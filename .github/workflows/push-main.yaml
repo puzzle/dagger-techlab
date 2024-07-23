@@ -14,7 +14,6 @@ on:
   push:
     branches:
       - main
-      - master
 
 jobs:
   build:
@@ -56,17 +55,6 @@ jobs:
           tags: |
             quay.io/puzzle/dagger-techlab:latest
       -
-        name: Build Puzzle Version
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          build-args: |
-            TRAINING_HUGO_ENV=puzzle
-          push: true
-          tags: |
-            quay.io/puzzle/dagger-techlab:latest-puzzle
-      -
         name: 'Install Helm'
         uses: azure/setup-helm@v4
         with:
@@ -79,7 +67,7 @@ jobs:
       -
         name: Create KUBECONFIG
         env:
-          KUBE_CONFIG: '${{ secrets.KUBECONFIG_K8S_ACEND }}'
+          KUBE_CONFIG: '${{ secrets.KUBECONFIG_PROD_AV2 }}'
         run: |
           mkdir -p $HOME/.kube
           echo "$KUBE_CONFIG" > $HOME/.kube/config
@@ -90,7 +78,15 @@ jobs:
           TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-prod'
           TRAINING_VERSION: '${{ github.sha }}'
         run: |
-          helm upgrade $TRAINING_HELM_RELEASE acend-training-chart --install --wait --kubeconfig $HOME/.kube/config  --namespace=$TRAINING_NAMESPACE --set=app.name=$HELM_RELEASE --set=app.version=$TRAINING_VERSION --repo=https://acend.github.io/helm-charts/ --values=helm-chart/values.yaml --atomic
+          helm upgrade $TRAINING_HELM_RELEASE acend-training-chart --install --wait \
+            --kubeconfig $HOME/.kube/config \
+            --namespace=$TRAINING_NAMESPACE \
+            --set=app.name=$HELM_RELEASE \
+            --set=app.version=$TRAINING_VERSION \
+            --repo=https://acend.github.io/helm-charts/ \
+            --values=helm-chart/values.yaml \
+            --set-string=acendTraining.deployments[0].ingress.labels.public=true \
+            --atomic
       -
         name: Redeploy Deployments
         env:
@@ -98,4 +94,7 @@ jobs:
           TRAINING_HELM_NAME: 'dagger-techlab-puzzle'
           TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-prod'
         run: |
-          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
+          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME} \
+            --kubeconfig $HOME/.kube/config \
+            --namespace $TRAINING_NAMESPACE
+

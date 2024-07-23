@@ -76,7 +76,7 @@ This is only rendered when `enabledModule` in `config.toml` **does not** contain
 Build the image:
 
 ```bash
-docker build [--build-arg TRAINING_HUGO_ENV=...] -t puzzle/dagger-techlab .
+docker build -t puzzle/dagger-techlab .
 ```
 
 Run it locally:

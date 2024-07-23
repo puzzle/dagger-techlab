@@ -53,8 +53,8 @@ weight = 1
 
 [[Languages.en.menu.main]]
 weight = 10
-name = "acend gmbh"
-url = "https://www.acend.ch"
+name = "Puzzle ITC GmbH"
+url = "https://www.puzzle.ch"
 
 [markup]
   [markup.goldmark]
@@ -67,9 +67,11 @@ url = "https://www.acend.ch"
   # guessSyntax = "true"
 
 [params]
-copyright = "acend gmbh"
+copyright = "Puzzle ITC GmbH"
 github_repo = "https://github.com/puzzle/dagger-techlab"
 github_branch = "main"
+
+imagePrefix = "puzzle_"
 
 enabledModule = "base"
 
@@ -98,12 +100,12 @@ url = "https://github.com/puzzle/dagger-techlab"
 [[params.links.user]]
 name = "Twitter"
 icon = "fab fa-twitter"
-url = "https://twitter.com/acendch"
+url = "https://twitter.com/puzzleitc"
 
 [[params.links.user]]
 name = "LinkedIn"
 icon = "fab fa-linkedin-in"
-url = "https://linkedin.com/company/acendch/"
+url = "https://linkedin.com/company/puzzle-itc"
 
 
 [module]
@@ -114,7 +116,7 @@ url = "https://linkedin.com/company/acendch/"
     extended = true
     min = "0.100.0"
   [[module.imports]]
-    path = "github.com/acend/docsy-acend"
+    path = "github.com/puzzle/docsy-puzzle"
     disable = false
   [[module.imports]]
     path = "github.com/acend/docsy-plus"
