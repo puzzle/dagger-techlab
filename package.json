@@ -1,0 +1,28 @@
+{
+  "name": "changeme-training",
+  "version": "0.0.9",
+  "description": "changeme Training",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/changeme/changeme-training.git"
+  },
+  "author": "changeme",
+  "scripts": {
+    "start": "bash -c \"docker run --rm --publish 8080:8080 -v $(pwd):/src:Z docker.io/klakegg/hugo:$(grep \"FROM docker.io/klakegg/hugo\" Dockerfile | sed 's/FROM docker.io\/klakegg\\/hugo://g' | sed 's/ AS builder//g') server -p 8080 --bind 0.0.0.0\"",
+    "mdlint": "markdownlint --config .markdownlint.json content *.md",
+    "mdlint-fix": "npm run mdlint -- --fix",
+    "prepare": "husky install"
+  },
+  "bugs": {
+    "url": "https://github.com/changeme/changeme-training/issues"
+  },
+  "homepage": "https://github.com/changeme/changeme-training#readme",
+  "devDependencies": {
+    "husky": "9.1.1",
+    "lint-staged": "15.2.7",
+    "markdownlint-cli": "0.41.0"
+  },
+  "lint-staged": {
+    "*.md": "markdownlint --config .markdownlint.json --fix"
+  }
+}

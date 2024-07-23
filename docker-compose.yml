@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  hugo:
+    build:
+      target: builder
+    environment:
+      HUGO_ENVIRONMENT: "${HUGO_ENVIRONMENT:-development}"
+    volumes:
+      - ./:/src
+    ports:
+      - 8080:8080
+    # Use colors in output
+    # https://github.com/docker/compose/issues/2231
+    tty: true
+    command: server --port 8080
