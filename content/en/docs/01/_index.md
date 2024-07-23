@@ -1,5 +1,5 @@
 ---
-title: "1. CHANGEME Sample Chapter"
+title: "1. Dagger Training Sample Chapter"
 weight: 1
 sectionnumber: 1
 ---

@@ -1,35 +1,23 @@
-# CHANGEME
 acendTraining:
   servicePort: 8080
   deployments:
-    - 
-      name: acend
-      replicaCount: 2
+    - name: puzzle
+      replicaCount: 1
       image:
-        repository: quay.io/acend/hugo-training-template
+        repository: quay.io/puzzle/dagger-techlab
         pullPolicy: Always
         tag: ""
         tagsuffix: ""
       ingress:
-        secretOverride: acend-wildcard
-        appname: hugo-training-template
-        domain: training.acend.ch
-    - 
-      name: puzzle
-      replicaCount: 2
-      image:
-        repository: quay.io/acend/hugo-training-template
-        pullPolicy: Always
-        tag: ""
-        tagsuffix: "-puzzle"
-      ingress:
-        secretOverride: acend-wildcard
-        appname: hugo-training-template
-        domain: training.puzzle.ch
-
-
-
-nameOverride: "acend-hugo-template"
+        emptyTLS: true
+        ingressClassName: openshift-public
+        labels:
+          public: "true"
+        useDefaultSecret: true
+        appname: dagger-techlab
+        domainmain: puzzle.ch
+        domain: ocp.cloudscale.puzzle.ch
+nameOverride: "dagger-techlab"
 fullnameOverride: ""
 
 serviceAccount:

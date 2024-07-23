@@ -50,9 +50,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          # changeme
           tags: |
-            quay.io/acend/hugo-training-template:pr-${{ github.event.pull_request.number }}
+            quay.io/puzzle/dagger-techlab:pr-${{ github.event.pull_request.number }}
       -
         name: Build Puzzle Version
         uses: docker/build-push-action@v6
@@ -62,9 +61,8 @@ jobs:
           build-args: |
             TRAINING_HUGO_ENV=puzzle
           push: true
-          # changeme
           tags: |
-            quay.io/acend/hugo-training-template:pr-${{ github.event.pull_request.number }}-puzzle
+            quay.io/puzzle/dagger-techlab:pr-${{ github.event.pull_request.number }}-puzzle
       -
         name: 'Install Helm'
         uses: azure/setup-helm@v4
@@ -86,7 +84,7 @@ jobs:
         name: Deploy Helm Release
         env:
           TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
-          TRAINING_NAMESPACE: 'acend-hugo-training-template-test' # changeme
+          TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-test'
           TRAINING_VERSION: '${{ github.sha }}'
         run: |
           helm upgrade $TRAINING_HELM_RELEASE acend-training-chart --install --wait --kubeconfig $HOME/.kube/config  --namespace=$TRAINING_NAMESPACE --set=app.name=$HELM_RELEASE --set=app.version=$TRAINING_VERSION --repo=https://acend.github.io/helm-charts/ --values=helm-chart/values.yaml --atomic --history-max 1
@@ -94,9 +92,8 @@ jobs:
         name: Redeploy Deployments
         env:
           TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
-          TRAINING_HELM_NAME: 'acend-hugo-template' # changeme
-          TRAINING_NAMESPACE: 'acend-hugo-training-template-test' # changeme
-        # changeme
+          TRAINING_HELM_NAME: 'dagger-techlab-puzzle'
+          TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-test'
         run: |
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
@@ -105,8 +102,6 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # changeme
           message: |
            PR Environments:
-           * acend version <https://hugo-training-template-pr-${{ github.event.pull_request.number }}.training.acend.ch>
-           * puzzle version <https://hugo-training-template-pr-${{ github.event.pull_request.number }}.training.puzzle.ch>
+           * puzzle version <https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch>

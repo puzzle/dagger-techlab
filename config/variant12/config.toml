@@ -26,7 +26,7 @@ url = "https://www.puzzle.ch"
 [[params.links.developer]]
 name = "GitHub"
 icon = "fab fa-github"
-url = "https://github.com/acend/changeme-training"
+url = "https://github.com/puzzle/dagger-techlab"
 
 [[params.links.user]]
 name = "Twitter"
