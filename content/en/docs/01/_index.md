@@ -169,3 +169,4 @@ Hint: Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Cont
 ```bash
 dagger -m github.com/shykes/daggerverse/wolfi@v0.1.4 call container with-exec --args="cat","/etc/os-release" stdout
 ```
+
