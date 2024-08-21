@@ -60,6 +60,3 @@ This should output something similar to:
 dagger v0.12.5 (registry.dagger.io/engine:v0.12.5) darwin/arm64
 ```
 
-
-
-
