@@ -9,56 +9,6 @@ menu:
 
 ## Install the Dagger CLI
 
-
-### Linux
-
-Download and install the latest `dagger` version:
-
-```bash
-curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
-```
-
-Verify the installation:
-
-```bash
-which dagger
-dagger version
-```
-
-This should output something similar to:
-
-```
-~/.local/bin/dagger
-dagger v0.12.5 (registry.dagger.io/engine) linux/amd64
-```
-
-
-### macOS
-
-Install the latest `dagger` version using `homebrew`:
-
-```bash
-brew install dagger/tap/dagger
-```
-
-Or using `sh` and `curl`:
-
-```bash
-cd /usr/local
-curl -L https://dl.dagger.io/dagger/install.sh | sh
-```
-
-Verify the installation:
-
-```bash
-which dagger
-dagger version
-```
-
-This should output something similar to:
-
-```
-/opt/homebrew/bin/dagger
-dagger v0.12.5 (registry.dagger.io/engine:v0.12.5) darwin/arm64
-```
+This guide shows you how to install the `dagger` CLI.
+Follow the instructions on the subsequent pages to complete the setup on your operating system of choice.
 
