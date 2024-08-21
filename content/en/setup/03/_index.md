@@ -19,7 +19,7 @@ To install a different `dagger` CLI version, you can specify it using this param
 `-DaggerVersion x.y.z`
 {{% /alert %}}
 
-For further customizations, such as adding Dagger to your system's PATH or using the interactive installation process, 
+For further customizations, such as adding Dagger to your system's PATH or using the interactive installation process,
 additional parameters are available. To view all available options:
 
 ```bash

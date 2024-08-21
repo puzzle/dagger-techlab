@@ -59,3 +59,4 @@ To update using `sh` and `curl` instead, use the same commands as for a fresh in
 cd /usr/local
 curl -L https://dl.dagger.io/dagger/install.sh | sh
 ```
+
