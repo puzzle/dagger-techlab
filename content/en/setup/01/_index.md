@@ -7,16 +7,16 @@ sectionnumber: 1
 
 ## Installation for Linux
 
-Download and install the latest `dagger` version:
+Download and install the latest `dagger` CLI version:
 
 ```bash
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
 
 {{% alert title="Note" color="primary" %}}
-To install another `dagger` version instead, you can specify it using this param, added to the command above:
+To install a different `dagger` CLI version, you can specify it using this param, added to the previous command:
 
-DAGGER_VERSION=x.y.z
+`DAGGER_VERSION=x.y.z`
 {{% /alert %}}
 
 
