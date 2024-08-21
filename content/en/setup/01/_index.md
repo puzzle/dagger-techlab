@@ -13,6 +13,12 @@ Download and install the latest `dagger` version:
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
 
+{{% alert title="Note" color="primary" %}}
+To install another `dagger` version instead, you can specify it using this param, added to the command above:
+
+DAGGER_VERSION=x.y.z
+{{% /alert %}}
+
 
 ## Verification
 
@@ -33,7 +39,7 @@ dagger v0.12.5 (registry.dagger.io/engine) linux/amd64
 
 ## Update
 
-To update your `dagger` CLI to the latest version, use the same command as for a fresh installation, i.e.::
+To update your `dagger` CLI to the latest version, use the same command as for a fresh installation, i.e.:
 
 ```bash
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh

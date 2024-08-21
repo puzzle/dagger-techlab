@@ -20,6 +20,13 @@ cd /usr/local
 curl -L https://dl.dagger.io/dagger/install.sh | sh
 ```
 
+{{% alert title="Note" color="primary" %}}
+To install another `dagger` version instead, you can specify it using this param, added to the command above:
+
+DAGGER_VERSION=x.y.z
+{{% /alert %}}
+
+
 ## Verification
 
 Verify the installation:
