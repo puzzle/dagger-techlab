@@ -67,6 +67,7 @@ dagger -m github.com/shykes/daggerverse/hello@v0.3.0 call hello --name=sun
 #### Boolean Arguments
 
 To pass a boolean argument to a Dagger Function, simply add the corresponding flag:
+
 * To set the argument to true: `--foo=true`, or simply `--foo`
 * To set the argument to false: `--foo=false`
 
