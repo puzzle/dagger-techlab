@@ -17,14 +17,18 @@ Download and install the latest `dagger` version:
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
 
-Verify:
+Verify the installation:
 
 ```bash
 which dagger
-~/.local/bin/dagger
-
 dagger version
-dagger v0.12.3 (registry.dagger.io/engine) linux/amd64
+```
+
+This should output something similar to:
+
+```
+~/.local/bin/dagger
+dagger v0.12.5 (registry.dagger.io/engine) linux/amd64
 ```
 
 ### macOS
@@ -42,14 +46,18 @@ cd /usr/local
 curl -L https://dl.dagger.io/dagger/install.sh | sh
 ```
 
-Verify:
+Verify the installation:
 
 ```bash
 which dagger
-/opt/homebrew/bin/dagger
-
 dagger version
-dagger v0.12.3 (registry.dagger.io/engine:v0.12.3) darwin/arm64
+```
+
+This should output something similar to:
+
+```
+/opt/homebrew/bin/dagger
+dagger v0.12.5 (registry.dagger.io/engine:v0.12.5) darwin/arm64
 ```
 
 
