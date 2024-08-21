@@ -1,5 +1,5 @@
 ---
-title: "1. Functions and Chaining "
+title: "1. Functions and Chaining"
 weight: 1
 sectionnumber: 1
 ---
