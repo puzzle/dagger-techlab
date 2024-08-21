@@ -13,6 +13,9 @@ Download and install the latest `dagger` version:
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
 
+
+## Verification
+
 Verify the installation:
 
 ```bash
@@ -28,32 +31,11 @@ dagger v0.12.5 (registry.dagger.io/engine) linux/amd64
 ```
 
 
-### macOS
+## Update
 
-Install the latest `dagger` version using `homebrew`:
-
-```bash
-brew install dagger/tap/dagger
-```
-
-Or using `sh` and `curl`:
+To update your `dagger` CLI to the latest version, use the same command as for a fresh installation, i.e.::
 
 ```bash
-cd /usr/local
-curl -L https://dl.dagger.io/dagger/install.sh | sh
-```
-
-Verify the installation:
-
-```bash
-which dagger
-dagger version
-```
-
-This should output something similar to:
-
-```
-/opt/homebrew/bin/dagger
-dagger v0.12.5 (registry.dagger.io/engine:v0.12.5) darwin/arm64
+curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
 
