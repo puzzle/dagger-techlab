@@ -52,12 +52,12 @@ Additional to the available arguments, this often also shows you the type of val
 ### Function Arguments
 
 Dagger Functions can accept arguments. In addition to basic types (string, boolean, integer, array...),
-Dagger also defines powerful core types: Directory, File, Container, Service, and Secret.
+Dagger also defines powerful core types: [Container](https://docs.dagger.io/api/reference/#definition-Container), [Directory](https://docs.dagger.io/api/reference/#definition-Directory), [File](https://docs.dagger.io/api/reference/#definition-File), [Service](https://docs.dagger.io/api/reference/#definition-Service) and [Secret](https://docs.dagger.io/api/reference/#definition-Secret).
 
 
 #### String Arguments
 
-To pass a string argument to a Dagger Function, append the corresponding flag to the dagger call command, followed by the string value:
+To pass a String argument to a Dagger Function, append the corresponding flag to the dagger call command, followed by the string value:
 
 ```bash
 dagger -m github.com/shykes/daggerverse/hello@v0.3.0 call hello --name=sun
@@ -66,7 +66,7 @@ dagger -m github.com/shykes/daggerverse/hello@v0.3.0 call hello --name=sun
 
 #### Boolean Arguments
 
-To pass a boolean argument to a Dagger Function, simply add the corresponding flag:
+To pass a Boolean argument to a Dagger Function, simply add the corresponding flag:
 
 * To set the argument to true: `--foo=true`, or simply `--foo`
 * To set the argument to false: `--foo=false`
@@ -74,7 +74,7 @@ To pass a boolean argument to a Dagger Function, simply add the corresponding fl
 
 #### Directory Arguments
 
-You can also pass a directory argument. To do so, add the corresponding flag, followed by a local filesystem path **or** a remote Git reference.
+You can also pass a Directory argument. To do so, add the corresponding flag, followed by a local filesystem path **or** a remote Git reference.
 
 In **both** cases, the `dagger` CLI will convert it to an object referencing the contents of that filesystem path or Git repository location,
 and pass the resulting `Directory` object as argument to the Dagger Function.
@@ -82,7 +82,7 @@ and pass the resulting `Directory` object as argument to the Dagger Function.
 
 #### Container Arguments
 
-Same as directories, you can pass a container argument. To do so, add the corresponding flag, followed by the address of an OCI image.
+Same as directories, you can pass a Container argument. To do so, add the corresponding flag, followed by the address of an OCI image.
 
 The CLI will dynamically pull the image, and pass the resulting `Container` object as argument to the Dagger Function.
 
@@ -100,21 +100,61 @@ It is the **actual state of a container**, managed by the Dagger Engine, and pas
 Dagger allows you to use confidential information, such as passwords, tokens, etc., in your Dagger Functions, without exposing them in plaintext logs,
 writing them into the filesystem of containers you're building, or inserting them into the cache.
 
-To pass a secret to a Dagger Function, source it from a host environment variable `env:`, the host filesystem `file:`, or a host command `cmd:`.
+To pass a Secret to a Dagger Function, source it from a host environment variable `env:`, the host filesystem `file:`, or a host command `cmd:`.
 
 Here is an example of passing a GitHub access token from an environment variable named `GITHUB_TOKEN` to a Dagger Function.
 The Dagger Function uses the token to query the GitHub CLI for a list of issues in the Dagger open-source repository:
 
 ```bash
-dagger -m github.com/aweris/daggerverse/gh@99a1336f8091ff43bf833778a324de1cadcf25ac call run --token=env:GITHUB_TOKEN --cmd="issue list --repo=dagger/dagger"
+dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=env:GITHUB_TOKEN --cmd="issue list --repo=dagger/dagger"
 ```
 
 
-### Task 1.1: Make use of arguments
+### Task 1.1: Explore a module
 
-Call the `Hello()` function so that it returns the string `Welcome, sunshine!` in ASCII-art.
+Explore the `github.com/purpleclay/daggerverse/ponysay@v0.1.0` module.
+Make it return the phrase `Dagger puts a smile on my face!`.
+
+```bash
+dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 functions
+```
+
+```bash
+dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 call say --help
+```
+
+```bash
+dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 call say --msg="Dagger puts a smile on my face!"
+```
+
+
+### Task 1.2: Make use of multiple arguments
+
+Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art.
 
 ```bash
 dagger -m github.com/shykes/daggerverse/hello@v0.3.0 call hello --giant --greeting=Welcome --name=sunshine
+```
+
+
+### Function Chaining
+
+Dagger Functions can return either basic types or objects. Objects can define their own functions. When calling a Dagger Function that returns an object,
+the Dagger API lets you follow up by calling one of that object's functions, which itself can return another object, and so on.
+This is called "function chaining", and is a core feature of Dagger.
+
+Dagger's core types ([Container](https://docs.dagger.io/api/reference/#definition-Container), [Directory](https://docs.dagger.io/api/reference/#definition-Directory), [File](https://docs.dagger.io/api/reference/#definition-File), [Service](https://docs.dagger.io/api/reference/#definition-Service), ...)
+are all objects. They each define various functions for interacting with their respective objects.
+
+Print the contents of a file returned by a Dagger Function, by chaining a call to the `File` object's `Contents()` function:
+
+```bash
+dagger -m github.com/dagger/dagger/dev/ruff@a29dadbb5d9968784847a15fccc5629daf2985ae call lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
+```
+
+Expose a service returned by a Dagger Function on a specified host port, by chaining a call to the `Service` object's `Up()` function:
+
+```bash
+dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call service up --ports=22022:22
 ```
 
