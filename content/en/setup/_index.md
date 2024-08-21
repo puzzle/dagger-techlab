@@ -9,6 +9,7 @@ menu:
 
 ## Install the Dagger CLI
 
+
 ### Linux
 
 Download and install the latest `dagger` version:
@@ -30,6 +31,7 @@ This should output something similar to:
 ~/.local/bin/dagger
 dagger v0.12.5 (registry.dagger.io/engine) linux/amd64
 ```
+
 
 ### macOS
 
