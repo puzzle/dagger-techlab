@@ -158,3 +158,14 @@ Expose a service returned by a Dagger Function on a specified host port, by chai
 dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call service up --ports=22022:22
 ```
 
+
+### Task 1.3: Chain calls
+
+Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
+object of the `github.com/shykes/daggerverse/wolfi@v0.1.4` module:
+
+Hint: Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
+
+```bash
+dagger -m github.com/shykes/daggerverse/wolfi@v0.1.4 call container with-exec --args="cat","/etc/os-release" stdout
+```
