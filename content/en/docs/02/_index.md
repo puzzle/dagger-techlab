@@ -22,7 +22,7 @@ The app is split in a frontend and an api part:
 * The frontend is written in type script and uses a redis memcache.
 * The backend is mostly written in python, uses a postgreSQL database and mailisearch.
 
-Caddy is used as reverse proxy to keep the various parts together.
+Caddy is used as reverse proxy to keep the parts together.
 
 
 ### The Journey
@@ -79,7 +79,7 @@ As a first step, we could implement a simple `build` function:
         )
 ```
 
-This allows us to build the frontend and bind it as a service to the localhost on port 3000:
+This allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
 
 ```bash
 dagger -m Classquiz call build --context ./frontend/ with-exposed-port --port 3000 as-service
@@ -100,7 +100,7 @@ As we have seen before, the two parts of the app depend on several components:
 * Meilisearch
 * Caddy
 
-We have to implement each component as a service, which then can be used app. For Redis this could look like this:
+We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used app. For Redis this could look like this:
 
 ```python
     @function
@@ -232,7 +232,7 @@ After:
 Now we can finally run ClassQuiz locally:
 
 ```bash
-dagger call proxy --context-frontend=./frontend  --context-backend=.  --proxy-config=Caddyfile-docker up --ports=8000:8080
+dagger -m Classquiz call proxy --context-frontend=./frontend  --context-backend=.  --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
 And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
