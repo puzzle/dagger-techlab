@@ -51,7 +51,7 @@ The app also binds the privileged port `80`, which would be an obstacle as well.
 #### Initialize a Dagger module
 
 A new Dagger module in Go, Python or TypeScript can be initialized by running `dagger init` inside the app's root directory,
-using the `--source` flag to specify a directory for the module's source code. 
+using the `--source` flag to specify a directory for the module's source code.
 
 We will use the **Python SDK** for this example:
 
