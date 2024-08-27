@@ -1,0 +1,35 @@
+--- config.py	2024-08-27 09:12:30.871018892 +0200
++++ config.py	2024-08-27 09:12:53.055075688 +0200
+@@ -30,16 +30,16 @@
+ 
+     root_address: str = "http://127.0.0.1:8000"
+     redis: RedisDsn = "redis://localhost:6379/0?decode_responses=True"
+-    skip_email_verification: bool = False
++    skip_email_verification: bool = True
+     db_url: str | PostgresDsn = "postgresql://postgres:mysecretpassword@localhost:5432/classquiz"
+     hcaptcha_key: str | None = None
+     recaptcha_key: str | None = None
+-    mail_address: str
+-    mail_password: str
+-    mail_username: str
+-    mail_server: str
+-    mail_port: int
+-    secret_key: str
++    mail_address: str = "some@example.org"
++    mail_password: str = "some@example.org"
++    mail_username: str = "some@example.org"
++    mail_server: str = "some.example.org"
++    mail_port: int = "525"
++    secret_key: str = "secret"
+     access_token_expire_minutes: int = 30
+     cache_expiry: int = 86400
+     sentry_dsn: str | None
+@@ -60,7 +60,7 @@
+     storage_backend: str | None = "local"
+ 
+     # if storage_backend == "local":
+-    storage_path: str | None
++    storage_path: str | None = "/app/data"
+ 
+     # if storage_backend == "s3":
+     s3_access_key: str | None
