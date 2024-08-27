@@ -115,26 +115,68 @@ dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=env:GITHUB_TO
 Explore the `github.com/purpleclay/daggerverse/ponysay@v0.1.0` module.
 Make it return the phrase `Dagger puts a smile on my face!`.
 
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 functions
 ```
+{{% /details %}}
 
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 call say --help
 ```
+{{% /details %}}
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 call say --msg="Dagger puts a smile on my face!"
 ```
+{{% /details %}}
 
 
 ### Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
 Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art.
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger -m github.com/shykes/daggerverse/hello@v0.3.0 call hello --giant --greeting=Welcome --name=sunshine
 ```
+{{% /details %}}
+
+
+### Task {{% param sectionnumber %}}.3: Pass a secret
+
+Set and replace the `--token` value in the following call with a secret using an environment variable
+
+```bash
+dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=visible --cmd="issue list --repo=dagger/dagger"
+```
+
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```bash
+export SECRET=invisible
+dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=env:SECRET --cmd="issue list --repo=dagger/dagger"
+```
+{{% /details %}}
+
+or using a file
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```bash
+echo $SECRET > secret.txt
+dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=file:./secret.txt --cmd="issue list --repo=dagger/dagger"
+```
+{{% /details %}}
+
+or using a command
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```bash
+dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=cmd:"head -c10 /dev/random | base64" --cmd="issue list --repo=dagger/dagger"
+```
+{{% /details %}}
 
 
 ### Function Chaining
@@ -164,9 +206,13 @@ dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call servic
 Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
 object of the `github.com/shykes/daggerverse/wolfi@v0.1.4` module:
 
-Hint: Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
+{{% /details %}}
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger -m github.com/shykes/daggerverse/wolfi@v0.1.4 call container with-exec --args="cat","/etc/os-release" stdout
 ```
+{{% /details %}}
 

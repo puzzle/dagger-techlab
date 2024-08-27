@@ -41,6 +41,12 @@ which is particularly interesting for our purpose.
 
 Since the app has some hard-coded configurations that would interfere with our setup, let's apply the following [patch](config.patch) to the `classquiz/config.py`:
 
+{{< details title="show patch" mode-switcher="normalexpertmode" >}}
+
+{{% readAndHighlight file="config.patch" code="true" lang="patch" highlight="hl_lines=8 18-23 33" %}}
+
+{{< /details >}}
+
 ```bash
 patch classquiz/config.py < config.patch
 ```
@@ -122,6 +128,7 @@ for the required ports and params.
 
 While the implementations of PostgreSQL and Meilisearch are very similar and quite simple:
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
     def postgres(self) -> dagger.Service:
@@ -147,6 +154,7 @@ While the implementations of PostgreSQL and Meilisearch are very similar and qui
             .as_service()
         )
 ```
+{{% /details %}}
 
 The implementation of Caddy is a bit more sophisticated, as the proxy is our new entry point, which "glues" all the pieces together.
 
@@ -156,6 +164,7 @@ Official documentation about how to [Bind services in functions](https://docs.da
 Important detail from the docs: The name used for the service binding defines the host name to be used by the function!
 {{% /alert %}}
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
     def proxy(self, context_backend: dagger.Directory, context_frontend: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
@@ -170,6 +179,7 @@ Important detail from the docs: The name used for the service binding defines th
             .as_service()
         )
 ```
+{{% /details %}}
 
 
 ### Task {{% param sectionnumber %}}.2: Create separate Front- and Backend functions
@@ -180,6 +190,7 @@ which is encapsulated by the Caddy reverse proxy, while the backend relies on th
 
 Hint: Start with the `backend` and adjust the host part of the urls used in `classquiz/config.py`.
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
     def backend(self, context: dagger.Directory) -> dagger.Service:
@@ -195,11 +206,13 @@ Hint: Start with the `backend` and adjust the host part of the urls used in `cla
             .as_service()
         )
 ```
+{{% /details %}}
 
 For convenience, the function returns directly a Service.
 
 And the `frontend`:
 
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
     def frontend(self, context: dagger.Directory) -> dagger.Service:
@@ -212,6 +225,7 @@ And the `frontend`:
             .as_service()
         )
 ```
+{{% /details %}}
 
 Now the two service bindings in the `proxy` function can be simplified a bit.
 
