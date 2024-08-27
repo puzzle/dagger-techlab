@@ -4,7 +4,7 @@ weight: 1
 sectionnumber: 1
 ---
 
-## 1. Functions and Chaining
+## {{% param sectionnumber %}}. Functions and Chaining
 
 
 ### Function Calls from the CLI
@@ -110,7 +110,7 @@ dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=env:GITHUB_TO
 ```
 
 
-### Task 1.1: Explore a module
+### Task {{% param sectionnumber %}}.1: Explore a module
 
 Explore the `github.com/purpleclay/daggerverse/ponysay@v0.1.0` module.
 Make it return the phrase `Dagger puts a smile on my face!`.
@@ -128,7 +128,7 @@ dagger -m github.com/purpleclay/daggerverse/ponysay@v0.1.0 call say --msg="Dagge
 ```
 
 
-### Task 1.2: Make use of multiple arguments
+### Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
 Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art.
 
@@ -159,7 +159,7 @@ dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call servic
 ```
 
 
-### Task 1.3: Chain calls
+### Task {{% param sectionnumber %}}.3: Chain calls
 
 Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
 object of the `github.com/shykes/daggerverse/wolfi@v0.1.4` module:

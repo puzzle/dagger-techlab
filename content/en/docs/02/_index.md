@@ -4,7 +4,7 @@ weight: 2
 sectionnumber: 2
 ---
 
-## 2. Daggerize an App
+## {{% param sectionnumber %}}. Daggerize an App
 
 
 ### The Challenge
@@ -115,7 +115,7 @@ We have to implement each component as a service, which then can be used app. Fo
 ```
 
 
-### Task 2.1: Implement Services
+### Task {{% param sectionnumber %}}.1: Implement Services
 
 Add the remaining Services as well. Consult [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml)
 for the required ports and params.
@@ -172,7 +172,7 @@ Important detail from the docs: The name used for the service binding defines th
 ```
 
 
-### Task 2.2: Create separate Front- and Backend functions
+### Task {{% param sectionnumber %}}.2: Create separate Front- and Backend functions
 
 Our initial `build` function can be used to create both, front- and backend containers.
 But in fact, the two app parts require different config params and dependencies: The frontend only communicates with the api of the backend,
