@@ -235,9 +235,7 @@ Now we can finally run ClassQuiz locally:
 dagger call proxy --context-frontend=./frontend  --context-backend=.  --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
-And then visit http://localhost:8000/
-
-Where, after registering ourselves, we can log in and create our survey!
+And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
 
 
 ### Complete Solution
