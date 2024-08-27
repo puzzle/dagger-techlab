@@ -43,7 +43,7 @@ Since the app has some hard-coded configurations that would interfere with our s
 
 {{< details title="show patch" mode-switcher="normalexpertmode" >}}
 
-{{% readAndHighlight file="config.patch" code="true" lang="patch" highlight="hl_lines=8 18-23 33" %}}
+{{% readAndHighlight file="config.patch" code="true" lang="patch" highlight="hl_lines=8 18-23 32" %}}
 
 {{< /details >}}
 
