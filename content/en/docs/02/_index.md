@@ -213,7 +213,7 @@ And the `frontend`:
         )
 ```
 
-Now the two service bindings in the `proxy` function can be simplified a bit. 
+Now the two service bindings in the `proxy` function can be simplified a bit.
 
 Before:
 
@@ -451,10 +451,9 @@ server_regex = rf"^{re.escape(settings().root_address)}/api/v1/storage/download/
 # SPDX-License-Identifier: MPL-2.0
 
 :8080 {
-	reverse_proxy * http://frontend:3000
-	reverse_proxy /api/* http://api:8081
-	reverse_proxy /openapi.json http://api:8081 # Only use if you need to serve the OpenAPI spec
-	reverse_proxy /socket.io/* http://api:8081
-
+    reverse_proxy * http://frontend:3000
+    reverse_proxy /api/* http://api:8081
+    reverse_proxy /openapi.json http://api:8081 # Only use if you need to serve the OpenAPI spec
+    reverse_proxy /socket.io/* http://api:8081
 }
 ```
