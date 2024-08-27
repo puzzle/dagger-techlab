@@ -201,7 +201,7 @@ dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call servic
 ```
 
 
-### Task {{% param sectionnumber %}}.3: Chain calls
+### Task {{% param sectionnumber %}}.4: Chain calls
 
 Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
 object of the `github.com/shykes/daggerverse/wolfi@v0.1.4` module:
