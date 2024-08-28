@@ -88,13 +88,13 @@ As a first step, we could implement a simple `build` function:
 This allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
 
 ```bash
-dagger -m Classquiz call build --context ./frontend/ with-exposed-port --port 3000 as-service
+dagger -m Classquiz call build --context=./frontend/ with-exposed-port --port=3000 as-service
 ```
 
 And the backend as well:
 
 ```bash
-dagger -m Classquiz call build --context . with-exposed-port --port 8000 as-service up
+dagger -m Classquiz call build --context=. with-exposed-port --port=8000 as-service up
 ```
 
 But if we have a closer look to the console output, we will discover some error messages due to missing configurations and components.
