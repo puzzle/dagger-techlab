@@ -167,13 +167,13 @@ Important detail from the docs: The name used for the service binding defines th
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
-    def proxy(self, context_backend: dagger.Directory, context_frontend: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
+    def proxy(self, context: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
         """Returns a caddy proxy service encapsulating the front and backend services. This service must be bound to port 8000 in order to match some hard coded configuration: --ports 8000:8080"""
         return (
             dag.container()
             .from_("caddy:alpine")
-            .with_service_binding("frontend", self.build(context_frontend).as_service())
-            .with_service_binding("api", self.build(context_backend).as_service())
+            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.build(context).as_service())
             .with_file("/etc/caddy/Caddyfile", proxy_config)
             .with_exposed_port(8080)
             .as_service()
@@ -232,21 +232,21 @@ Now the two service bindings in the `proxy` function can be simplified a bit.
 Before:
 
 ```python
-            .with_service_binding("frontend", self.build(context_frontend).as_service())
-            .with_service_binding("api", self.build(context_backend).as_service())
+            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.build(context).as_service())
 ```
 
 After:
 
 ```python
-            .with_service_binding("frontend", self.frontend(context_frontend))
-            .with_service_binding("api", self.backend(context_backend))
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
+            .with_service_binding("api", self.backend(context))
 ```
 
 Now we can finally run ClassQuiz locally:
 
 ```bash
-dagger -m Classquiz call proxy --context-frontend=./frontend  --context-backend=.  --proxy-config=Caddyfile-docker up --ports=8000:8080
+dagger -m Classquiz call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
 And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
@@ -328,13 +328,13 @@ class Classquiz:
 
 
     @function
-    def proxy(self, context_backend: dagger.Directory, context_frontend: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
+    def proxy(self, context: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
         """Returns a caddy proxy service encapsulating the front and backend services. This service must be bound to port 8000 in order to match some hard coded configuration: --ports 8000:8080"""
         return (
             dag.container()
             .from_("caddy:alpine")
-            .with_service_binding("frontend", self.frontend(context_frontend))
-            .with_service_binding("api", self.backend(context_backend))
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
+            .with_service_binding("api", self.backend(context))
             .with_file("/etc/caddy/Caddyfile", proxy_config)
             .with_exposed_port(8080)
             .as_service()
