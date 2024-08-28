@@ -54,3 +54,8 @@ Dagger downloaded the Module and added it as dependency to our `dagger.json`:
 ```
 
 This way, all the functions provided by the module are available directly in our code - no need to add further imports or anything like that!
+
+{{% alert title="Note" color="primary" %}}
+You may wonder why the dependency contains `trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba` while we wanted to install `trivy@v0.5.0`?
+This is not a mistake: Dagger enforces version pinning, which guarantees that the module version to be installed always remains exactly the same!
+{{% /details %}}
