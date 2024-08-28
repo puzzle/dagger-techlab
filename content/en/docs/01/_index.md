@@ -1,13 +1,34 @@
 ---
-title: "1. Functions and Chaining"
+title: "1. Function Calls from the CLI"
 weight: 1
 sectionnumber: 1
 ---
 
-## {{% param sectionnumber %}}. Functions and Chaining
+## {{% param sectionnumber %}}. Function Calls from the CLI
 
 
-### Function Calls from the CLI
+Once installed, the `dagger` CLI offers you these functions:
+
+```
+call        (Call one or more functions, interconnected into a pipeline)
+completion  (Generate the autocompletion script for the specified shell)
+config      (Get or set module configuration)
+core        (Call a core function)
+develop     (Prepare a local module for development)
+functions   (List available functions)
+help        (Help about any command)
+init        (Initialize a new module)
+install     (Install a dependency)
+login       (Log in to Dagger Cloud)
+logout      (Log out from Dagger Cloud)
+query       (Send API queries to a dagger engine)
+run         (Run a command in a Dagger session)
+version     (Print dagger version)
+```
+
+{{% alert title="Note" color="primary" %}}
+Checkout the autocompletion by tipping `dagger`, followed by some `Tab` keystrokes.
+{{% /alert %}}
 
 The most common way to call Dagger Functions is using the `dagger` CLI:
 
@@ -177,42 +198,3 @@ or using a command
 dagger -m github.com/aweris/daggerverse/gh@v0.0.2 call run --token=cmd:"head -c10 /dev/random | base64" --cmd="issue list --repo=dagger/dagger"
 ```
 {{% /details %}}
-
-
-### Function Chaining
-
-Dagger Functions can return either basic types or objects. Objects can define their own functions. When calling a Dagger Function that returns an object,
-the Dagger API lets you follow up by calling one of that object's functions, which itself can return another object, and so on.
-This is called "function chaining", and is a core feature of Dagger.
-
-Dagger's core types ([Container](https://docs.dagger.io/api/reference/#definition-Container), [Directory](https://docs.dagger.io/api/reference/#definition-Directory), [File](https://docs.dagger.io/api/reference/#definition-File), [Service](https://docs.dagger.io/api/reference/#definition-Service), ...)
-are all objects. They each define various functions for interacting with their respective objects.
-
-Print the contents of a file returned by a Dagger Function, by chaining a call to the `File` object's `Contents()` function:
-
-```bash
-dagger -m github.com/dagger/dagger/dev/ruff@a29dadbb5d9968784847a15fccc5629daf2985ae call lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
-```
-
-Expose a service returned by a Dagger Function on a specified host port, by chaining a call to the `Service` object's `Up()` function:
-
-```bash
-dagger -m github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 call service up --ports=22022:22
-```
-
-
-### Task {{% param sectionnumber %}}.4: Chain calls
-
-Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
-object of the `github.com/shykes/daggerverse/wolfi@v0.1.4` module:
-
-{{% details title="show hint" mode-switcher="normalexpertmode" %}}
-Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
-{{% /details %}}
-
-{{% details title="show solution" mode-switcher="normalexpertmode" %}}
-```bash
-dagger -m github.com/shykes/daggerverse/wolfi@v0.1.4 call container with-exec --args="cat","/etc/os-release" stdout
-```
-{{% /details %}}
-

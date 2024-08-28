@@ -1,113 +1,255 @@
 ---
-title: "3. Pipeline integration"
+title: "3. Daggerize an App"
 weight: 3
 sectionnumber: 3
 ---
 
-## {{% param sectionnumber %}}. Pipeline integration
+## {{% param sectionnumber %}}. Daggerize an App
 
 
 ### The Challenge
 
-After we have learned how to spin up an app locally, we want to integrate it into a CI-Pipeline.
+After we have learned the basic Dagger Functions, we want to apply our new knowledge to solve a real life problem:
+We would like to conduct a survey regarding the popularity of the different Dagger SDKs!
 
 
-### Vulnerability scan
+### The Candidate
 
-So instead of starting the app, we want to build the container images and scan them for vulnerabilities.
-A very popular open-source tool for this task is [Trivy](https://trivy.dev/).
+Fortunately, there is a free open-source quiz app called [ClassQuiz](https://classquiz.de/)
+It allows the creation of shareable, fully customizable quizzes and surveys.
+The app is split in a frontend and an api part:
 
-We could simply create and start a Trivy Dagger Container like we did for Redis in the previous Lab.
-But wait - as it is such a popular tool, maybe someone already did this before and shared its solution?
+* The frontend is written in type script and uses a redis memcache.
+* The backend is mostly written in python, uses a postgreSQL database and meilisearch.
 
-So let's visit [daggerverse.dev](https://daggerverse.dev). Here we can find hundreds of ready to use Dagger Modules:
-At the time of writing, a search for `trivy` reveals six different Modules (+1 just containing examples) -
-which leaves us with six solutions to one problem :)
+Caddy is used as reverse proxy to keep the parts together.
 
 
-### Task {{% param sectionnumber %}}.1: Install a Module from Daggerverse
+### The Journey
 
-For our task, we chose the [github.com/sagikazarmark/daggerverse/trivy](https://daggerverse.dev/mod/github.com/sagikazarmark/daggerverse/trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba) Module.
 
-Explore its page, have a look at the available functions which are documented on the left side.
+#### Prerequisites
 
-After that, add it to our project by installing it
+Check out ClassQuiz:
 
-{{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger install github.com/sagikazarmark/daggerverse/trivy@v0.5.0
-```
-{{% /details %}}
-
-Dagger downloaded the Module and added it as dependency to our `dagger.json`:
-
-```json
-{
-  "name": "classquiz",
-  "sdk": "python",
-  "dependencies": [
-    {
-      "name": "trivy",
-      "source": "github.com/sagikazarmark/daggerverse/trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba"
-    }
-  ],
-  "source": "ci",
-  "engineVersion": "v0.12.5"
-}
+git clone https://github.com/mawoka-myblock/ClassQuiz.git
 ```
 
-This way, all the functions provided by the module are available directly in our code - no need to add further imports or anything like that!
+Get familiar with the source - take a closer look at the [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml),
+which is particularly interesting for our purpose.
+
+Since the app has some hard-coded configurations that would interfere with our setup, let's apply the following [patch](config.patch) to the `classquiz/config.py`:
+
+{{< details title="show patch" mode-switcher="normalexpertmode" >}}
+
+{{% readAndHighlight file="config.patch" code="true" lang="patch" highlight="hl_lines=8 18-23 32" %}}
+
+{{< /details >}}
+
+```bash
+patch classquiz/config.py < config.patch
+```
+
+The app also binds the privileged port `80`, which would be an obstacle as well. So let's replace all occurrences of `:80` in `Caddyfile-docker` with `:8081` or another port of your choice.
 
 
-### Extending our codebase
+#### Initialize a Dagger Module
 
-The Trivy Module has a `container()` function, which expects [Container](https://docs.dagger.io/api/reference/#definition-Container) as argument.
-As our existing `frontend()` and `backend()` return [Service](https://docs.dagger.io/api/reference/#definition-Service)s, we need an additional functions.
-Since the only difference in creating these containers is the path in which they are built, we will combine them into a single function:
+A new Dagger module in Go, Python or TypeScript can be initialized by running `dagger init` inside the app's root directory,
+using the `--source` flag to specify a directory for the module's source code.
+
+We will use the **Python SDK** for this example:
+
+```bash
+dagger init --sdk=python --source=./ci
+```
+
+This leaves us with a generated `dagger.json` module metadata file, an initial `ci/src/main/__init__.py` source code template, `ci/pyproject.toml` and
+`ci/requirements.lock` files, as well as a generated `ci/sdk` folder for local development.
+The configuration file sets the name of the module to the name of the current directory, unless an alternative is specified with the `--name` argument.
+
+
+## Run the App locally
+
+The generated `ci/src/main/__init__.py` is the starting point, which needs to be extended.
+
+As a first step, we could implement a simple `build` function:
 
 ```python
     @function
-    async def build(self, context: dagger.Directory) -> dagger.Container:
+    def build(self, context: dagger.Directory) -> dagger.Container:
         """Returns a container built with the given context."""
-        return await dag.container().build(context)
+        return (
+            dag.container()
+            .build(context)
+        )
 ```
 
-For better scalability, we have defined the function as asynchronous.
+This allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
+
+```bash
+dagger -m Classquiz call build --context=./frontend/ with-exposed-port --port=3000 as-service
+```
+
+And the backend as well:
+
+```bash
+dagger -m Classquiz call build --context=. with-exposed-port --port=8000 as-service up
+```
+
+But if we have a closer look to the console output, we will discover some error messages due to missing configurations and components.
+
+As we have seen before, the two parts of the app depend on several components:
+
+* Redis
+* PostgreSQL
+* Meilisearch
+* Caddy
+
+We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used app. For Redis this could look like this:
+
+```python
+    @function
+    def redis(self) -> dagger.Service:
+        """Returns a redis service from a container built with the given params."""
+        return (
+            dag.container()
+            .from_("redis:alpine")
+            .with_exposed_port(6379)
+            .as_service()
+        )
+```
 
 
-### Task {{% param sectionnumber %}}.2: Add Trivy scan
+### Task {{% param sectionnumber %}}.1: Implement Services
 
-Now that everything is prepared, it's time to add the actual Trivy scan:
-Add a `ci` function, which returns a directory containing the scan results.
+Add the remaining Services as well. Consult [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml)
+for the required ports and params.
+
+While the implementations of PostgreSQL and Meilisearch are very similar and quite simple:
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
-    async def ci(self, context: dagger.Directory) -> dagger.Directory:
-        """Builds the front- and backend, performs a Trivy scan and returns the directory containing the reports."""
-        trivy = dag.trivy()
-
-        directory = (
-            dag.directory()
-            .with_file("scans/backend.sarif", trivy.container(await self.build(context)).report("sarif"))
-            .with_file("scans/frontend.sarif", trivy.container(await self.build(context.directory("frontend"))).report("sarif"))
+    def postgres(self) -> dagger.Service:
+        """Returns a postgres database service from a container built with the given params."""
+        return (
+            dag.container()
+            .from_("postgres:14-alpine")
+            .with_env_variable("POSTGRES_PASSWORD", "classquiz")
+            .with_env_variable("POSTGRES_DB", "classquiz")
+            .with_env_variable("POSTGRES_USER", "postgres")
+            .with_exposed_port(5432)
+            .as_service()
         )
-        return directory
+
+    @function
+    def meilisearch(self) -> dagger.Service:
+        """Returns a meilisearch service from a container built with the given params."""
+        return (
+            dag.container()
+            .from_("getmeili/meilisearch:v0.28.0")
+            .with_exposed_port(7700)
+            .as_service()
+        )
 ```
 {{% /details %}}
 
+The implementation of Caddy is a bit more sophisticated, as the proxy is our new entry point, which "glues" all the pieces together.
 
-### Task {{% param sectionnumber %}}.3: Run the ci from CLI
+Official documentation about how to [Bind services in functions](https://docs.dagger.io/manuals/developer/services/#bind-services-in-functions)
 
-Let's see if we can run it from the CLI and have a look at the results:
+{{% alert title="Note" color="primary" %}}
+Important detail from the docs: The name used for the service binding defines the host name to be used by the function!
+{{% /alert %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
-```bash
-dagger -m Classquiz call ci --context=. export --path=.tmp
+```python
+    @function
+    def proxy(self, context: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
+        """Returns a caddy proxy service encapsulating the front and backend services. This service must be bound to port 8000 in order to match some hard coded configuration: --ports 8000:8080"""
+        return (
+            dag.container()
+            .from_("caddy:alpine")
+            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.build(context).as_service())
+            .with_file("/etc/caddy/Caddyfile", proxy_config)
+            .with_exposed_port(8080)
+            .as_service()
+        )
 ```
 {{% /details %}}
 
-If everything went well, the scan results should be found in the directory `.tmp/scans/`.
+
+### Task {{% param sectionnumber %}}.2: Create separate Front- and Backend functions
+
+Our initial `build` function can be used to create both, front- and backend containers.
+But in fact, the two app parts require different config params and dependencies: The frontend only communicates with the api of the backend,
+which is encapsulated by the Caddy reverse proxy, while the backend relies on the services we created earlier.
+
+Hint: Start with the `backend` and adjust the host part of the urls used in `classquiz/config.py`.
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```python
+    @function
+    def backend(self, context: dagger.Directory) -> dagger.Service:
+        """Returns a backend service from a container built with the given context, params and service bindings."""
+        return (
+            dag.container()
+            .with_env_variable("MAX_WORKERS", "1")
+            .with_env_variable("PORT", "8081")
+            .with_service_binding("postgresd", self.postgres())
+            .with_service_binding("meilisearchd", self.meilisearch())
+            .with_service_binding("redisd", self.redis())
+            .build(context)
+            .as_service()
+        )
+```
+{{% /details %}}
+
+For convenience, the function returns directly a Service.
+
+And the `frontend`:
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```python
+    @function
+    def frontend(self, context: dagger.Directory) -> dagger.Service:
+        """Returns a frontend service from a container built with the given context and params."""
+        return (
+            dag.container()
+            .with_env_variable("API_URL", "http://api:8081")
+            .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
+            .build(context)
+            .as_service()
+        )
+```
+{{% /details %}}
+
+Now the two service bindings in the `proxy` function can be simplified a bit.
+
+Before:
+
+```python
+            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.build(context).as_service())
+```
+
+After:
+
+```python
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
+            .with_service_binding("api", self.backend(context))
+```
+
+Now we can finally run ClassQuiz locally:
+
+```bash
+dagger -m Classquiz call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
+```
+
+And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
 
 
 ### Complete Solution
@@ -162,7 +304,7 @@ class Classquiz:
 
     @function
     def meilisearch(self) -> dagger.Service:
-        """Returns a mailisearch service from a container built with the given params."""
+        """Returns a meilisearch service from a container built with the given params."""
         return (
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
@@ -193,20 +335,132 @@ class Classquiz:
             .as_service()
         )
 
-    @function
-    async def build(self, context: dagger.Directory) -> dagger.Container:
-        """Returns a container built with the given context."""
-        return await dag.container().build(context)
+```
 
-    @function
-    async def ci(self, context: dagger.Directory) -> dagger.Directory:
-        """Builds the front- and backend, performs a Trivy scan and returns the directory containing the reports."""
-        trivy = dag.trivy()
+`classquiz/config.py`:
 
-        directory = (
-            dag.directory()
-            .with_file("scans/backend.sarif", trivy.container(await self.build(context)).report("sarif"))
-            .with_file("scans/frontend.sarif", trivy.container(await self.build(context.directory("frontend"))).report("sarif"))
-        )
-        return directory
+```python
+# SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
+#
+# SPDX-License-Identifier: MPL-2.0
+
+import re
+from functools import lru_cache
+
+from redis import asyncio as redis_lib
+import redis as redis_base_lib
+from pydantic import BaseSettings, RedisDsn, PostgresDsn, BaseModel
+import meilisearch as MeiliSearch
+from typing import Optional
+from arq import create_pool
+from arq.connections import RedisSettings, ArqRedis
+
+from classquiz.storage import Storage
+
+
+class CustomOpenIDProvider(BaseModel):
+    scopes: str = "openid email profile"
+    server_metadata_url: str
+    client_id: str
+    client_secret: str
+
+
+class Settings(BaseSettings):
+    """
+    Settings class for the shop app.
+    """
+
+    root_address: str = "http://127.0.0.1:8000"
+    redis: RedisDsn = "redis://redisd:6379/0?decode_responses=True"
+    skip_email_verification: bool = True
+    db_url: str | PostgresDsn = "postgresql://postgres:classquiz@postgresd:5432/classquiz"
+    hcaptcha_key: str | None = None
+    recaptcha_key: str | None = None
+    mail_address: str = "some@example.org"
+    mail_password: str = "some@example.org"
+    mail_username: str = "some@example.org"
+    mail_server: str = "some.example.org"
+    mail_port: int = "525"
+    secret_key: str = "secret"
+    access_token_expire_minutes: int = 30
+    cache_expiry: int = 86400
+    sentry_dsn: str | None
+    meilisearch_url: str = "http://meilisearchd:7700"
+    meilisearch_index: str = "classquiz"
+    google_client_id: Optional[str]
+    google_client_secret: Optional[str]
+    github_client_id: Optional[str]
+    github_client_secret: Optional[str]
+    custom_openid_provider: CustomOpenIDProvider | None = None
+    telemetry_enabled: bool = True
+    free_storage_limit: int = 1074000000
+    pixabay_api_key: str | None = None
+    mods: list[str] = []
+    registration_disabled: bool = False
+
+    # storage_backend
+    storage_backend: str | None = "local"
+
+    # if storage_backend == "local":
+    storage_path: str | None = "/app/data"
+
+    # if storage_backend == "s3":
+    s3_access_key: str | None
+    s3_secret_key: str | None
+    s3_bucket_name: str = "classquiz"
+    s3_base_url: str | None
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        env_nested_delimiter = "__"
+
+
+async def initialize_arq():
+    # skipcq: PYL-W0603
+    global arq
+    arq = await create_pool(RedisSettings.from_dsn(settings.redis))
+
+
+@lru_cache()
+def settings() -> Settings:
+    return Settings()
+
+
+pool = redis_lib.ConnectionPool().from_url(settings().redis)
+
+redis: redis_base_lib.client.Redis = redis_lib.Redis(connection_pool=pool)
+arq: ArqRedis = ArqRedis(pool_or_conn=pool)
+storage: Storage = Storage(
+    backend=settings().storage_backend,
+    storage_path=settings().storage_path,
+    access_key=settings().s3_access_key,
+    secret_key=settings().s3_secret_key,
+    bucket_name=settings().s3_bucket_name,
+    base_url=settings().s3_base_url,
+)
+
+meilisearch = MeiliSearch.Client(settings().meilisearch_url)
+
+ALLOWED_TAGS_FOR_QUIZ = ["b", "strong", "i", "em", "small", "mark", "del", "sub", "sup"]
+
+ALLOWED_MIME_TYPES = ["image/png", "video/mp4", "image/jpeg", "image/gif", "image/webp"]
+
+server_regex = rf"^{re.escape(settings().root_address)}/api/v1/storage/download/.{{36}}--.{{36}}$"
+
+```
+
+`Cadyyfile-docker`:
+
+```yaml
+# SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
+#
+# SPDX-License-Identifier: MPL-2.0
+
+:8080 {
+    reverse_proxy * http://frontend:3000
+    reverse_proxy /api/* http://api:8081
+    reverse_proxy /openapi.json http://api:8081 # Only use if you need to serve the OpenAPI spec
+    reverse_proxy /socket.io/* http://api:8081
+}
 ```
