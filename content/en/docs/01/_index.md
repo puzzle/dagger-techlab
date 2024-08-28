@@ -51,7 +51,7 @@ Due to Daggers caching mechanism, subsequent calls will be executed much faster!
 
 ### Exploring Modules and Functions
 
-If you are curious, what other functions are available on this module, you can either have a look at its [source code](https://github.com/shykes/daggerverse/blob/main/hello/main.go)
+If you are curious, what other [Function](https://docs.dagger.io/api/reference/#definition-Function)s are available on this [Module](https://docs.dagger.io/api/reference/#definition-Module), you can either have a look at its [source code](https://github.com/shykes/daggerverse/blob/main/hello/main.go)
 or you can explore its functions using:
 
 ```bash
