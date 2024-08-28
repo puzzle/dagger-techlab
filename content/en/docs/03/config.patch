@@ -1,12 +1,17 @@
---- config.py	2024-08-27 09:12:30.871018892 +0200
-+++ config.py	2024-08-27 09:12:53.055075688 +0200
-@@ -30,16 +30,16 @@
+diff --git a/classquiz/config.py b/classquiz/config.py
+index b6f7635..fbc66d5 100644
+--- a/classquiz/config.py
++++ b/classquiz/config.py
+@@ -29,21 +29,21 @@ class Settings(BaseSettings):
+     """
  
      root_address: str = "http://127.0.0.1:8000"
-     redis: RedisDsn = "redis://localhost:6379/0?decode_responses=True"
+-    redis: RedisDsn = "redis://localhost:6379/0?decode_responses=True"
 -    skip_email_verification: bool = False
+-    db_url: str | PostgresDsn = "postgresql://postgres:mysecretpassword@localhost:5432/classquiz"
++    redis: RedisDsn = "redis://redisd:6379/0?decode_responses=True"
 +    skip_email_verification: bool = True
-     db_url: str | PostgresDsn = "postgresql://postgres:mysecretpassword@localhost:5432/classquiz"
++    db_url: str | PostgresDsn = "postgresql://postgres:classquiz@postgresd:5432/classquiz"
      hcaptcha_key: str | None = None
      recaptcha_key: str | None = None
 -    mail_address: str
@@ -24,7 +29,12 @@
      access_token_expire_minutes: int = 30
      cache_expiry: int = 86400
      sentry_dsn: str | None
-@@ -60,7 +60,7 @@
+-    meilisearch_url: str = "http://127.0.0.1:7700"
++    meilisearch_url: str = "http://meilisearchd:7700"
+     meilisearch_index: str = "classquiz"
+     google_client_id: Optional[str]
+     google_client_secret: Optional[str]
+@@ -60,7 +60,7 @@ class Settings(BaseSettings):
      storage_backend: str | None = "local"
  
      # if storage_backend == "local":

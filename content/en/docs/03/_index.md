@@ -10,13 +10,14 @@ sectionnumber: 3
 ### The Challenge
 
 After we have learned the basic Dagger Functions, we want to apply our new knowledge to solve a real life problem:
+
 We would like to conduct a survey regarding the popularity of the different Dagger SDKs!
 
 
 ### The Candidate
 
-Fortunately, there is a free open-source quiz app called [ClassQuiz](https://classquiz.de/)
-It allows the creation of shareable, fully customizable quizzes and surveys.
+Fortunately, there is a free open-source quiz app called [ClassQuiz](https://classquiz.de/)\
+It allows the creation of shareable, fully customizable quizzes and surveys.\
 The app is split in a frontend and an api part:
 
 * The frontend is written in type script and uses a redis memcache.
@@ -47,14 +48,48 @@ Since the app has some hard-coded configurations that would interfere with our s
 
 {{< /details >}}
 
+Create first the `config.patch` file in the root of your git folder. Then add the content of the above patch.
+
 ```bash
 patch classquiz/config.py < config.patch
 ```
 
-The app also binds the privileged port `80`, which would be an obstacle as well. So let's replace all occurrences of `:80` in `Caddyfile-docker` with `:8081` or another port of your choice.
+{{% alert title="Note" color="primary" %}}
 
+If patching does not work, overwrite the file `classquiz/config.py` with the content from the following `config.py` file.
 
-#### Initialize a Dagger Module
+{{< details title="show final config.py file" >}}
+
+{{< readfile file="config.py" code="true" lang="Python" >}}
+
+{{< /details >}}
+
+{{% /alert %}}
+
+The app also binds the privileged port `80`, which would be an obstacle as well.\
+So let's replace all occurrences of `:80` in `Caddyfile-docker` with `:8081`.\
+Additionally the missing protocol has to be added to the last `reverse_proxy` line. Add `http://` in front of `api:80`.
+
+Do it by hand or use the following `sed` commands:
+
+```bash
+sed -i 's# api:80# http://api:80#g' Caddyfile-docker
+sed -i 's#api:80#api:8081#g' Caddyfile-docker
+```
+
+If patching does not work, overwrite the file `Caddyfile-docker` with the content from the following `Caddyfile-docker` file.
+
+{{< details title="show final Caddyfile-docker file" >}}
+
+{{< readfile file="Caddyfile-docker" code="true" >}}
+
+{{< /details >}}
+
+#### Start using Dagger
+
+As we learnt in the first labs, Dagger functions are needed to encapsulate our pipeline functionality.
+
+In Dagger, everything is a Module, therefore the first step is to initialize a Dagger Module.
 
 A new Dagger module in Go, Python or TypeScript can be initialized by running `dagger init` inside the app's root directory,
 using the `--source` flag to specify a directory for the module's source code.
