@@ -124,14 +124,28 @@ As a first step, we could implement a simple `build` function:
 This allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
 
 ```bash
-dagger -m Classquiz call build --context=./frontend/ with-exposed-port --port=3000 as-service
+dagger call --mod Classquiz build --context=./frontend/ with-exposed-port --port=3000 as-service
 ```
+
+{{% alert title="Note" color="primary" %}}
+
+As we are in the root directory of the Dagger module, we do not need to provide the module (`--mod`) option.\
+This is the simplified command:
+
+```bash
+dagger call build --context=./frontend/ with-exposed-port --port=3000 as-service
+```
+{{% /alert %}}
+
+Use `Ctrl +c` to stop the container.
 
 And the backend as well:
 
 ```bash
-dagger -m Classquiz call build --context=. with-exposed-port --port=8000 as-service up
+dagger call build --context=. with-exposed-port --port=8000 as-service up
 ```
+
+Use `Ctrl +c` to stop the container.
 
 But if we have a closer look to the console output, we will discover some error messages due to missing configurations and components.
 
@@ -281,7 +295,7 @@ After:
 Now we can finally run ClassQuiz locally:
 
 ```bash
-dagger -m Classquiz call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
+dagger call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
 And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
