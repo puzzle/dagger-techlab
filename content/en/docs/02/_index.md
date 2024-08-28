@@ -20,7 +20,7 @@ It allows the creation of shareable, fully customizable quizzes and surveys.
 The app is split in a frontend and an api part:
 
 * The frontend is written in type script and uses a redis memcache.
-* The backend is mostly written in python, uses a postgreSQL database and mailisearch.
+* The backend is mostly written in python, uses a postgreSQL database and meilisearch.
 
 Caddy is used as reverse proxy to keep the parts together.
 
@@ -143,10 +143,9 @@ While the implementations of PostgreSQL and Meilisearch are very similar and qui
             .as_service()
         )
 
-
     @function
-    def mailisearch(self) -> dagger.Service:
-        """Returns a mailisearch service from a container built with the given params."""
+    def meilisearch(self) -> dagger.Service:
+        """Returns a meilisearch service from a container built with the given params."""
         return (
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
@@ -200,7 +199,7 @@ Hint: Start with the `backend` and adjust the host part of the urls used in `cla
             .with_env_variable("MAX_WORKERS", "1")
             .with_env_variable("PORT", "8081")
             .with_service_binding("postgresd", self.postgres())
-            .with_service_binding("mailisearchd", self.mailisearch())
+            .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
             .build(context)
             .as_service()
@@ -275,7 +274,6 @@ class Classquiz:
             .as_service()
         )
 
-
     @function
     def backend(self, context: dagger.Directory) -> dagger.Service:
         """Returns a backend service from a container built with the given context, params and service bindings."""
@@ -284,12 +282,11 @@ class Classquiz:
             .with_env_variable("MAX_WORKERS", "1")
             .with_env_variable("PORT", "8081")
             .with_service_binding("postgresd", self.postgres())
-            .with_service_binding("mailisearchd", self.mailisearch())
+            .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
             .build(context)
             .as_service()
         )
-
 
     @function
     def postgres(self) -> dagger.Service:
@@ -304,17 +301,15 @@ class Classquiz:
             .as_service()
         )
 
-
     @function
-    def mailisearch(self) -> dagger.Service:
-        """Returns a mailisearch service from a container built with the given params."""
+    def meilisearch(self) -> dagger.Service:
+        """Returns a meilisearch service from a container built with the given params."""
         return (
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
             .with_exposed_port(7700)
             .as_service()
         )
-
 
     @function
     def redis(self) -> dagger.Service:
@@ -325,7 +320,6 @@ class Classquiz:
             .with_exposed_port(6379)
             .as_service()
         )
-
 
     @function
     def proxy(self, context: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
@@ -390,7 +384,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     cache_expiry: int = 86400
     sentry_dsn: str | None
-    meilisearch_url: str = "http://mailisearchd:7700"
+    meilisearch_url: str = "http://meilisearchd:7700"
     meilisearch_index: str = "classquiz"
     google_client_id: Optional[str]
     google_client_secret: Optional[str]
