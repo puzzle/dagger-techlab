@@ -11,7 +11,7 @@ But there is more: Dagger allows you to reuse Dagger Functions developed by othe
 
 So let's visit the [Daggerverse](https://daggerverse.dev) and explore it a bit.
 Here we find hundreds of ready to use Dagger Modules - and each one of them extends Dagger with one or more additional Functions!
-We can also navigate to the (Git) repositories and inspect the source code of each published Module. 
+We can also navigate to the (Git) repositories and inspect the source code of each published Module.
 
 {{% alert title="Note" color="primary" %}}
 As Dagger Functions can call other functions across languages, the language a Module is written in doesn't matter!
@@ -20,6 +20,7 @@ As Dagger Functions can call other functions across languages, the language a Mo
 Let's search for [Trivy](https://trivy.dev/), a very popular open-source vulnerability scann tool
 At the time of writing, a search for `trivy` reveals six Modules (+1 just containing examples) -
 which leaves us with six different solutions to one problem :)
+
 
 ### Task {{% param sectionnumber %}}.1: Install a Module from Daggerverse
 
