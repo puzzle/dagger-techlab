@@ -372,8 +372,8 @@ To fix this, delete all cookies and session data.
 {{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
 <!-- markdownlint-restore -->
 
-`classquiz/config.py`:
 
+`classquiz/config.py`:
 
 {{< readfile file="solution/config.py" code="true" lang="Python" >}}
 
@@ -381,3 +381,54 @@ To fix this, delete all cookies and session data.
 `Cadyyfile-docker`:
 
 {{< readfile file="solution/Caddyfile-docker" code="true" lang="YAML" >}}
+
+<!--
+TODO: add frontend build by Dagger API 
+
+### Additional / Advanced
+
+
+    @function
+    def build_frontend(self, src: dagger.Directory) -> dagger.Container:
+        """Build and publish Docker container"""
+        # build container
+        builder = (
+            dag.container()
+            .from_("node:19-bullseye")
+            .with_env_variable("API_URL", "http://api:8081")
+            .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
+            # .with_env_variable("ENV API_URL", "https://mawoka.eu")
+            # .with_env_variable("ENV REDIS_URL", "redis://localhost:6379")
+            # .with_env_variable("ENV VITE_MAPBOX_ACCESS_TOKEN", "pk.eyJ1IjoibWF3b2thIiwiYSI6ImNsMjBob3d4ZjBhcGszYnE0bWp4aXB1ZW4ifQ.IByxV1qeIuEWpHCWsuB88A")
+            # .with_env_variable("ENV VITE_HCAPTCHA", "ee81b2a1-acf3-4d20-b2a4-a7ea94c7eba5") 
+            .with_directory("/usr/src/app", src)
+            .with_workdir("/usr/src/app")
+            .with_exec(["corepack", "enable"])
+            .with_exec(["corepack", "prepare", "pnpm@8.14.0", "--activate"])
+            .with_exec(["pnpm", "i"])
+            .with_exec(["pnpm", "run", "build"])
+        )
+
+        # runtime image
+        runtime_image = (
+            dag.container()
+            .from_("node:19-bullseye-slim")
+            .with_workdir("/app")
+            .with_file("/app/package.json", builder.file("/usr/src/app/package.json"))
+            .with_file("/app/pnpm-lock.yaml", builder.file("/usr/src/app/pnpm-lock.yaml"))
+            .with_exec(["corepack", "enable"])
+            .with_exec(["corepack", "prepare", "pnpm@8.14.0", "--activate"])
+            .with_exec(["pnpm", "i"])
+            .with_directory("/app/", builder.directory("/usr/src/app/build/"))
+            .with_directory("/app/node_modules/", builder.directory("/usr/src/app/node_modules/"))
+            .with_exec(["pnpm", "run", "run:prod"])
+            .with_exposed_port(3000)
+        )
+        return runtime_image
+
+
+{{% alert title="Note" color="primary" %}}
+When using dagger call, all names (functions, arguments, struct fields, etc) are converted into a shell-friendly "kebab-case" style.
+{{% /alert %}}
+
+-->
