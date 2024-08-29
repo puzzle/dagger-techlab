@@ -2,7 +2,7 @@ import dagger
 from dagger import dag, function, object_type
 
 @object_type
-class Classquiz:
+class ClassQuiz:
 
     @function
     def frontend(self, context: dagger.Directory) -> dagger.Service:
