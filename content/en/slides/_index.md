@@ -8,13 +8,10 @@ menu:
 
 {{< blocks/section color="light">}}
 
-{{% blocks/feature icon="fa-chalkboard-teacher" url="https://changeme" title="Slide 1" %}}
+{{% blocks/feature icon="fa-chalkboard-teacher" url="Dagger-Puzzle-Training-1-Intro.pdf" title="Intro to Dagger" %}}
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fa-chalkboard-teacher" url="https://changeme" title="Slide 12" %}}
-{{% /blocks/feature %}}
-
-{{% blocks/feature icon="fa-chalkboard-teacher" url="https://changeme" title="Slide 3" %}}
+{{% blocks/feature icon="fa-chalkboard-teacher" url="Dagger-Puzzle-Training-2-Extended.pdf" title="Dagger Concepts" %}}
 {{% /blocks/feature %}}
 
 {{< /blocks/section >}}
