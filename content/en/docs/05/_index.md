@@ -13,6 +13,7 @@ It is time to write pipelines. This is why we are here.
 
 Good, that we already have some functions, that we can reuse.
 
+
 ### Task {{% param sectionnumber %}}.1: Create CI function
 
 Now that everything is prepared, it's time to add the actual Trivy scan:
