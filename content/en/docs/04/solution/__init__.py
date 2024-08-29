@@ -1,27 +1,16 @@
----
-title: "5. Pipeline integration"
-weight: 5
-sectionnumber: 5
----
+import dagger
+from dagger import dag, function, object_type
 
-## {{% param sectionnumber %}}. Pipeline integration
+@object_type
+class ClassQuiz:
 
-
-### The Challenge
-
-It is time to write pipelines. This is why we are here.
-
-Good, that we already have some functions, that we can reuse.
-
-### Task {{% param sectionnumber %}}.1: Create CI function
-
-Now that everything is prepared, it's time to add the actual Trivy scan:
-Add a `ci` function, which returns a directory containing the scan results.
-
-{{% details title="show solution" mode-switcher="normalexpertmode" %}}
-```python
     @function
-    async def ci(self, context: dagger.Directory) -> dagger.Directory:
+    async def build(self, context: dagger.Directory) -> dagger.Container:
+        """Returns a container built with the given context."""
+        return await dag.container().build(context)
+
+    @function
+    async def vulnerability_scan(self, context: dagger.Directory) -> dagger.Directory:
         """Builds the front- and backend, performs a Trivy scan and returns the directory containing the reports."""
         trivy = dag.trivy()
 
@@ -31,34 +20,6 @@ Add a `ci` function, which returns a directory containing the scan results.
             .with_file("scans/frontend.sarif", trivy.container(await self.build(context.directory("frontend"))).report("sarif"))
         )
         return directory
-```
-{{% /details %}}
-
-
-### Task {{% param sectionnumber %}}.2: Run the ci from CLI
-
-Let's see if we can run it from the CLI and have a look at the results:
-
-{{% details title="show solution" mode-switcher="normalexpertmode" %}}
-```bash
-dagger -m Classquiz call ci --context=. export --path=.tmp
-```
-{{% /details %}}
-
-If everything went well, the scan results should be found in the directory `.tmp/scans/`.
-
-
-### Complete Solution
-
-`ci/src/main/__init__.py`:
-
-```python
-import dagger
-from dagger import dag, function, object_type
-
-
-@object_type
-class ClassQuiz:
 
     @function
     def frontend(self, context: dagger.Directory) -> dagger.Service:
@@ -100,7 +61,7 @@ class ClassQuiz:
 
     @function
     def meilisearch(self) -> dagger.Service:
-        """Returns a mailisearch service from a container built with the given params."""
+        """Returns a meilisearch service from a container built with the given params."""
         return (
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
@@ -130,21 +91,3 @@ class ClassQuiz:
             .with_exposed_port(8080)
             .as_service()
         )
-
-    @function
-    async def build(self, context: dagger.Directory) -> dagger.Container:
-        """Returns a container built with the given context."""
-        return await dag.container().build(context)
-
-    @function
-    async def ci(self, context: dagger.Directory) -> dagger.Directory:
-        """Builds the front- and backend, performs a Trivy scan and returns the directory containing the reports."""
-        trivy = dag.trivy()
-
-        directory = (
-            dag.directory()
-            .with_file("scans/backend.sarif", trivy.container(await self.build(context)).report("sarif"))
-            .with_file("scans/frontend.sarif", trivy.container(await self.build(context.directory("frontend"))).report("sarif"))
-        )
-        return directory
-```

@@ -127,3 +127,13 @@ When using dagger call, all names (functions, arguments, struct fields, etc) are
 {{% /alert %}}
 
 If everything went well, the scan results should be found in the directory `.tmp/scans/`.
+
+
+### Complete Solution
+
+`ci/src/main/__init__.py`:
+
+<!-- markdownlint-capture -->
+<!-- markdownlint-disable -->
+{{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
+<!-- markdownlint-restore -->
