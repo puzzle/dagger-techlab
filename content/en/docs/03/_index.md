@@ -4,7 +4,8 @@ weight: 3
 sectionnumber: 3
 ---
 
-## {{% param sectionnumber %}}. Daggerize an App
+
+## Daggerize an App
 
 
 ### The Challenge
@@ -85,6 +86,7 @@ If patching does not work, overwrite the file `Caddyfile-docker` with the conten
 
 {{< /details >}}
 
+
 #### Start using Dagger
 
 As we learnt in the first labs, Dagger functions are needed to encapsulate our pipeline functionality.
@@ -107,9 +109,22 @@ The configuration file sets the name of the module to the name of the current di
 
 ## Run the App locally
 
-The generated `ci/src/main/__init__.py` is the starting point, which needs to be extended.
+The generated `ci/src/main/__init__.py` is the starting point, which needs to be extended.\
+It has already some example functions that are ready to use or extend.
+
+The ClassQuiz repository has two Dockerfile. One to build the frontend and one to build the backend.\
+A starting point is to use the Dockerfile for a Docker build.\
+The resulting Docker image can be used to run the app inside a container.
 
 As a first step, we could implement a simple `build` function:
+
+* function name: `build`
+* argument: `context` - the folder containing the Docker build context, including the Dockerfile
+* return: a Dagger Container
+
+{{% alert title="Note" color="primary" %}}
+The Dagger Engine has no access to your host computer. Therefore you have to explicitly provide folders as arguments.
+{{% /alert %}}
 
 ```python
     @function
@@ -121,11 +136,27 @@ As a first step, we could implement a simple `build` function:
         )
 ```
 
-This allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
+The entrypoint to accessing the Dagger API from your own module's code is `dag`, the Dagger client, which is pre-initialized.\
+It contains all the core types (like Container, Directory, etc.), as well as bindings to any dependencies your module has declared.
+
+The [Python SDK Reference](https://dagger-io.readthedocs.org/) documents all Dagger API types and functions.\
+Our function starts by creating a container (`dag.container()`).
+[Here](https://dagger-io.readthedocs.io/en/sdk-python-v0.12.5/client.html#dagger.Container) is the reference to the Python documentation.
+
+The [build](https://dagger-io.readthedocs.io/en/sdk-python-v0.12.5/client.html#dagger.Container.build) executes the Docker build with the given files.
+
+This function allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
 
 ```bash
-dagger call --mod Classquiz build --context=./frontend/ with-exposed-port --port=3000 as-service
+dagger call --mod ClassQuiz build --context=./frontend/ with-exposed-port --port=3000 as-service up
 ```
+
+Here we do the previous explained [Function Chaining](https://docs.dagger.io/manuals/user/chaining).
+
+* Our `build` method returns a Dagger container.
+* `with-exposed-port --port=3000` opens the port to the Container (expose)
+* `as-service` Turn the container into a Service that runs the app.
+* `up` Opens the connection to the app Service. (Creates a tunnel that forwards traffic from the caller’s network to this service.)
 
 {{% alert title="Note" color="primary" %}}
 
@@ -133,13 +164,13 @@ As we are in the root directory of the Dagger module, we do not need to provide 
 This is the simplified command:
 
 ```bash
-dagger call build --context=./frontend/ with-exposed-port --port=3000 as-service
+dagger call build --context=./frontend/ with-exposed-port --port=3000 as-service up
 ```
 {{% /alert %}}
 
 Use `Ctrl +c` to stop the container.
 
-And the backend as well:
+And the backend as well with its context folder:
 
 ```bash
 dagger call build --context=. with-exposed-port --port=8000 as-service up
@@ -156,7 +187,8 @@ As we have seen before, the two parts of the app depend on several components:
 * Meilisearch
 * Caddy
 
-We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used app. For Redis this could look like this:
+We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used app.
+For Redis this could look like this:
 
 ```python
     @function
@@ -170,11 +202,23 @@ We have to implement each component as a [Service](https://docs.dagger.io/manual
         )
 ```
 
+{{% alert title="Note" color="primary" %}}
+This Container build does not use a Dockerfile. The Container is defined using the Dagger API.\
+The exposing to a Service, that we did with Bash before, is done in the function.
+{{% /alert %}}
+
+Add the redis function to your module.
+
 
 ### Task {{% param sectionnumber %}}.1: Implement Services
 
 Add the remaining Services as well. Consult [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml)
 for the required ports and params.
+
+{{% alert title="Note" color="primary" %}}
+A simple check for your function code is to run `dagger functions`. This will build/compile your code including all Dagger dependencies.\
+When you see your functions listed, then the syntax is right.
+{{% /alert %}}
 
 While the implementations of PostgreSQL and Meilisearch are very similar and quite simple:
 
@@ -230,14 +274,26 @@ Important detail from the docs: The name used for the service binding defines th
 ```
 {{% /details %}}
 
+You could try to run the ClassQuiz app now. But it will not work because of some missing configuration.
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+```
+dagger call proxy --context . --proxy-config Caddyfile-docker up --ports 8000:8080
+```
+{{% /details %}}
+
 
 ### Task {{% param sectionnumber %}}.2: Create separate Front- and Backend functions
 
-Our initial `build` function can be used to create both, front- and backend containers.
-But in fact, the two app parts require different config params and dependencies: The frontend only communicates with the api of the backend,
+Our initial `build` function can be used to create both, front- and backend containers.\
+But in fact, the two app parts require different config params and dependencies:\
+The frontend only communicates with the api of the backend,
 which is encapsulated by the Caddy reverse proxy, while the backend relies on the services we created earlier.
 
-Hint: Start with the `backend` and adjust the host part of the urls used in `classquiz/config.py`.
+Hints:
+
+* Start with the `backend` and adjust the host part of the urls used in `classquiz/config.py`.
+* For `PORT` use the port that you set inside the `Caddyfile-docker` earlier in this lab.
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
@@ -298,218 +354,30 @@ Now we can finally run ClassQuiz locally:
 dagger call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
-And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
+And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can register, log in and create our survey!
+
+
+{{% alert title="Note" color="primary" %}}
+Sometimes old cookies or session storage corrupts the app.\
+To fix this, delete all cookies and session data.
+{{% /alert %}}
 
 
 ### Complete Solution
 
 `ci/src/main/__init__.py`:
 
-```python
-import dagger
-from dagger import dag, function, object_type
-
-
-@object_type
-class Classquiz:
-
-    @function
-    def frontend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a frontend service from a container built with the given context and params."""
-        return (
-            dag.container()
-            .with_env_variable("API_URL", "http://api:8081")
-            .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
-            .build(context)
-            .as_service()
-        )
-
-    @function
-    def backend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a backend service from a container built with the given context, params and service bindings."""
-        return (
-            dag.container()
-            .with_env_variable("MAX_WORKERS", "1")
-            .with_env_variable("PORT", "8081")
-            .with_service_binding("postgresd", self.postgres())
-            .with_service_binding("meilisearchd", self.meilisearch())
-            .with_service_binding("redisd", self.redis())
-            .build(context)
-            .as_service()
-        )
-
-    @function
-    def postgres(self) -> dagger.Service:
-        """Returns a postgres database service from a container built with the given params."""
-        return (
-            dag.container()
-            .from_("postgres:14-alpine")
-            .with_env_variable("POSTGRES_PASSWORD", "classquiz")
-            .with_env_variable("POSTGRES_DB", "classquiz")
-            .with_env_variable("POSTGRES_USER", "postgres")
-            .with_exposed_port(5432)
-            .as_service()
-        )
-
-    @function
-    def meilisearch(self) -> dagger.Service:
-        """Returns a meilisearch service from a container built with the given params."""
-        return (
-            dag.container()
-            .from_("getmeili/meilisearch:v0.28.0")
-            .with_exposed_port(7700)
-            .as_service()
-        )
-
-    @function
-    def redis(self) -> dagger.Service:
-        """Returns a redis service from a container built with the given params."""
-        return (
-            dag.container()
-            .from_("redis:alpine")
-            .with_exposed_port(6379)
-            .as_service()
-        )
-
-    @function
-    def proxy(self, context: dagger.Directory, proxy_config: dagger.File) -> dagger.Service:
-        """Returns a caddy proxy service encapsulating the front and backend services. This service must be bound to port 8000 in order to match some hard coded configuration: --ports 8000:8080"""
-        return (
-            dag.container()
-            .from_("caddy:alpine")
-            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
-            .with_service_binding("api", self.backend(context))
-            .with_file("/etc/caddy/Caddyfile", proxy_config)
-            .with_exposed_port(8080)
-            .as_service()
-        )
-
-```
+<!-- markdownlint-capture -->
+<!-- markdownlint-disable -->
+{{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
+<!-- markdownlint-restore -->
 
 `classquiz/config.py`:
 
-```python
-# SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
-#
-# SPDX-License-Identifier: MPL-2.0
 
-import re
-from functools import lru_cache
+{{< readfile file="solution/config.py" code="true" lang="Python" >}}
 
-from redis import asyncio as redis_lib
-import redis as redis_base_lib
-from pydantic import BaseSettings, RedisDsn, PostgresDsn, BaseModel
-import meilisearch as MeiliSearch
-from typing import Optional
-from arq import create_pool
-from arq.connections import RedisSettings, ArqRedis
-
-from classquiz.storage import Storage
-
-
-class CustomOpenIDProvider(BaseModel):
-    scopes: str = "openid email profile"
-    server_metadata_url: str
-    client_id: str
-    client_secret: str
-
-
-class Settings(BaseSettings):
-    """
-    Settings class for the shop app.
-    """
-
-    root_address: str = "http://127.0.0.1:8000"
-    redis: RedisDsn = "redis://redisd:6379/0?decode_responses=True"
-    skip_email_verification: bool = True
-    db_url: str | PostgresDsn = "postgresql://postgres:classquiz@postgresd:5432/classquiz"
-    hcaptcha_key: str | None = None
-    recaptcha_key: str | None = None
-    mail_address: str = "some@example.org"
-    mail_password: str = "some@example.org"
-    mail_username: str = "some@example.org"
-    mail_server: str = "some.example.org"
-    mail_port: int = "525"
-    secret_key: str = "secret"
-    access_token_expire_minutes: int = 30
-    cache_expiry: int = 86400
-    sentry_dsn: str | None
-    meilisearch_url: str = "http://meilisearchd:7700"
-    meilisearch_index: str = "classquiz"
-    google_client_id: Optional[str]
-    google_client_secret: Optional[str]
-    github_client_id: Optional[str]
-    github_client_secret: Optional[str]
-    custom_openid_provider: CustomOpenIDProvider | None = None
-    telemetry_enabled: bool = True
-    free_storage_limit: int = 1074000000
-    pixabay_api_key: str | None = None
-    mods: list[str] = []
-    registration_disabled: bool = False
-
-    # storage_backend
-    storage_backend: str | None = "local"
-
-    # if storage_backend == "local":
-    storage_path: str | None = "/app/data"
-
-    # if storage_backend == "s3":
-    s3_access_key: str | None
-    s3_secret_key: str | None
-    s3_bucket_name: str = "classquiz"
-    s3_base_url: str | None
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        env_nested_delimiter = "__"
-
-
-async def initialize_arq():
-    # skipcq: PYL-W0603
-    global arq
-    arq = await create_pool(RedisSettings.from_dsn(settings.redis))
-
-
-@lru_cache()
-def settings() -> Settings:
-    return Settings()
-
-
-pool = redis_lib.ConnectionPool().from_url(settings().redis)
-
-redis: redis_base_lib.client.Redis = redis_lib.Redis(connection_pool=pool)
-arq: ArqRedis = ArqRedis(pool_or_conn=pool)
-storage: Storage = Storage(
-    backend=settings().storage_backend,
-    storage_path=settings().storage_path,
-    access_key=settings().s3_access_key,
-    secret_key=settings().s3_secret_key,
-    bucket_name=settings().s3_bucket_name,
-    base_url=settings().s3_base_url,
-)
-
-meilisearch = MeiliSearch.Client(settings().meilisearch_url)
-
-ALLOWED_TAGS_FOR_QUIZ = ["b", "strong", "i", "em", "small", "mark", "del", "sub", "sup"]
-
-ALLOWED_MIME_TYPES = ["image/png", "video/mp4", "image/jpeg", "image/gif", "image/webp"]
-
-server_regex = rf"^{re.escape(settings().root_address)}/api/v1/storage/download/.{{36}}--.{{36}}$"
-
-```
 
 `Cadyyfile-docker`:
 
-```yaml
-# SPDX-FileCopyrightText: 2023 Marlon W (Mawoka)
-#
-# SPDX-License-Identifier: MPL-2.0
-
-:8080 {
-    reverse_proxy * http://frontend:3000
-    reverse_proxy /api/* http://api:8081
-    reverse_proxy /openapi.json http://api:8081 # Only use if you need to serve the OpenAPI spec
-    reverse_proxy /socket.io/* http://api:8081
-}
-```
+{{< readfile file="solution/Caddyfile-docker" code="true" lang="YAML" >}}
