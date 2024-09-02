@@ -21,8 +21,8 @@ Fortunately, there is a free open-source quiz app called [ClassQuiz](https://cla
 It allows the creation of shareable, fully customizable quizzes and surveys.\
 The app is split in a frontend and an api part:
 
-* The frontend is written in type script and uses a redis memcache.
-* The backend is mostly written in python, uses a postgreSQL database and meilisearch.
+* The frontend is written in type script and uses a Redis memcache.
+* The backend is mostly written in python, uses a PostgreSQL database and Meilisearch.
 
 Caddy is used as reverse proxy to keep the parts together.
 
@@ -61,7 +61,7 @@ If patching does not work, overwrite the file `classquiz/config.py` with the con
 
 {{< details title="show final config.py file" >}}
 
-{{< readfile file="config.py" code="true" lang="Python" >}}
+{{< readfile file="solution/config.py" code="true" lang="Python" >}}
 
 {{< /details >}}
 
@@ -82,7 +82,7 @@ If patching does not work, overwrite the file `Caddyfile-docker` with the conten
 
 {{< details title="show final Caddyfile-docker file" >}}
 
-{{< readfile file="Caddyfile-docker" code="true" >}}
+{{< readfile file="solution/Caddyfile-docker" code="true" >}}
 
 {{< /details >}}
 
