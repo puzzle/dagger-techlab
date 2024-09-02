@@ -73,7 +73,7 @@ But after what we learned previously, we will, of course, use the functions of t
 ### Extending our codebase
 
 The Trivy Module has a `container()` function, which expects [Container](https://docs.dagger.io/api/reference/#definition-Container) as argument.
-As our existing `frontend()` and `backend()` return [Service](https://docs.dagger.io/api/reference/#definition-Service)s, we need an additional functions.
+As our existing `frontend()` and `backend()` return a [Service](https://docs.dagger.io/api/reference/#definition-Service), we need an additional functions.
 
 Since the only difference in creating these containers is the path in which they are built, we will combine them into a single function:
 
