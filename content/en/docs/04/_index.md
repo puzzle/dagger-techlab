@@ -14,12 +14,16 @@ Here we find hundreds of ready to use Dagger Modules - and each one of them exte
 We can also navigate to the (Git) repositories and inspect the source code of each published Module.
 
 {{% alert title="Note" color="primary" %}}
-As Dagger Functions can call other functions across languages, the language a Module is written in doesn't matter!
+There are also several Modules published by [Puzzle](https://daggerverse.dev/search?q=puzzle)
 {{% /alert %}}
 
 Let's search for [Trivy](https://trivy.dev/), a very popular open-source vulnerability scann tool
 At the time of writing, a search for `trivy` reveals six Modules (+1 just containing examples) -
 which leaves us with six different solutions to one problem :)
+
+{{% alert title="Note" color="primary" %}}
+As Dagger Functions can call other functions across languages, the language a Module is written in doesn't matter!
+{{% /alert %}}
 
 
 ### Task {{% param sectionnumber %}}.1: Install a Module from Daggerverse

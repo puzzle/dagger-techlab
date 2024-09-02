@@ -127,18 +127,26 @@ To pass a Boolean argument to a Dagger Function, simply add the corresponding fl
 * To set the argument to true: `--foo=true`, or simply `--foo`
 * To set the argument to false: `--foo=false`, or just omit the argument as the default is usually false
 
+True:
+
 ```bash
-# true
 # explicit
 dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=true
+```
+
+```bash
 # implicit
 dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout
 ```
 
+False:
+
 ```bash
-# false
 # explicit
 dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=false
+```
+
+```bash
 # implicit
 dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello
 ```
@@ -151,10 +159,13 @@ You can also pass a Directory argument. To do so, add the corresponding flag, fo
 In **both** cases, the `dagger` CLI will convert it to an object referencing the contents of that filesystem path or Git repository location,
 and pass the resulting `Directory` object as argument to the Dagger Function.
 
+Filesystem path:
 ```bash
-# filesystem path
 dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=/usr/bin
-# Git repository
+```
+
+Git repository:
+```bash
 dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=https://github.com/puzzle/action-owasp-dependecy-track-check
 ```
 
