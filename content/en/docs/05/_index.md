@@ -4,7 +4,7 @@ weight: 5
 sectionnumber: 5
 ---
 
-## {{% param sectionnumber %}}. Pipeline integration
+## Pipeline integration
 
 
 ### The Challenge

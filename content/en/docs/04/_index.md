@@ -4,7 +4,7 @@ weight: 4
 sectionnumber: 4
 ---
 
-## {{% param sectionnumber %}}. Daggerverse and Modules
+## Daggerverse and Modules
 
 Until here, we have successfully daggerized an application using the Dagger API.
 But there is more: Dagger allows you to reuse Dagger Functions developed by others, which were published to the [Daggerverse](https://daggerverse.dev)!
