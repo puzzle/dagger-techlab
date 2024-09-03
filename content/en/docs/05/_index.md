@@ -49,7 +49,7 @@ Let's see if we can run it from the CLI and have a look at the results:
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger -m Classquiz call ci --context=. export --path=.tmp
+dagger call ci --context=. export --path=.tmp
 ```
 {{% /details %}}
 

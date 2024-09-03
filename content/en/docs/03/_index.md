@@ -251,8 +251,8 @@ Important detail from the docs: The name used for the service binding defines th
 You could try to run the ClassQuiz app now. But it will not work because of some missing configuration.
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
-```
-dagger call proxy --context . --proxy-config Caddyfile-docker up --ports 8000:8080
+```bash
+dagger call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 {{% /details %}}
 
