@@ -41,33 +41,7 @@ git clone https://github.com/mawoka-myblock/ClassQuiz.git
 Get familiar with the source - take a closer look at the [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml),
 which is particularly interesting for our purpose.
 
-Since the app has some hard-coded configurations that would interfere with our setup, let's apply the following [patch](config.patch) to the `classquiz/config.py`:
-
-{{< details title="show patch" mode-switcher="normalexpertmode" >}}
-
-{{% readAndHighlight file="config.patch" code="true" lang="patch" highlight="hl_lines=8 18-23 32" %}}
-
-{{< /details >}}
-
-Create first the `config.patch` file in the root of your git folder. Then add the content of the above patch.
-
-```bash
-patch classquiz/config.py < config.patch
-```
-
-{{% alert title="Note" color="primary" %}}
-
-If patching does not work, overwrite the file `classquiz/config.py` with the content from the following `config.py` file.
-
-{{< details title="show final config.py file" >}}
-
-{{< readfile file="solution/config.py" code="true" lang="Python" >}}
-
-{{< /details >}}
-
-{{% /alert %}}
-
-The app also binds the privileged port `80`, which would be an obstacle as well.\
+The app binds the privileged port `80`, which would be an obstacle.\
 So let's replace all occurrences of `:80` in `Caddyfile-docker` with `:8081`.\
 Additionally the missing protocol has to be added to the last `reverse_proxy` line. Add `http://` in front of `api:80`.
 
@@ -304,6 +278,17 @@ Hints:
             dag.container()
             .with_env_variable("MAX_WORKERS", "1")
             .with_env_variable("PORT", "8081")
+            .with_env_variable("REDIS", "redis://redisd:6379/0?decode_responses=True")
+            .with_env_variable("SKIP_EMAIL_VERIFICATION", "True")
+            .with_env_variable("DB_URL", "postgresql://postgres:classquiz@postgresd:5432/classquiz")
+            .with_env_variable("MAIL_ADDRESS", "some@example.org")
+            .with_env_variable("MAIL_PASSWORD", "some@example.org")
+            .with_env_variable("MAIL_USERNAME", "some@example.org")
+            .with_env_variable("MAIL_SERVER", "some.example.org")
+            .with_env_variable("MAIL_PORT", "525")
+            .with_env_variable("SECRET_KEY", "secret")
+            .with_env_variable("MEILISEARCH_URL", "http://meilisearchd:7700")
+            .with_env_variable("STORAGE_PATH", "/app/data")
             .with_service_binding("postgresd", self.postgres())
             .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
@@ -371,12 +356,6 @@ To fix this, delete all cookies and session data.
 <!-- markdownlint-disable -->
 {{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
 <!-- markdownlint-restore -->
-
-
-`classquiz/config.py`:
-
-{{< readfile file="solution/config.py" code="true" lang="Python" >}}
-
 
 `Cadyyfile-docker`:
 

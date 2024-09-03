@@ -36,7 +36,7 @@ Add a `ci` function, that first runs the python tests and then returns a directo
 ```python
     @function
     async def ci(self, context: dagger.Directory) -> dagger.Directory:
-        """Run all pipeline stages"""
+        """Run all pipeline stages."""
         await self.pytest(context)
         return await self.vulnerability_scan(context)
 ```

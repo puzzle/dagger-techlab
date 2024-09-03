@@ -39,13 +39,14 @@ class ClassQuiz:
         return directory
 
     @function
-    def frontend(self, context: dagger.Directory) -> dagger.Container:
+    def frontend(self, context: dagger.Directory) -> dagger.Service:
         """Returns a frontend service from a container built with the given context and params."""
         return (
             dag.container()
             .with_env_variable("API_URL", "http://api:8081")
             .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
             .build(context)
+            .as_service()
         )
 
     @function
@@ -55,6 +56,17 @@ class ClassQuiz:
             dag.container()
             .with_env_variable("MAX_WORKERS", "1")
             .with_env_variable("PORT", "8081")
+            .with_env_variable("REDIS", "redis://redisd:6379/0?decode_responses=True")
+            .with_env_variable("SKIP_EMAIL_VERIFICATION", "True")
+            .with_env_variable("DB_URL", "postgresql://postgres:classquiz@postgresd:5432/classquiz")
+            .with_env_variable("MAIL_ADDRESS", "some@example.org")
+            .with_env_variable("MAIL_PASSWORD", "some@example.org")
+            .with_env_variable("MAIL_USERNAME", "some@example.org")
+            .with_env_variable("MAIL_SERVER", "some.example.org")
+            .with_env_variable("MAIL_PORT", "525")
+            .with_env_variable("SECRET_KEY", "secret")
+            .with_env_variable("MEILISEARCH_URL", "http://meilisearchd:7700")
+            .with_env_variable("STORAGE_PATH", "/app/data")
             .with_service_binding("postgresd", self.postgres())
             .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
@@ -101,8 +113,7 @@ class ClassQuiz:
         return (
             dag.container()
             .from_("caddy:alpine")
-            # .with_service_binding("frontend", self.frontend(context.directory("frontend")))
-            .with_service_binding("frontend", self.build_frontend(context.directory("frontend")).as_service())
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
             .with_service_binding("api", self.backend(context))
             .with_file("/etc/caddy/Caddyfile", proxy_config)
             .with_exposed_port(8080)
