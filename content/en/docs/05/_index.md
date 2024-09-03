@@ -56,6 +56,23 @@ dagger -m Classquiz call ci --context=. export --path=.tmp
 If everything went well, the scan results should again be found in the directory `.tmp/scans/`.
 
 
+### Task {{% param sectionnumber %}}.3: Add GitHub action
+
+As final step, we need to call the `ci` function an every push to the repository.
+
+Have a look at [Dagger for GitHub](https://github.com/marketplace/actions/dagger-for-github) first
+and then add the action to your fork on GitHub. Keep it simple and trigger the pipeline with every push on every branch.
+
+{{% details title="show solution" mode-switcher="normalexpertmode" %}}
+<!-- markdownlint-capture -->
+<!-- markdownlint-disable -->
+{{< readfile file="solution/dagger.yml" code="true" lang="Yaml" >}}
+<!-- markdownlint-restore -->
+{{% /details %}}
+
+Add or alter something, push it to the repo and see if the action runs as expected.
+
+
 ### Complete Solution
 
 
@@ -64,4 +81,11 @@ If everything went well, the scan results should again be found in the directory
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable -->
 {{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
+<!-- markdownlint-restore -->
+
+`dagger.yml`:
+
+<!-- markdownlint-capture -->
+<!-- markdownlint-disable -->
+{{< readfile file="solution/dagger.yml" code="true" lang="Yaml" >}}
 <!-- markdownlint-restore -->

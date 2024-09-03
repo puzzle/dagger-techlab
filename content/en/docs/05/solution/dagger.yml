@@ -1,0 +1,15 @@
+name: CI Pipeline
+on: [ push ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: test and scan
+        uses: dagger/dagger-for-github@v6
+        with:
+          version: latest
+          verb: call
+          module: .
+          args: ci --context=. export --path=.
