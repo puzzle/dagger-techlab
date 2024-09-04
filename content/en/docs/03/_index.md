@@ -266,8 +266,26 @@ which is encapsulated by the Caddy reverse proxy, while the backend relies on th
 
 Hints:
 
-* Start with the `backend` and adjust the host part of the urls used in `classquiz/config.py`.
+* Start with the `backend` and pass the required environment variables found in the `docker-compose.yml`.
 * For `PORT` use the port that you set inside the `Caddyfile-docker` earlier in this lab.
+
+{{% details title="show required environment variables" mode-switcher="normalexpertmode" %}}
+```
+MAX_WORKERS
+PORT
+REDIS
+SKIP_EMAIL_VERIFICATION
+DB_URL
+MAIL_ADDRESS
+MAIL_PASSWORD
+MAIL_USERNAME
+MAIL_SERVER
+MAIL_PORT
+SECRET_KEY
+MEILISEARCH_URL
+STORAGE_PATH
+```
+{{% /details %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
