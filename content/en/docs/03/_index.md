@@ -77,8 +77,22 @@ dagger init --sdk=python --source=./ci
 ```
 
 This leaves us with a generated `dagger.json` module metadata file, an initial `ci/src/main/__init__.py` source code template, `ci/pyproject.toml` and
-`ci/requirements.lock` files, as well as a generated `ci/sdk` folder for local development.
+`ci/requirements.lock` files, as well as a generated `ci/sdk` folder for local development.\
 The configuration file sets the name of the module to the name of the current directory, unless an alternative is specified with the `--name` argument.
+
+To check if the module works and what example functions are created, run the `functions` command.
+
+```bash
+$ dagger functions
+Full trace at https://dagger.cloud/ (rotate dagger.cloud token for full url)
+
+✔ connect 1.1s
+✔ initialize 9.6s
+
+Name             Description
+container-echo   Returns a container that echoes whatever string argument is provided
+grep-dir         Returns lines that match a pattern in the files of the provided Directory
+```
 
 
 ## Run the App locally
@@ -119,10 +133,11 @@ Our function starts by creating a container (`dag.container()`).
 
 The [build](https://dagger-io.readthedocs.io/en/sdk-python-v0.12.7/client.html#dagger.Container.build) executes the Docker build with the given files.
 
-This function allows us to build the frontend and expose it as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
+This function allows us to build the frontend as Container.\
+With function chaining we expose the container as a [Service](https://docs.dagger.io/manuals/developer/services) to the [localhost](https://docs.dagger.io/manuals/developer/services#expose-services-returned-by-functions-to-the-host) on port 3000:
 
 ```bash
-dagger call --mod ClassQuiz build --context=./frontend/ with-exposed-port --port=3000 as-service up
+dagger call --mod ./ci/ build --context=./frontend/ with-exposed-port --port=3000 as-service up
 ```
 
 Here we do the previous explained [Function Chaining](https://docs.dagger.io/manuals/user/chaining).
@@ -150,9 +165,48 @@ And the backend as well with its context folder:
 dagger call build --context=. with-exposed-port --port=8000 as-service up
 ```
 
-Use `Ctrl +c` to stop the container.
+{{% alert title="Warning" color="primary" %}}
+Unfortunately the Dagger call stops. We have to analyze this!
+{{% /alert %}}
 
-But if we have a closer look to the console output, we will discover some error messages due to missing configurations and components.
+We do not see the logs of the app in the output of the Dagger call.\
+Therefore we try to make the output more verbose. This is implemented with the `-v` option.
+
+Run the call again with the verbosity option:
+
+```bash
+dagger call -v build --context=. with-exposed-port --port=8000 as-service up
+```
+
+The following does still not contain the needed information of the problem.\
+It only shows, that the app is not started:
+
+```bash
+...
+
+✔ Container.asService: Service! 0.9s
+  ✔ start ./start.sh 0.9s
+    ✘ 8000/tcp 0.8s
+    ! checking for port 8000/tcp: context canceled
+    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=51.200426ms                                                         
+    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=197.220376ms                                                        
+    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=391.991097ms                                                        
+    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=631.458639ms                                                        
+✘ Service.up: Void 0.9s
+! failed to start host service: start upstream: exited: exit code: 1
+
+13:26:20 WRN rotate dagger.cloud token for full url
+Error: response from query: input: container.build.withExposedPort.asService.up resolve: failed to start host service: start upstream: exited: exit code: 1
+```
+
+Increase the verbosity of the Dagger call even more to get to the goal.\
+We will add two levels at once (`-v` -> `-vvv`):
+
+```bash
+dagger call -vvv build --context=. with-exposed-port --port=8000 as-service up
+```
+
+If we have a closer look to the console output, we will discover some error messages due to missing configurations.
 
 As we have seen before, the two parts of the app depend on several components:
 
@@ -290,7 +344,7 @@ STORAGE_PATH
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
-    def backend(self, context: dagger.Directory) -> dagger.SContainer:
+    def backend(self, context: dagger.Directory) -> dagger.Container:
         """Returns a backend container built with the given context, params and service bindings."""
         return (
             dag.container()
