@@ -48,6 +48,3 @@ For this purpose, every Dagger command can be invoked with the `debug` flag:
 dagger call --debug backend --context=.
 ```
 
-
-
-
