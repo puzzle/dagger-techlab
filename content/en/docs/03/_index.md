@@ -385,7 +385,7 @@ And the `frontend`:
 ```
 {{% /details %}}
 
-Now the two service bindings in the `proxy` function can be simplified a bit.
+Now the two service bindings in the `proxy` function needs to be changed accordingly.
 
 Before:
 
