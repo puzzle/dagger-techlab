@@ -19,14 +19,15 @@ add another one which executes the Python tests:
     async def pytest(self, context: dagger.Directory) -> str:
         """Run pytest and return its output."""
         return await (
-            dag.container()
+            self.backend(context)
             .with_exec(["pip", "install", "--upgrade", "pip"])
             .with_exec(["pip", "install", "--upgrade", "pytest"])
             .with_exec(["pytest", "classquiz/tests/", "--ignore=classquiz/tests/test_server.py"])
-            .build(context)
             .stdout()
         )
 ```
+
+The tests are run on the backend, therefore we need to build the backend first.
 
 
 ### Task {{% param sectionnumber %}}.1: Create CI function

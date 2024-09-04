@@ -14,11 +14,10 @@ class ClassQuiz:
     async def pytest(self, context: dagger.Directory) -> str:
         """Run pytest and return its output."""
         return await (
-            dag.container()
+            self.backend(context)
             .with_exec(["pip", "install", "--upgrade", "pip"])
             .with_exec(["pip", "install", "--upgrade", "pytest"])
             .with_exec(["pytest", "classquiz/tests/", "--ignore=classquiz/tests/test_server.py"])
-            .build(context)
             .stdout()
         )
 
@@ -74,6 +73,16 @@ class ClassQuiz:
         )
 
     @function
+    def redis(self) -> dagger.Service:
+        """Returns a redis service from a container built with the given params."""
+        return (
+            dag.container()
+            .from_("redis:alpine")
+            .with_exposed_port(6379)
+            .as_service()
+        )
+
+    @function
     def postgres(self) -> dagger.Service:
         """Returns a postgres database service from a container built with the given params."""
         return (
@@ -88,21 +97,11 @@ class ClassQuiz:
 
     @function
     def meilisearch(self) -> dagger.Service:
-        """Returns a mailisearch service from a container built with the given params."""
+        """Returns a meilisearch service from a container built with the given params."""
         return (
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
             .with_exposed_port(7700)
-            .as_service()
-        )
-
-    @function
-    def redis(self) -> dagger.Service:
-        """Returns a redis service from a container built with the given params."""
-        return (
-            dag.container()
-            .from_("redis:alpine")
-            .with_exposed_port(6379)
             .as_service()
         )
 
