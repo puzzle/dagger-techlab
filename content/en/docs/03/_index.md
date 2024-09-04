@@ -385,13 +385,29 @@ And the `frontend`:
 ```
 {{% /details %}}
 
+Now the two service bindings in the `proxy` function can be simplified a bit.
+
+Before:
+
+```python
+            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.build(context).as_service())
+```
+
+After:
+
+```python
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.backend(context).as_service())
+```
+
 Now we can run ClassQuiz locally:
 
 ```bash
 dagger call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080
 ```
 
-And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can register, log in and create our survey!
+And then visit [localhost:8000](http://localhost:8000/) - where, after registering ourselves, we can log in and create our survey!
 
 
 {{% alert title="Note" color="primary" %}}
