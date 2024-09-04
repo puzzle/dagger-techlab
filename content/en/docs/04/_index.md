@@ -53,7 +53,7 @@ Dagger downloaded the Module and added it as dependency to our `dagger.json`:
     }
   ],
   "source": "ci",
-  "engineVersion": "v0.12.5"
+  "engineVersion": "v0.12.7"
 }
 ```
 
