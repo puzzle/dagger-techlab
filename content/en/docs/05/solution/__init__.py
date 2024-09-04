@@ -14,10 +14,11 @@ class ClassQuiz:
     async def pytest(self, context: dagger.Directory) -> str:
         """Run pytest and return its output."""
         return await (
-            dag.container().build(context)
+            dag.container()
             .with_exec(["pip", "install", "--upgrade", "pip"])
             .with_exec(["pip", "install", "--upgrade", "pytest"])
             .with_exec(["pytest", "classquiz/tests/", "--ignore=classquiz/tests/test_server.py"])
+            .build(context)
             .stdout()
         )
 
@@ -39,19 +40,18 @@ class ClassQuiz:
         return directory
 
     @function
-    def frontend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a frontend service from a container built with the given context and params."""
+    def frontend(self, context: dagger.Directory) -> dagger.Container:
+        """Returns a frontend container built with the given context and params."""
         return (
             dag.container()
             .with_env_variable("API_URL", "http://api:8081")
             .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
             .build(context)
-            .as_service()
         )
 
     @function
-    def backend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a backend service from a container built with the given context, params and service bindings."""
+    def backend(self, context: dagger.Directory) -> dagger.Container:
+        """Returns a backend container built with the given context, params and service bindings."""
         return (
             dag.container()
             .with_env_variable("MAX_WORKERS", "1")
@@ -71,7 +71,6 @@ class ClassQuiz:
             .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
             .build(context)
-            .as_service()
         )
 
     @function
@@ -113,8 +112,8 @@ class ClassQuiz:
         return (
             dag.container()
             .from_("caddy:alpine")
-            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
-            .with_service_binding("api", self.backend(context))
+            .with_service_binding("frontend", self.frontend(context.directory("frontend")).as_service())
+            .with_service_binding("api", self.backend(context).as_service())
             .with_file("/etc/caddy/Caddyfile", proxy_config)
             .with_exposed_port(8080)
             .as_service()

@@ -272,8 +272,8 @@ Hints:
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
-    def backend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a backend service from a container built with the given context, params and service bindings."""
+    def backend(self, context: dagger.Directory) -> dagger.SContainer:
+        """Returns a backend container built with the given context, params and service bindings."""
         return (
             dag.container()
             .with_env_variable("MAX_WORKERS", "1")
@@ -293,47 +293,27 @@ Hints:
             .with_service_binding("meilisearchd", self.meilisearch())
             .with_service_binding("redisd", self.redis())
             .build(context)
-            .as_service()
         )
 ```
 {{% /details %}}
-
-For convenience, the function returns directly a Service.
 
 And the `frontend`:
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```python
     @function
-    def frontend(self, context: dagger.Directory) -> dagger.Service:
-        """Returns a frontend service from a container built with the given context and params."""
+    def frontend(self, context: dagger.Directory) -> dagger.Container:
+        """Returns a frontend container built with the given context and params."""
         return (
             dag.container()
             .with_env_variable("API_URL", "http://api:8081")
             .with_env_variable("REDIS_URL", "redis://redisd:6379/0?decode_responses=True")
             .build(context)
-            .as_service()
         )
 ```
 {{% /details %}}
 
-Now the two service bindings in the `proxy` function can be simplified a bit.
-
-Before:
-
-```python
-            .with_service_binding("frontend", self.build(context.directory("frontend")).as_service())
-            .with_service_binding("api", self.build(context).as_service())
-```
-
-After:
-
-```python
-            .with_service_binding("frontend", self.frontend(context.directory("frontend")))
-            .with_service_binding("api", self.backend(context))
-```
-
-Now we can finally run ClassQuiz locally:
+Now we can run ClassQuiz locally:
 
 ```bash
 dagger call proxy --context=. --proxy-config=Caddyfile-docker up --ports=8000:8080

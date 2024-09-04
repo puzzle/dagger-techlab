@@ -19,10 +19,11 @@ add another one which executes the Python tests:
     async def pytest(self, context: dagger.Directory) -> str:
         """Run pytest and return its output."""
         return await (
-            dag.container().build(context)
+            dag.container()
             .with_exec(["pip", "install", "--upgrade", "pip"])
             .with_exec(["pip", "install", "--upgrade", "pytest"])
             .with_exec(["pytest", "classquiz/tests/", "--ignore=classquiz/tests/test_server.py"])
+            .build(context)
             .stdout()
         )
 ```
