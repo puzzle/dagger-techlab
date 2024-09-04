@@ -1,0 +1,12 @@
+{
+  "name": "ClassQuiz",
+  "sdk": "python",
+  "dependencies": [
+    {
+      "name": "trivy",
+      "source": "github.com/sagikazarmark/daggerverse/trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba"
+    }
+  ],
+  "source": "ci",
+  "engineVersion": "v0.12.7"
+}

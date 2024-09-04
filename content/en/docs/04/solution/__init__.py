@@ -56,6 +56,16 @@ class ClassQuiz:
         )
 
     @function
+    def redis(self) -> dagger.Service:
+        """Returns a redis service from a container built with the given params."""
+        return (
+            dag.container()
+            .from_("redis:alpine")
+            .with_exposed_port(6379)
+            .as_service()
+        )
+
+    @function
     def postgres(self) -> dagger.Service:
         """Returns a postgres database service from a container built with the given params."""
         return (
@@ -75,16 +85,6 @@ class ClassQuiz:
             dag.container()
             .from_("getmeili/meilisearch:v0.28.0")
             .with_exposed_port(7700)
-            .as_service()
-        )
-
-    @function
-    def redis(self) -> dagger.Service:
-        """Returns a redis service from a container built with the given params."""
-        return (
-            dag.container()
-            .from_("redis:alpine")
-            .with_exposed_port(6379)
             .as_service()
         )
 

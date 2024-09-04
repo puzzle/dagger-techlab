@@ -42,20 +42,7 @@ dagger install github.com/sagikazarmark/daggerverse/trivy@v0.5.0
 
 Dagger downloaded the Module and added it as dependency to our `dagger.json`:
 
-```json
-{
-  "name": "classquiz",
-  "sdk": "python",
-  "dependencies": [
-    {
-      "name": "trivy",
-      "source": "github.com/sagikazarmark/daggerverse/trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba"
-    }
-  ],
-  "source": "ci",
-  "engineVersion": "v0.12.7"
-}
-```
+{{< readfile file="solution/dagger.json" code="true" lang="JSON" >}}
 
 This way, all the functions provided by the module are available directly in our code - no need to add further imports or anything like that!
 
