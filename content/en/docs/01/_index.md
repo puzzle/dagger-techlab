@@ -61,7 +61,7 @@ It is similar to the [MvnRepository](https://mvnrepository.com/). The MvnReposit
 The most common way to call Dagger Functions is using the `dagger` CLI:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello
+dagger call --mod ./mod hello
 ```
 
 The `dagger` CLI first loads a `hello` module directly from its [GitHub repository](https://github.com/shykes/daggerverse/tree/main/hello) and then executes the `Hello()` function from that module.
@@ -69,7 +69,7 @@ The `dagger` CLI first loads a `hello` module directly from its [GitHub reposito
 {{% alert title="Note" color="primary" %}}
 Explanation to the dagger CLI call.\
 `dagger call` : execute the dagger CLI `call` command\
-`--mod github.com/shykes/daggerverse/hello@v0.3.0` : `call` command option to use the `hello` module (load its functions)\
+`--mod ./mod` : `call` command option to use the `hello` module (load its functions)\
 `hello` : execute the `hello` function
 {{% /alert %}}
 
@@ -90,14 +90,14 @@ If you are curious, what other [Functions](https://docs.dagger.io/api/reference/
 or you can explore its functions using:
 
 ```bash
-dagger functions --mod github.com/shykes/daggerverse/hello@v0.3.0
+dagger functions --mod ./mod
 ```
 
 In this particular case, there aren't any other functions :( - but what about additional arguments of the `Hello()` function?
 Let's find out:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --help
+dagger call --mod ./mod hello --help
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -116,7 +116,7 @@ Dagger also defines powerful core types: [Container](https://docs.dagger.io/api/
 To pass a String argument to a Dagger Function, append the corresponding flag to the dagger call command, followed by the string value:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --name=sun
+dagger call --mod ./mod hello --name=sun
 ```
 
 
@@ -131,24 +131,24 @@ True:
 
 ```bash
 # explicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=true
+dagger call --mod ./mod hello --shout=true
 ```
 
 ```bash
 # implicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout
+dagger call --mod ./mod hello --shout
 ```
 
 False:
 
 ```bash
 # explicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=false
+dagger call --mod ./mod hello --shout=false
 ```
 
 ```bash
 # implicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello
+dagger call --mod ./mod hello
 ```
 
 
@@ -161,12 +161,12 @@ and pass the resulting `Directory` object as argument to the Dagger Function.
 
 Filesystem path:
 ```bash
-dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=/usr/bin
+dagger call --mod ./mod ls --dir .
 ```
 
 Git repository:
 ```bash
-dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=https://github.com/puzzle/action-owasp-dependecy-track-check
+dagger call --mod ./mod ls --dir https://github.com/puzzle/action-owasp-dependecy-track-check
 ```
 
 
@@ -177,8 +177,9 @@ Same as directories, you can pass a Container argument. To do so, add the corres
 The CLI will dynamically pull the image, and pass the resulting `Container` object as argument to the Dagger Function.
 
 ```bash
-dagger call --mod github.com/jpadams/daggerverse/trivy@v0.4.0 scan-container --ctr=alpine:latest
+dagger --mod ./mod call os --ctr=alpine:latest
 ```
+
 {{% alert title="Note" color="primary" %}}
 It is important to know that in Dagger, a `Container` object is not merely a string referencing an image on a remote registry.
 It is the **actual state of a container**, managed by the Dagger Engine, and passed to a Dagger Function's code as if it were just another variable!
@@ -230,7 +231,7 @@ Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so t
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --giant --greeting=Welcome --name=sunshine
+dagger call --mod ./mod hello --giant --greeting=Welcome --name=sunshine
 ```
 {{% /details %}}
 
