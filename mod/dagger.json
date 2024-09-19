@@ -1,5 +1,6 @@
 {
   "name": "mod",
   "sdk": "go",
-  "engineVersion": "v0.12.7"
+  "source": ".",
+  "engineVersion": "v0.13.1"
 }
