@@ -1,7 +1,5 @@
 // A module to support the Puzzle dagger techlab.
 //
-// This module has been generated via dagger init --sdk go.
-//
 // The functions are used inside the hands-on lab: https://dagger-techlab.puzzle.ch/
 
 package main
@@ -9,6 +7,7 @@ package main
 import (
 	"context"
 	"dagger/mod/internal/dagger"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -85,4 +84,21 @@ func (m *Mod) Os(
 	return ctr.
 		WithExec([]string{"cat", "/etc/os-release"}).
 		Stdout(ctx)
+}
+
+// Returns the answer to everything when the password is right.
+func (m *Mod) Unlock(
+	ctx context.Context,
+	// container to get is's OS
+	password *dagger.Secret,
+	) (string, error) {
+		passwordText, err := password.Plaintext(ctx)
+		if err != nil {
+			return "", err
+		}
+	passwordTextClean := strings.TrimSpace(passwordText)
+	if passwordTextClean == "MySuperSecret" {
+		return "You unlocked the secret. The answer is 42!", nil
+	}
+	return "", errors.New("Nice try ;-) Provide right password to unlock the secret.")
 }

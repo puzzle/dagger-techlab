@@ -194,16 +194,22 @@ writing them into the filesystem of containers you're building, or inserting the
 To pass a Secret to a Dagger Function, source it from a host environment variable `env:`, the host filesystem `file:`, or a host command `cmd:`.
 
 Here is an example of passing a GitHub access token from an environment variable named `GITHUB_TOKEN` to a Dagger Function.
+
 The Dagger Function uses the token to query the GitHub CLI for a list of issues in the Dagger open-source repository:
 
 ```bash
 dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=env:GITHUB_TOKEN --cmd="issue list --repo=dagger/dagger"
 ```
 
+{{% alert title="Note" color="primary" %}}
+This is only an example, you don't have to make it run.
+{{% /alert %}}
+
 
 ## Task {{% param sectionnumber %}}.1: Explore a module
 
 Explore the `github.com/purpleclay/daggerverse/ponysay@v0.1.0` module.
+
 Make it return the phrase `Dagger puts a smile on my face!`.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
@@ -227,7 +233,7 @@ dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --msg="Da
 
 ## Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
-Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art.
+Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
@@ -238,17 +244,16 @@ dagger call --mod ./mod hello --giant --greeting=Welcome --name=sunshine
 
 ## Task {{% param sectionnumber %}}.3: Pass a secret
 
-Set and replace the `--token` value in the following call with a secret using an environment variable
+Set the `--password` value in the following call with a secret, using an environment variable, containing the password "MySuperSecret".
 
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=visible --cmd="issue list --repo=dagger/dagger"
+dagger call --mod ./mod unlock --password=visible
 ```
-
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-export SECRET=invisible
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=env:SECRET --cmd="issue list --repo=dagger/dagger"
+export SECRET=MySuperSecret
+dagger call --mod ./mod unlock --password env:SECRET
 ```
 {{% /details %}}
 
@@ -257,7 +262,7 @@ or using a file
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 echo $SECRET > secret.txt
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=file:./secret.txt --cmd="issue list --repo=dagger/dagger"
+dagger call --mod ./mod unlock --password file:./secret.txt
 ```
 {{% /details %}}
 
@@ -265,10 +270,10 @@ or using a command
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=cmd:"head -c10 /dev/random | base64" --cmd="issue list --repo=dagger/dagger"
+dagger call --mod ./mod unlock --password cmd:"echo $SECRET"
 ```
 {{% /details %}}
 
 {{% alert title="Note" color="primary" %}}
-Unless you provide a working token, the function execution will fail with an `HTTP 401` error.
+Unless you provide the right password, the function execution will fail with an error.
 {{% /alert %}}
