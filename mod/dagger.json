@@ -3,6 +3,10 @@
   "sdk": "go",
   "dependencies": [
     {
+      "name": "openssh-server",
+      "source": "github.com/sagikazarmark/daggerverse/openssh-server@c767a220a5f507555fd415e9c9729234589fd95c"
+    },
+    {
       "name": "hello",
       "source": "github.com/shykes/daggerverse/hello@54d86c6002d954167796e41886a47c47d95a626d"
     }

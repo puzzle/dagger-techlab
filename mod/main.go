@@ -42,9 +42,8 @@ func (m *Mod) Hello(
 	// +optional
 	figletContainer *dagger.Container,
 	) (string, error) {
-    return dag.Hello().Hello(ctx,dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
+    return dag.Hello().Hello(ctx, dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
 }
-
 
 // Returns the files of the directory
 func (m *Mod) Ls(
@@ -86,4 +85,14 @@ func (m *Mod) Unlock(
 		return "You unlocked the secret. The answer is 42!", nil
 	}
 	return "", errors.New("Nice try ;-) Provide right password to unlock the secret.")
+}
+
+// Return a service that runs the OpenSSH server.
+// Calls external (sub-)module https://github.com/sagikazarmark/daggerverse/openssh-server
+func (m *Mod) Service(
+	// +optional
+	// +default=22
+    port int,
+    ) *dagger.Service {
+	return dag.OpensshServer().Service(dagger.OpensshServerServiceOpts{Port: port})
 }
