@@ -1,6 +1,12 @@
 {
   "name": "mod",
   "sdk": "go",
+  "dependencies": [
+    {
+      "name": "hello",
+      "source": "github.com/shykes/daggerverse/hello@54d86c6002d954167796e41886a47c47d95a626d"
+    }
+  ],
   "source": ".",
   "engineVersion": "v0.13.1"
 }

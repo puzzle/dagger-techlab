@@ -8,7 +8,6 @@ import (
 	"context"
 	"dagger/mod/internal/dagger"
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -22,8 +21,8 @@ var defaultFigletContainer = dag.
 type Mod struct{}
 
 // Say hello to the world!
-// Code taken from https://github.com/shykes/hello. Thanks!
-func (hello *Mod) Hello(
+// Calls external (sub-)module https://github.com/shykes/hello
+func (m *Mod) Hello(
 	ctx context.Context,
 	// Change the greeting
 	// +optional
@@ -42,24 +41,10 @@ func (hello *Mod) Hello(
 	// Custom container for running the figlet tool
 	// +optional
 	figletContainer *dagger.Container,
-) (string, error) {
-	message := fmt.Sprintf("%s, %s!", greeting, name)
-	if shout {
-		message = strings.ToUpper(message) + "!!!!!"
-	}
-	if giant {
-		// Run 'figlet' in a container to produce giant letters
-		ctr := figletContainer
-		if ctr == nil {
-			ctr = defaultFigletContainer
-		}
-		return ctr.
-			WithoutEntrypoint(). // clear the entrypoint to make sure 'figlet' is executed
-			WithExec([]string{"figlet", message}).
-			Stdout(ctx)
-	}
-	return message, nil
+	) (string, error) {
+    return dag.Hello().Hello(ctx,dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
 }
+
 
 // Returns the files of the directory
 func (m *Mod) Ls(
