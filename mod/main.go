@@ -20,6 +20,11 @@ var defaultFigletContainer = dag.
 
 type Mod struct{}
 
+type LintRun struct {
+	// +private
+	Source *dagger.Directory
+}
+
 // Say hello to the world!
 // Calls external (sub-)module https://github.com/shykes/hello
 func (m *Mod) Hello(
@@ -96,3 +101,19 @@ func (m *Mod) Service(
     ) *dagger.Service {
 	return dag.OpensshServer().Service(dagger.OpensshServerServiceOpts{Port: port})
 }
+
+// Lint a Python codebase
+// Calls external (sub-)module https://github.com/dagger/dagger/modules/ruff
+func (m *Mod) Lint(
+	source *dagger.Directory,
+) *LintRun {
+	return &LintRun{
+		Source: source,
+	}
+}
+
+// Return a JSON report file for this run
+func (run LintRun) Report() *dagger.File {
+	return dag.Ruff().Lint(run.Source).Report()
+}
+
