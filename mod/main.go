@@ -26,7 +26,7 @@ type LintRun struct {
 }
 
 // Say hello to the world!
-// Calls external module https://github.com/shykes/hello
+// Calls external module Hello https://github.com/shykes/hello
 func (m *Mod) Hello(
 	ctx context.Context,
 	// Change the greeting
@@ -76,7 +76,7 @@ func (m *Mod) Os(
 		Stdout(ctx)
 }
 
-// Returns the answer to everything when the password is right.
+// Returns the answer to everything when the password is right
 func (m *Mod) Unlock(
 	ctx context.Context,
 	password *dagger.Secret,
@@ -92,8 +92,8 @@ func (m *Mod) Unlock(
 	return "", errors.New("Nice try ;-) Provide right password to unlock the secret.")
 }
 
-// Return a service that runs the OpenSSH server.
-// Calls external module https://github.com/sagikazarmark/daggerverse/tree/main/openssh-server
+// Return a service that runs an OpenSSH server
+// Calls external module OpensshServer https://github.com/sagikazarmark/daggerverse/tree/main/openssh-server
 func (m *Mod) Service(
 	// +optional
 	// +default=22
@@ -104,7 +104,7 @@ func (m *Mod) Service(
 }
 
 // Lint a Python codebase
-// Calls external module https://github.com/dagger/dagger/tree/main/modules/ruff
+// Calls external module Ruff https://github.com/dagger/dagger/tree/main/modules/ruff
 func (m *Mod) Lint(
 	source *dagger.Directory,
 ) *LintRun {
@@ -121,7 +121,7 @@ func (run LintRun) Report() *dagger.File {
 }
 
 // Build a Wolfi Linux container
-// https://github.com/shykes/daggerverse/tree/main/wolfi
+// Calls external module Wolfi https://github.com/shykes/daggerverse/tree/main/wolfi
 func (m *Mod) Container() *dagger.Container {
     return dag.Wolfi().
         Container()

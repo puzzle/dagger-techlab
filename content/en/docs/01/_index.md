@@ -64,12 +64,12 @@ The most common way to call Dagger Functions is using the `dagger` CLI:
 dagger call --mod ./mod hello
 ```
 
-The `dagger` CLI first loads a `hello` module directly from its [GitHub repository](https://github.com/shykes/daggerverse/tree/main/hello) and then executes the `Hello()` function from that module.
+The `dagger` CLI first loads the modules dependencies and then executes the local modules `Hello()` function.
 
 {{% alert title="Note" color="primary" %}}
 Explanation to the dagger CLI call.\
 `dagger call` : execute the dagger CLI `call` command\
-`--mod ./mod` : `call` command option to use the `hello` module (load its functions)\
+`--mod ./mod` : `call` command option to use the specified local module (load its functions)\
 `hello` : execute the `hello` function
 {{% /alert %}}
 
@@ -80,20 +80,22 @@ hello, world!
 ```
 
 {{% alert title="Note" color="primary" %}}
-Due to Daggers caching mechanism, subsequent calls will be executed much faster!
+The first execution will take a considerable amount of time, as the module depends on several other modules 
+which have to be downloaded.\
+For this reason and thanks to Daggers caching mechanism, subsequent calls will be executed much faster!
 {{% /alert %}}
 
 
 ### Exploring Modules and Functions
 
-If you are curious, what other [Functions](https://docs.dagger.io/api/reference/#definition-Function) are available on this [Module](https://docs.dagger.io/api/reference/#definition-Module), you can either have a look at its [source code](https://github.com/shykes/daggerverse/blob/main/hello/main.go)
+If you are curious, what other [Functions](https://docs.dagger.io/api/reference/#definition-Function) are available on this module, you can either have a look at its [source code](https://github.com/puzzle/dagger-techlab/blob/main/mod/main.go)
 or you can explore its functions using:
 
 ```bash
 dagger functions --mod ./mod
 ```
 
-In this particular case, there aren't any other functions :( - but what about additional arguments of the `Hello()` function?
+And what about additional arguments of the `Hello()` function?
 Let's find out:
 
 ```bash
@@ -233,7 +235,7 @@ dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --msg="Da
 
 ## Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
-Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
+Call the `Hello()` function so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
