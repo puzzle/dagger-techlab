@@ -26,7 +26,7 @@ type LintRun struct {
 }
 
 // Say hello to the world!
-// Calls external (sub-)module https://github.com/shykes/hello
+// Calls external module https://github.com/shykes/hello
 func (m *Mod) Hello(
 	ctx context.Context,
 	// Change the greeting
@@ -47,7 +47,8 @@ func (m *Mod) Hello(
 	// +optional
 	figletContainer *dagger.Container,
 	) (string, error) {
-    return dag.Hello().Hello(ctx, dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
+    return dag.Hello().
+        Hello(ctx, dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
 }
 
 // Returns the files of the directory
@@ -67,7 +68,7 @@ func (m *Mod) Ls(
 // Returns the operating system of the container
 func (m *Mod) Os(
 	ctx context.Context,
-	// container to get is's OS
+	// container to get it's OS
 	ctr *dagger.Container,
 	) (string, error) {
 	return ctr.
@@ -78,7 +79,6 @@ func (m *Mod) Os(
 // Returns the answer to everything when the password is right.
 func (m *Mod) Unlock(
 	ctx context.Context,
-	// container to get is's OS
 	password *dagger.Secret,
 	) (string, error) {
 		passwordText, err := password.Plaintext(ctx)
@@ -93,17 +93,18 @@ func (m *Mod) Unlock(
 }
 
 // Return a service that runs the OpenSSH server.
-// Calls external (sub-)module https://github.com/sagikazarmark/daggerverse/openssh-server
+// Calls external module https://github.com/sagikazarmark/daggerverse/tree/main/openssh-server
 func (m *Mod) Service(
 	// +optional
 	// +default=22
     port int,
     ) *dagger.Service {
-	return dag.OpensshServer().Service(dagger.OpensshServerServiceOpts{Port: port})
+	return dag.OpensshServer().
+	    Service(dagger.OpensshServerServiceOpts{Port: port})
 }
 
 // Lint a Python codebase
-// Calls external (sub-)module https://github.com/dagger/dagger/modules/ruff
+// Calls external module https://github.com/dagger/dagger/tree/main/modules/ruff
 func (m *Mod) Lint(
 	source *dagger.Directory,
 ) *LintRun {
@@ -114,6 +115,14 @@ func (m *Mod) Lint(
 
 // Return a JSON report file for this run
 func (run LintRun) Report() *dagger.File {
-	return dag.Ruff().Lint(run.Source).Report()
+	return dag.Ruff().
+	    Lint(run.Source).
+	    Report()
 }
 
+// Build a Wolfi Linux container
+// https://github.com/shykes/daggerverse/tree/main/wolfi
+func (m *Mod) Container() *dagger.Container {
+    return dag.Wolfi().
+        Container()
+}
