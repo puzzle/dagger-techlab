@@ -92,9 +92,9 @@ func (m *Mod) Unlock(
 	return "", errors.New("Nice try ;-) Provide right password to unlock the secret.")
 }
 
-// Return a service that runs an OpenSSH server
+// Returns a service that runs an OpenSSH server
 // Calls external module OpensshServer https://github.com/sagikazarmark/daggerverse/tree/main/openssh-server
-func (m *Mod) Service(
+func (m *Mod) SshService(
 	// +optional
 	// +default=22
     port int,
@@ -113,7 +113,7 @@ func (m *Mod) Lint(
 	}
 }
 
-// Return a JSON report file for this run
+// Returns a JSON report file for this run
 func (run LintRun) Report() *dagger.File {
 	return dag.Ruff().
 	    Lint(run.Source).
@@ -122,7 +122,7 @@ func (run LintRun) Report() *dagger.File {
 
 // Build a Wolfi Linux container
 // Calls external module Wolfi https://github.com/shykes/daggerverse/tree/main/wolfi
-func (m *Mod) Container() *dagger.Container {
+func (m *Mod) Wolfi() *dagger.Container {
     return dag.Wolfi().
         Container()
 }
