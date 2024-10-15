@@ -70,7 +70,7 @@ The `dagger` CLI first loads the modules dependencies and then executes the loca
 Explanation to the dagger CLI call.\
 `dagger call` : execute the dagger CLI `call` command\
 `--mod ./mod` : `call` command option to use the specified local module (load its functions)\
-`hello` : execute the `hello` function
+`hello` : execute the `Hello()` function
 {{% /alert %}}
 
 After a while you should see:
@@ -80,9 +80,9 @@ hello, world!
 ```
 
 {{% alert title="Note" color="primary" %}}
-The first execution will take a considerable amount of time, as the module depends on several other modules 
-which have to be downloaded.\
-For this reason and thanks to Daggers caching mechanism, subsequent calls will be executed much faster!
+The first execution will take a considerable amount of time, as the module depends on several other modules
+which have to be downloaded.
+For this reason and thanks to Daggers caching mechanism, subsequent calls will be executed **much** faster!
 {{% /alert %}}
 
 
@@ -184,7 +184,7 @@ dagger --mod ./mod call os --ctr=alpine:latest
 
 {{% alert title="Note" color="primary" %}}
 It is important to know that in Dagger, a `Container` object is not merely a string referencing an image on a remote registry.
-It is the **actual state of a container**, managed by the Dagger Engine, and passed to a Dagger Function's code as if it were just another variable!
+It is the **actual state of a container**, managed by the Dagger Engine, and passed to a Dagger Functions code as if it were just another variable!
 {{% /alert %}}
 
 
