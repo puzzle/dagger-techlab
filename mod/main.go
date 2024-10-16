@@ -11,13 +11,6 @@ import (
 	"strings"
 )
 
-var defaultFigletContainer = dag.
-	Container().
-	From("alpine:latest").
-	WithExec([]string{
-		"apk", "add", "figlet",
-	})
-
 type Mod struct{}
 
 type LintRun struct {
@@ -43,12 +36,9 @@ func (m *Mod) Hello(
 	// Make the message uppercase, and add more exclamation points
 	// +optional
 	shout bool,
-	// Custom container for running the figlet tool
-	// +optional
-	figletContainer *dagger.Container,
 	) (string, error) {
     return dag.Hello().
-        Hello(ctx, dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout, FigletContainer: figletContainer})
+        Hello(ctx, dagger.HelloHelloOpts{Greeting: greeting, Name: name, Giant: giant, Shout: shout})
 }
 
 // Returns the files of the directory
