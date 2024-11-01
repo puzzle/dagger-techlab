@@ -1,5 +1,5 @@
 {
-  "name": "mod",
+  "name": "dagger-techlab-module",
   "sdk": "go",
   "dependencies": [
     {

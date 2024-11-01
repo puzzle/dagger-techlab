@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-type Mod struct{}
+type DaggerTechlabModule struct{}
 
 type LintRun struct {
 	// +private
@@ -20,7 +20,7 @@ type LintRun struct {
 
 // Say hello to the world!
 // Calls external module Hello https://github.com/shykes/hello
-func (m *Mod) Hello(
+func (m *DaggerTechlabModule) Hello(
 	ctx context.Context,
 	// Change the greeting
 	// +optional
@@ -42,7 +42,7 @@ func (m *Mod) Hello(
 }
 
 // Returns the files of the directory
-func (m *Mod) Ls(
+func (m *DaggerTechlabModule) Ls(
 	ctx context.Context,
 	// directory to list it's files
 	dir *dagger.Directory,
@@ -56,7 +56,7 @@ func (m *Mod) Ls(
 }
 
 // Returns the operating system of the container
-func (m *Mod) Os(
+func (m *DaggerTechlabModule) Os(
 	ctx context.Context,
 	// container to get it's OS
 	ctr *dagger.Container,
@@ -67,7 +67,7 @@ func (m *Mod) Os(
 }
 
 // Returns the answer to everything when the password is right
-func (m *Mod) Unlock(
+func (m *DaggerTechlabModule) Unlock(
 	ctx context.Context,
 	password *dagger.Secret,
 	) (string, error) {
@@ -84,7 +84,7 @@ func (m *Mod) Unlock(
 
 // Returns a service that runs an OpenSSH server
 // Calls external module OpensshServer https://github.com/sagikazarmark/daggerverse/tree/main/openssh-server
-func (m *Mod) SshService(
+func (m *DaggerTechlabModule) SshService(
 	// +optional
 	// +default=22
     port int,
@@ -95,7 +95,7 @@ func (m *Mod) SshService(
 
 // Lint a Python codebase
 // Calls external module Ruff https://github.com/dagger/dagger/tree/main/modules/ruff
-func (m *Mod) Lint(
+func (m *DaggerTechlabModule) Lint(
 	source *dagger.Directory,
 ) *LintRun {
 	return &LintRun{
@@ -112,7 +112,7 @@ func (run LintRun) Report() *dagger.File {
 
 // Build a Wolfi Linux container
 // Calls external module Wolfi https://github.com/shykes/daggerverse/tree/main/wolfi
-func (m *Mod) Wolfi() *dagger.Container {
+func (m *DaggerTechlabModule) Wolfi() *dagger.Container {
     return dag.Wolfi().
         Container()
 }

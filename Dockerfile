@@ -25,11 +25,11 @@ RUN wkhtmltopdf --enable-internal-links --enable-local-file-access \
 
 FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine
 
-LABEL maintainer=acend.ch
+LABEL maintainer=puzzle.ch
 LABEL org.opencontainers.image.title="puzzle.ch's Dagger Basics Training"
-LABEL org.opencontainers.image.description="Container with acend.ch's Dagger Techlab content"
-LABEL org.opencontainers.image.authors=acend.ch
-LABEL org.opencontainers.image.source =ttps://github.com/puzzle/dagger-techlab/
+LABEL org.opencontainers.image.description="Container with puzzle.ch's Dagger Techlab content"
+LABEL org.opencontainers.image.authors=puzzle.ch
+LABEL org.opencontainers.image.source=https://github.com/puzzle/dagger-techlab/
 LABEL org.opencontainers.image.licenses=CC-BY-SA-4.0
 
 EXPOSE 8080
