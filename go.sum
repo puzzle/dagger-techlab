@@ -1,6 +1,7 @@
 github.com/FortAwesome/Font-Awesome v0.0.0-20210804190922-7d3d774145ac/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
 github.com/FortAwesome/Font-Awesome v0.0.0-20230327165841-0698449d50f2/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
 github.com/FortAwesome/Font-Awesome v0.0.0-20240108205627-a1232e345536/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
+github.com/FortAwesome/Font-Awesome v0.0.0-20240402185447-c0f460dca7f7 h1:2aWEKCRLqQ9nPyXaz4/IYtRrDr3PzEiX0DUSUr2/EDs=
 github.com/FortAwesome/Font-Awesome v0.0.0-20240402185447-c0f460dca7f7/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
 github.com/FortAwesome/Font-Awesome v0.0.0-20240716171331-37eff7fa00de/go.mod h1:IUgezN/MFpCDIlFezw3L8j83oeiIuYoj28Miwr/KUYo=
 github.com/acend/docsy-acend v1.0.0 h1:TwmHoH3z6lh5zcNj6zUpMP4lYOhQ+OOgcbBwr7AqVoo=
@@ -26,4 +27,5 @@ github.com/puzzle/docsy-puzzle v0.0.0-20230123144731-757054047a02 h1:80gTlzoKpnR
 github.com/puzzle/docsy-puzzle v0.0.0-20230123144731-757054047a02/go.mod h1:q4bPnnpLaz5IDdFmQFxCHr85uwAsK9ayut5NNmC4w3I=
 github.com/twbs/bootstrap v4.6.1+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
 github.com/twbs/bootstrap v5.2.3+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
+github.com/twbs/bootstrap v5.3.3+incompatible h1:goFoqinzdHfkeegpFP7pvhbd0g+A3O2hbU3XCjuNrEQ=
 github.com/twbs/bootstrap v5.3.3+incompatible/go.mod h1:fZTSrkpSf0/HkL0IIJzvVspTt1r9zuf7XlZau8kpcY0=
