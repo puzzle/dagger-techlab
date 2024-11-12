@@ -66,10 +66,11 @@ dagger call \
   hello
 ```
 
-The `dagger` CLI first loads the modules dependencies and then executes the local modules `Hello()` function.
+The `dagger` CLI first loads the `dagger-techlab-module` module directly from its [GitHub repository](https://github.com/puzzle/dagger-techlab/tree/main/mod) and then executes the `Hello()` function from that module.
 
 {{% alert title="Note" color="primary" %}}
-Explanation to the dagger CLI call.
+Explanation to the dagger CLI call:
+
 * `dagger call`:
   * execute the dagger CLI `call` command
 * `--mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63`:
