@@ -1,36 +1,70 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
-  "ignorePaths": ["**/mod/**"],
+  "ignorePaths": [
+    "**/mod/**"
+  ],
   "prConcurrentLimit": 4,
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchPackagePatterns": ["husky", "markdownlint-cli"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "matchPackageNames": [
+        "/husky/",
+        "/markdownlint-cli/"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "matchPackageNames": [
+        "/floryn90/hugo/",
+        "/nginxinc/nginx-unprivileged/"
+      ]
+    },
+    {
+      "matchDatasources": [
+        "golang-version"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["floryn90/hugo", "nginxinc/nginx-unprivileged"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": [
+        "action"
+      ],
+      "matchDatasources": [
+        "github-tags"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchDatasources": ["golang-version"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    },
-    {
-      "matchDepTypes": ["action"],
-      "matchDatasources": ["github-tags"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    },
-    {
-      "matchManagers": ["gomod"],
-      "matchDepTypes": ["indirect"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
       "enabled": true,
       "automerge": false
     }
