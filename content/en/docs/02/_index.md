@@ -17,7 +17,9 @@ are all objects. They each define various functions for interacting with their r
 Let's explore them step by step:
 
 ```bash
-dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --help
 ```
 
 {{% details title="show available 'module' functions" mode-switcher="normalexpertmode" %}}
@@ -25,24 +27,27 @@ dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 --h
     USAGE                                                                            
       dagger call [options] [arguments] <function>
 
-    FUNCTIONS                           
-      container             
-      host-keys             Returns the SSH host keys.
-      known-hosts           Return a formatted SSH known_hosts file.              
- ---> service               Return a service that runs the OpenSSH server.
-      with-authorized-key   Authorize a public key.
-      with-config           Mount a custom SSH configuration file (with .conf extension). 
+    FUNCTIONS
+      hello         Say hello to the world!
+      lint          Lint a Python codebase
+      ls            Returns the files of the directory
+      os            Returns the operating system of the container
+ ---> ssh-service   Returns a service that runs an OpenSSH server
+      unlock        Returns the answer to everything when the password is right
+      wolfi         Build a Wolfi Linux container
 ```
 {{% /details %}}
 
 ```bash
-dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 service --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service --help
 ```
 
 {{% details title="show available 'service' object functions" mode-switcher="normalexpertmode" %}}
 ```
     USAGE
-      dagger call service [arguments] <function>
+      dagger call ssh-service [arguments] <function>
 
     FUNCTIONS
       endpoint      Retrieves an endpoint that clients can use to reach this container.
@@ -55,13 +60,15 @@ dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 ser
 {{% /details %}}
 
 ```bash
-dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 service up --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service up --help
 ```
 
 {{% details title="show available 'up' function arguments" mode-switcher="normalexpertmode" %}}
 ```
     USAGE
-      dagger call service up [arguments]
+      dagger call ssh-service up [arguments]
 
     ARGUMENTS
  ---> --ports PortForward   List of frontend/backend port mappings to forward.
@@ -72,23 +79,31 @@ dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 ser
 {{% /details %}}
 
 Now that we have got all the pieces together, let's expose a Service returned by a Dagger Function on a specified host port,
-by chaining a call to the `Service` object's `Up()` function:
+by chaining a call to the `Service` objects `Up()` function:
+
+{{% alert title="Note" color="primary" %}}
+The `Service` object is returned by the modules `SshService()` function.
+{{% /alert %}}
 
 ```bash
-dagger call --mod github.com/sagikazarmark/daggerverse/openssh-server@v0.1.0 service up --ports=22022:22
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service up --ports=22022:22
 ```
 
-Here we print the contents of a File returned by a Dagger Function, by chaining a call to the `File` object's `Contents()` function:
+Here we print the contents of a File returned by a Dagger Function, by chaining a call to the `File` objects `Contents()` function:
 
 ```bash
-dagger call --mod github.com/dagger/dagger/dev/ruff@a29dadbb5d9968784847a15fccc5629daf2985ae lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
 ```
 
 
 ### Task {{% param sectionnumber %}}.1: Chain calls
 
 Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
-object of the `github.com/shykes/daggerverse/wolfi@v0.1.3` module:
+object, returned by the modules `Wolfi()` function:
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
@@ -96,7 +111,9 @@ Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/shykes/daggerverse/wolfi@v0.1.3 container with-exec --args="cat","/etc/os-release" stdout
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi with-exec --args="cat","/etc/os-release" stdout
 ```
 {{% /details %}}
 
@@ -104,12 +121,16 @@ Try an alternative approach using [File()](https://docs.dagger.io/api/reference/
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/shykes/daggerverse/wolfi@v0.1.3 container file --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi file --help
 ```
 {{% /details %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/shykes/daggerverse/wolfi@v0.1.3 container file --path=/etc/os-release contents
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi file --path=/etc/os-release contents
 ```
 {{% /details %}}

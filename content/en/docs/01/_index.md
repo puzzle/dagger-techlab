@@ -61,16 +61,22 @@ It is similar to the [MvnRepository](https://mvnrepository.com/). The MvnReposit
 The most common way to call Dagger Functions is using the `dagger` CLI:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello
 ```
 
-The `dagger` CLI first loads a `hello` module directly from its [GitHub repository](https://github.com/shykes/daggerverse/tree/main/hello) and then executes the `Hello()` function from that module.
+The `dagger` CLI first loads the `dagger-techlab-module` module directly from its [GitHub repository](https://github.com/puzzle/dagger-techlab/tree/main/mod) and then executes the `Hello()` function from that module.
 
 {{% alert title="Note" color="primary" %}}
-Explanation to the dagger CLI call.\
-`dagger call` : execute the dagger CLI `call` command\
-`--mod github.com/shykes/daggerverse/hello@v0.3.0` : `call` command option to use the `hello` module (load its functions)\
-`hello` : execute the `hello` function
+Explanation to the dagger CLI call:
+
+* `dagger call`:
+  * execute the dagger CLI `call` command
+* `--mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63`:
+  * `call` command option to use the specified local module (load its functions)
+* `hello`:
+  * execute the `Hello()` function
 {{% /alert %}}
 
 After a while you should see:
@@ -80,24 +86,29 @@ hello, world!
 ```
 
 {{% alert title="Note" color="primary" %}}
-Due to Daggers caching mechanism, subsequent calls will be executed much faster!
+The first execution will take a considerable amount of time, as the module depends on several other modules
+which have to be downloaded.
+For this reason and thanks to Daggers caching mechanism, subsequent calls will be executed **much** faster!
 {{% /alert %}}
 
 
 ### Exploring Modules and Functions
 
-If you are curious, what other [Functions](https://docs.dagger.io/api/reference/#definition-Function) are available on this [Module](https://docs.dagger.io/api/reference/#definition-Module), you can either have a look at its [source code](https://github.com/shykes/daggerverse/blob/main/hello/main.go)
+If you are curious, what other [Functions](https://docs.dagger.io/api/reference/#definition-Function) are available on this module, you can either have a look at its [source code](https://github.com/puzzle/dagger-techlab/blob/main/mod/main.go)
 or you can explore its functions using:
 
 ```bash
-dagger functions --mod github.com/shykes/daggerverse/hello@v0.3.0
+dagger functions \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63
 ```
 
-In this particular case, there aren't any other functions :( - but what about additional arguments of the `Hello()` function?
+And what about additional arguments of the `Hello()` function?
 Let's find out:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --help
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -116,7 +127,9 @@ Dagger also defines powerful core types: [Container](https://docs.dagger.io/api/
 To pass a String argument to a Dagger Function, append the corresponding flag to the dagger call command, followed by the string value:
 
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --name=sun
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --name=sun
 ```
 
 
@@ -131,24 +144,32 @@ True:
 
 ```bash
 # explicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=true
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout=true
 ```
 
 ```bash
 # implicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout
 ```
 
 False:
 
 ```bash
 # explicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --shout=false
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout=false
 ```
 
 ```bash
 # implicit
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello
 ```
 
 
@@ -161,12 +182,16 @@ and pass the resulting `Directory` object as argument to the Dagger Function.
 
 Filesystem path:
 ```bash
-dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=/usr/bin
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ls --dir .
 ```
 
 Git repository:
 ```bash
-dagger call --mod github.com/softwaredevelop/daggerverse/shellcheck@3872d4fb4e5b0e8a2844b2148ea00c076396a53b check --source=https://github.com/puzzle/action-owasp-dependecy-track-check
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ls --dir https://github.com/puzzle/action-owasp-dependecy-track-check
 ```
 
 
@@ -177,11 +202,14 @@ Same as directories, you can pass a Container argument. To do so, add the corres
 The CLI will dynamically pull the image, and pass the resulting `Container` object as argument to the Dagger Function.
 
 ```bash
-dagger call --mod github.com/jpadams/daggerverse/trivy@v0.4.0 scan-container --ctr=alpine:latest
+dagger \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  call os --ctr=alpine:latest
 ```
+
 {{% alert title="Note" color="primary" %}}
 It is important to know that in Dagger, a `Container` object is not merely a string referencing an image on a remote registry.
-It is the **actual state of a container**, managed by the Dagger Engine, and passed to a Dagger Function's code as if it were just another variable!
+It is the **actual state of a container**, managed by the Dagger Engine, and passed to a Dagger Functions code as if it were just another variable!
 {{% /alert %}}
 
 
@@ -193,61 +221,85 @@ writing them into the filesystem of containers you're building, or inserting the
 To pass a Secret to a Dagger Function, source it from a host environment variable `env:`, the host filesystem `file:`, or a host command `cmd:`.
 
 Here is an example of passing a GitHub access token from an environment variable named `GITHUB_TOKEN` to a Dagger Function.
+
 The Dagger Function uses the token to query the GitHub CLI for a list of issues in the Dagger open-source repository:
 
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=env:GITHUB_TOKEN --cmd="issue list --repo=dagger/dagger"
+dagger call \
+  --mod github.com/aweris/daggerverse/gh@v0.0.2 \
+  run \
+    --token=env:GITHUB_TOKEN \
+    --cmd="issue list \
+    --repo=dagger/dagger"
 ```
+
+{{% alert title="Note" color="primary" %}}
+This is only an example, you don't have to make it run.
+{{% /alert %}}
 
 
 ## Task {{% param sectionnumber %}}.1: Explore a module
 
 Explore the `github.com/purpleclay/daggerverse/ponysay@v0.1.0` module.
+
 Make it return the phrase `Dagger puts a smile on my face!`.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger functions --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0
+dagger functions \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0
 ```
 {{% /details %}}
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --help
+dagger call \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 \
+  say --help
 ```
 {{% /details %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --msg="Dagger puts a smile on my face!"
+dagger call \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 \
+  say --msg="Dagger puts a smile on my face!"
 ```
 {{% /details %}}
 
 
 ## Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
-Call the `Hello()` function of `github.com/shykes/daggerverse/hello@v0.3.0` so that it returns the phrase `Welcome, sunshine!` in ASCII-art.
+Call the `Hello()` function so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/shykes/daggerverse/hello@v0.3.0 hello --giant --greeting=Welcome --name=sunshine
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello \
+    --giant \
+    --greeting=Welcome \
+    --name=sunshine
 ```
 {{% /details %}}
 
 
 ## Task {{% param sectionnumber %}}.3: Pass a secret
 
-Set and replace the `--token` value in the following call with a secret using an environment variable
+Set the `--password` value in the following call with a secret, using an environment variable, containing the password "MySuperSecret".
 
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=visible --cmd="issue list --repo=dagger/dagger"
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password=visible
 ```
-
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-export SECRET=invisible
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=env:SECRET --cmd="issue list --repo=dagger/dagger"
+export SECRET=MySuperSecret
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password env:SECRET
 ```
 {{% /details %}}
 
@@ -256,7 +308,9 @@ or using a file
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 echo $SECRET > secret.txt
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=file:./secret.txt --cmd="issue list --repo=dagger/dagger"
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password file:./secret.txt
 ```
 {{% /details %}}
 
@@ -264,10 +318,12 @@ or using a command
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=cmd:"head -c10 /dev/random | base64" --cmd="issue list --repo=dagger/dagger"
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password cmd:"echo $SECRET"
 ```
 {{% /details %}}
 
 {{% alert title="Note" color="primary" %}}
-Unless you provide a working token, the function execution will fail with an `HTTP 401` error.
+Unless you provide the right password, the function execution will fail with an error.
 {{% /alert %}}
