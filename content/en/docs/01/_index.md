@@ -62,7 +62,7 @@ The most common way to call Dagger Functions is using the `dagger` CLI:
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello
 ```
 
@@ -73,7 +73,7 @@ Explanation to the dagger CLI call:
 
 * `dagger call`:
   * execute the dagger CLI `call` command
-* `--mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63`:
+* `--mod github.com/puzzle/dagger-techlab/mod@v1.0.0`:
   * `call` command option to use the specified local module (load its functions)
 * `hello`:
   * execute the `Hello()` function
@@ -99,7 +99,7 @@ or you can explore its functions using:
 
 ```bash
 dagger functions \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0
 ```
 
 And what about additional arguments of the `Hello()` function?
@@ -107,7 +107,7 @@ Let's find out:
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello --help
 ```
 
@@ -128,7 +128,7 @@ To pass a String argument to a Dagger Function, append the corresponding flag to
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello --name=sun
 ```
 
@@ -145,14 +145,14 @@ True:
 ```bash
 # explicit
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello --shout=true
 ```
 
 ```bash
 # implicit
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello --shout
 ```
 
@@ -161,14 +161,14 @@ False:
 ```bash
 # explicit
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello --shout=false
 ```
 
 ```bash
 # implicit
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello
 ```
 
@@ -183,14 +183,14 @@ and pass the resulting `Directory` object as argument to the Dagger Function.
 Filesystem path:
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   ls --dir .
 ```
 
 Git repository:
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   ls --dir https://github.com/puzzle/action-owasp-dependecy-track-check
 ```
 
@@ -203,7 +203,7 @@ The CLI will dynamically pull the image, and pass the resulting `Container` obje
 
 ```bash
 dagger \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   call os --ctr=alpine:latest
 ```
 
@@ -275,7 +275,7 @@ Call the `Hello()` function so that it returns the phrase `Welcome, sunshine!` i
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   hello \
     --giant \
     --greeting=Welcome \
@@ -290,7 +290,7 @@ Set the `--password` value in the following call with a secret, using an environ
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   unlock --password=visible
 ```
 
@@ -298,7 +298,7 @@ dagger call \
 ```bash
 export SECRET=MySuperSecret
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   unlock --password env:SECRET
 ```
 {{% /details %}}
@@ -309,7 +309,7 @@ or using a file
 ```bash
 echo $SECRET > secret.txt
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   unlock --password file:./secret.txt
 ```
 {{% /details %}}
@@ -319,7 +319,7 @@ or using a command
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   unlock --password cmd:"echo $SECRET"
 ```
 {{% /details %}}
