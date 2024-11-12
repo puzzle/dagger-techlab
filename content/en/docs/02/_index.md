@@ -17,7 +17,9 @@ are all objects. They each define various functions for interacting with their r
 Let's explore them step by step:
 
 ```bash
-dagger call --mod ./mod --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --help
 ```
 
 {{% details title="show available 'module' functions" mode-switcher="normalexpertmode" %}}
@@ -37,7 +39,9 @@ dagger call --mod ./mod --help
 {{% /details %}}
 
 ```bash
-dagger call --mod ./mod ssh-service --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service --help
 ```
 
 {{% details title="show available 'service' object functions" mode-switcher="normalexpertmode" %}}
@@ -56,7 +60,9 @@ dagger call --mod ./mod ssh-service --help
 {{% /details %}}
 
 ```bash
-dagger call --mod ./mod ssh-service up --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service up --help
 ```
 
 {{% details title="show available 'up' function arguments" mode-switcher="normalexpertmode" %}}
@@ -80,13 +86,17 @@ The `Service` object is returned by the modules `SshService()` function.
 {{% /alert %}}
 
 ```bash
-dagger call --mod ./mod ssh-service up --ports=22022:22
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ssh-service up --ports=22022:22
 ```
 
 Here we print the contents of a File returned by a Dagger Function, by chaining a call to the `File` objects `Contents()` function:
 
 ```bash
-dagger call --mod ./mod lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
 ```
 
 
@@ -101,7 +111,9 @@ Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod ./mod wolfi with-exec --args="cat","/etc/os-release" stdout
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi with-exec --args="cat","/etc/os-release" stdout
 ```
 {{% /details %}}
 
@@ -109,12 +121,16 @@ Try an alternative approach using [File()](https://docs.dagger.io/api/reference/
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod ./mod wolfi file --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi file --help
 ```
 {{% /details %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod ./mod wolfi file --path=/etc/os-release contents
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  wolfi file --path=/etc/os-release contents
 ```
 {{% /details %}}

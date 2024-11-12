@@ -61,16 +61,21 @@ It is similar to the [MvnRepository](https://mvnrepository.com/). The MvnReposit
 The most common way to call Dagger Functions is using the `dagger` CLI:
 
 ```bash
-dagger call --mod ./mod hello
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello
 ```
 
 The `dagger` CLI first loads the modules dependencies and then executes the local modules `Hello()` function.
 
 {{% alert title="Note" color="primary" %}}
-Explanation to the dagger CLI call.\
-`dagger call` : execute the dagger CLI `call` command\
-`--mod ./mod` : `call` command option to use the specified local module (load its functions)\
-`hello` : execute the `Hello()` function
+Explanation to the dagger CLI call.
+* `dagger call`:
+  * execute the dagger CLI `call` command
+* `--mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63`:
+  * `call` command option to use the specified local module (load its functions)
+* `hello`:
+  * execute the `Hello()` function
 {{% /alert %}}
 
 After a while you should see:
@@ -92,14 +97,17 @@ If you are curious, what other [Functions](https://docs.dagger.io/api/reference/
 or you can explore its functions using:
 
 ```bash
-dagger functions --mod ./mod
+dagger functions \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63
 ```
 
 And what about additional arguments of the `Hello()` function?
 Let's find out:
 
 ```bash
-dagger call --mod ./mod hello --help
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --help
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -118,7 +126,9 @@ Dagger also defines powerful core types: [Container](https://docs.dagger.io/api/
 To pass a String argument to a Dagger Function, append the corresponding flag to the dagger call command, followed by the string value:
 
 ```bash
-dagger call --mod ./mod hello --name=sun
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --name=sun
 ```
 
 
@@ -133,24 +143,32 @@ True:
 
 ```bash
 # explicit
-dagger call --mod ./mod hello --shout=true
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout=true
 ```
 
 ```bash
 # implicit
-dagger call --mod ./mod hello --shout
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout
 ```
 
 False:
 
 ```bash
 # explicit
-dagger call --mod ./mod hello --shout=false
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello --shout=false
 ```
 
 ```bash
 # implicit
-dagger call --mod ./mod hello
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello
 ```
 
 
@@ -163,12 +181,16 @@ and pass the resulting `Directory` object as argument to the Dagger Function.
 
 Filesystem path:
 ```bash
-dagger call --mod ./mod ls --dir .
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ls --dir .
 ```
 
 Git repository:
 ```bash
-dagger call --mod ./mod ls --dir https://github.com/puzzle/action-owasp-dependecy-track-check
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  ls --dir https://github.com/puzzle/action-owasp-dependecy-track-check
 ```
 
 
@@ -179,7 +201,9 @@ Same as directories, you can pass a Container argument. To do so, add the corres
 The CLI will dynamically pull the image, and pass the resulting `Container` object as argument to the Dagger Function.
 
 ```bash
-dagger --mod ./mod call os --ctr=alpine:latest
+dagger \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  call os --ctr=alpine:latest
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -200,7 +224,12 @@ Here is an example of passing a GitHub access token from an environment variable
 The Dagger Function uses the token to query the GitHub CLI for a list of issues in the Dagger open-source repository:
 
 ```bash
-dagger call --mod github.com/aweris/daggerverse/gh@v0.0.2 run --token=env:GITHUB_TOKEN --cmd="issue list --repo=dagger/dagger"
+dagger call \
+  --mod github.com/aweris/daggerverse/gh@v0.0.2 \
+  run \
+    --token=env:GITHUB_TOKEN \
+    --cmd="issue list \
+    --repo=dagger/dagger"
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -216,19 +245,24 @@ Make it return the phrase `Dagger puts a smile on my face!`.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger functions --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0
+dagger functions \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0
 ```
 {{% /details %}}
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --help
+dagger call \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 \
+  say --help
 ```
 {{% /details %}}
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 say --msg="Dagger puts a smile on my face!"
+dagger call \
+  --mod github.com/purpleclay/daggerverse/ponysay@v0.1.0 \
+  say --msg="Dagger puts a smile on my face!"
 ```
 {{% /details %}}
 
@@ -239,7 +273,12 @@ Call the `Hello()` function so that it returns the phrase `Welcome, sunshine!` i
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod ./mod hello --giant --greeting=Welcome --name=sunshine
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  hello \
+    --giant \
+    --greeting=Welcome \
+    --name=sunshine
 ```
 {{% /details %}}
 
@@ -249,13 +288,17 @@ dagger call --mod ./mod hello --giant --greeting=Welcome --name=sunshine
 Set the `--password` value in the following call with a secret, using an environment variable, containing the password "MySuperSecret".
 
 ```bash
-dagger call --mod ./mod unlock --password=visible
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password=visible
 ```
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 export SECRET=MySuperSecret
-dagger call --mod ./mod unlock --password env:SECRET
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password env:SECRET
 ```
 {{% /details %}}
 
@@ -264,7 +307,9 @@ or using a file
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 echo $SECRET > secret.txt
-dagger call --mod ./mod unlock --password file:./secret.txt
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password file:./secret.txt
 ```
 {{% /details %}}
 
@@ -272,7 +317,9 @@ or using a command
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger call --mod ./mod unlock --password cmd:"echo $SECRET"
+dagger call \
+  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  unlock --password cmd:"echo $SECRET"
 ```
 {{% /details %}}
 
