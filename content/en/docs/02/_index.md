@@ -18,7 +18,7 @@ Let's explore them step by step:
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   --help
 ```
 
@@ -40,7 +40,7 @@ dagger call \
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   ssh-service --help
 ```
 
@@ -61,7 +61,7 @@ dagger call \
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   ssh-service up --help
 ```
 
@@ -87,7 +87,7 @@ The `Service` object is returned by the modules `SshService()` function.
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   ssh-service up --ports=22022:22
 ```
 
@@ -95,7 +95,7 @@ Here we print the contents of a File returned by a Dagger Function, by chaining 
 
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   lint --source=https://github.com/puzzle/puzzle-radicale-auth-ldap report contents
 ```
 
@@ -112,7 +112,7 @@ Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   wolfi with-exec --args="cat","/etc/os-release" stdout
 ```
 {{% /details %}}
@@ -122,7 +122,7 @@ Try an alternative approach using [File()](https://docs.dagger.io/api/reference/
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   wolfi file --help
 ```
 {{% /details %}}
@@ -130,7 +130,7 @@ dagger call \
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash
 dagger call \
-  --mod github.com/puzzle/dagger-techlab/mod@0437877e0809d7aef35ea031a3a36eb943876e63 \
+  --mod github.com/puzzle/dagger-techlab/mod@v1.0.0 \
   wolfi file --path=/etc/os-release contents
 ```
 {{% /details %}}
