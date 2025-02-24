@@ -8,7 +8,8 @@
   "prConcurrentLimit": 4,
   "packageRules": [
     {
-      "matchFiles": ["mod/go.mod", "workflows/go.mod"], // Dagger module go.mod is managed by dagger
+      //"matchFiles": ["mod/go.mod", "workflows/go.mod"], // Dagger module go.mod is managed by dagger
+      "matchFiles": ["**/go.mod"], // Dagger module go.mod is managed by dagger
       "enabled": false
     },
     {
@@ -38,7 +39,7 @@
         "/floryn90/hugo/",
         "/nginxinc/nginx-unprivileged/"
       ]
-    },
+    }/*,
     {
       "matchDatasources": [
         "golang-version"
@@ -48,7 +49,7 @@
         "patch"
       ],
       "automerge": true
-    },
+    }*/,
     {
       "matchDepTypes": [
         "action"
@@ -61,7 +62,7 @@
         "patch"
       ],
       "automerge": true
-    },
+    }/*,
     {
       "matchManagers": [
         "gomod"
@@ -71,6 +72,6 @@
       ],
       "enabled": true,
       "automerge": false
-    }
+    }*/
   ]
 }
