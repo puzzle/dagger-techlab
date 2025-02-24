@@ -8,6 +8,10 @@
   "prConcurrentLimit": 4,
   "packageRules": [
     {
+      "matchFiles": ["mod/go.mod", "workflows/go.mod"], // Dagger module go.mod is managed by dagger
+      "enabled": false
+    },
+    {
       "matchDepTypes": [
         "devDependencies"
       ],
