@@ -1,37 +1,58 @@
-// A generated module for Workflows functions
+// A helper module for workflow functions
 //
-// This module has been generated via dagger init and serves as a reference to
-// basic module structure as you get started with Dagger.
-//
-// Two functions have been pre-created. You can modify, delete, or add to them,
-// as needed. They demonstrate usage of arguments and return types using simple
-// echo and grep commands. The functions can be called from the dagger CLI or
-// from one of the SDKs.
-//
-// The first line in this comment block is a short description line and the
-// rest is a long description with more detail on the module's purpose or usage,
-// if appropriate. All modules should have a short description.
+// This module helps to develop the hugo application.
 
 package main
 
 import (
 	"context"
 	"dagger/workflows/internal/dagger"
+	"fmt"
+	"strings"
 )
 
 type Workflows struct{}
 
-// Returns a container that echoes whatever string argument is provided
-func (m *Workflows) ContainerEcho(stringArg string) *dagger.Container {
-	return dag.Container().From("alpine:latest").WithExec([]string{"echo", stringArg})
-}
-
-// Returns lines that match a pattern in the files of the provided Directory
-func (m *Workflows) GrepDir(ctx context.Context, directoryArg *dagger.Directory, pattern string) (string, error) {
+// Get the Hugo Image tag
+func (m *Workflows) HugoTag(
+	ctx context.Context,
+	src *dagger.Directory,
+) (string, error) {
 	return dag.Container().
 		From("alpine:latest").
-		WithMountedDirectory("/mnt", directoryArg).
+		WithMountedDirectory("/mnt", src).
 		WithWorkdir("/mnt").
-		WithExec([]string{"grep", "-R", pattern, "."}).
+		WithExec([]string{"sh", "-c", "grep \"FROM docker.io/floryn90/hugo\" Dockerfile | sed 's/FROM docker.io\\/floryn90\\/hugo://g' | sed 's/ AS builder//g'"}).
 		Stdout(ctx)
+}
+
+// Prepares the local dev container with the given source.
+func (m *Workflows) LocalDev(
+	ctx context.Context,
+	src *dagger.Directory,
+) (*dagger.Container, error) {
+	tag,err := m.HugoTag(ctx, src)
+	if err != nil {
+		return nil, err
+	}
+	from := strings.TrimSpace(fmt.Sprintf("docker.io/floryn90/hugo:%s", tag))
+	container := dag.Container().
+		From(from).
+		WithMountedDirectory("/src", src, dagger.ContainerWithMountedDirectoryOpts{Owner: "hugo"}).
+		WithExposedPort(8080)
+	return container, nil
+}
+
+// Builds and runs Hugo from the given source.
+func (m *Workflows) LocalStart(
+	ctx context.Context,
+	src *dagger.Directory,
+) (*dagger.Service, error) {
+	container, err := m.LocalDev(ctx, src)
+	if err != nil {
+		return nil, err
+	}
+	service := container.
+		AsService(dagger.ContainerAsServiceOpts{Args: []string{"hugo", "server", "-p", "8080"}})
+	return service, nil
 }
