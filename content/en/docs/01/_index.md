@@ -30,6 +30,8 @@ DAGGER MODULE COMMANDS
   functions     List available functions
   init          Initialize a new module
   install       Install a dependency
+  uninstall     Uninstall a dependency
+  update        Update a dependency
 
 EXECUTION COMMANDS
   query         Send API queries to a dagger engine
