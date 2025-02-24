@@ -1,24 +1,29 @@
 {
   "name": "dagger-techlab-module",
-  "sdk": "go",
+  "engineVersion": "v0.16.1",
+  "sdk": {
+    "source": "go"
+  },
   "dependencies": [
     {
       "name": "hello",
-      "source": "github.com/shykes/daggerverse/hello@54d86c6002d954167796e41886a47c47d95a626d"
+      "source": "github.com/shykes/daggerverse/hello@54d86c6002d954167796e41886a47c47d95a626d",
+      "pin": "54d86c6002d954167796e41886a47c47d95a626d"
     },
     {
       "name": "openssh-server",
-      "source": "github.com/sagikazarmark/daggerverse/openssh-server@c767a220a5f507555fd415e9c9729234589fd95c"
+      "source": "github.com/sagikazarmark/daggerverse/openssh-server@c767a220a5f507555fd415e9c9729234589fd95c",
+      "pin": "c767a220a5f507555fd415e9c9729234589fd95c"
     },
     {
       "name": "ruff",
-      "source": "github.com/dagger/dagger/dev/ruff@d9a15262229f1dba0aa53dbd0216908438331995"
+      "source": "github.com/dagger/dagger/dev/ruff@d9a15262229f1dba0aa53dbd0216908438331995",
+      "pin": "d9a15262229f1dba0aa53dbd0216908438331995"
     },
     {
       "name": "wolfi",
-      "source": "github.com/shykes/daggerverse/wolfi@3338120927f8e291c4780de691ef63a7c9d825c0"
+      "source": "github.com/shykes/daggerverse/wolfi@3338120927f8e291c4780de691ef63a7c9d825c0",
+      "pin": "3338120927f8e291c4780de691ef63a7c9d825c0"
     }
-  ],
-  "source": ".",
-  "engineVersion": "v0.13.1"
+  ]
 }
