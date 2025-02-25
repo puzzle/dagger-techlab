@@ -30,6 +30,8 @@ DAGGER MODULE COMMANDS
   functions     List available functions
   init          Initialize a new module
   install       Install a dependency
+  uninstall     Uninstall a dependency
+  update        Update a dependency
 
 EXECUTION COMMANDS
   query         Send API queries to a dagger engine
@@ -66,7 +68,7 @@ dagger call \
   hello
 ```
 
-The `dagger` CLI first loads the `dagger-techlab-module` module directly from its [GitHub repository](https://github.com/puzzle/dagger-techlab/tree/main/mod) and then executes the `Hello()` function from that module.
+The `dagger` CLI first loads the `dagger-techlab-module` module directly from its [GitHub repository](https://github.com/puzzle/dagger-techlab/tree/main/mod) and then executes the `hello` function from that module.
 
 {{% alert title="Note" color="primary" %}}
 Explanation to the dagger CLI call:
@@ -76,7 +78,7 @@ Explanation to the dagger CLI call:
 * `--mod github.com/puzzle/dagger-techlab/mod@v1.0.0`:
   * `call` command option to use the specified local module (load its functions)
 * `hello`:
-  * execute the `Hello()` function
+  * execute the `hello` function
 {{% /alert %}}
 
 After a while you should see:
@@ -102,7 +104,21 @@ dagger functions \
   --mod github.com/puzzle/dagger-techlab/mod@v1.0.0
 ```
 
-And what about additional arguments of the `Hello()` function?
+The `functions` call should return a list like this:
+
+```bash
+Name          Description
+hello         Say hello to the world!
+lint          Lint a Python codebase
+ls            Returns the files of the directory
+os            Returns the operating system of the container
+ssh-service   Returns a service that runs an OpenSSH server
+unlock        Returns the answer to everything when the password is right
+wolfi         Build a Wolfi Linux container
+```
+
+And what about additional arguments of the `hello` function?
+
 Let's find out:
 
 ```bash
@@ -270,7 +286,7 @@ dagger call \
 
 ## Task {{% param sectionnumber %}}.2: Make use of multiple arguments
 
-Call the `Hello()` function so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
+Call the `hello` function so that it returns the phrase `Welcome, sunshine!` in ASCII-art (giant letters).
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 ```bash

@@ -79,10 +79,10 @@ dagger call \
 {{% /details %}}
 
 Now that we have got all the pieces together, let's expose a Service returned by a Dagger Function on a specified host port,
-by chaining a call to the `Service` objects `Up()` function:
+by chaining a call to the `Service` objects `up` function:
 
 {{% alert title="Note" color="primary" %}}
-The `Service` object is returned by the modules `SshService()` function.
+The `Service` object is returned by the modules `ssh-service` function.
 {{% /alert %}}
 
 ```bash
@@ -91,7 +91,7 @@ dagger call \
   ssh-service up --ports=22022:22
 ```
 
-Here we print the contents of a File returned by a Dagger Function, by chaining a call to the `File` objects `Contents()` function:
+Here we print the contents of a File returned by a Dagger Function, by chaining a call to the `File` objects `contents` function:
 
 ```bash
 dagger call \
@@ -103,7 +103,7 @@ dagger call \
 ### Task {{% param sectionnumber %}}.1: Chain calls
 
 Display and return the contents of the `/etc/os-release` file in a container, by chaining additional calls to the `Container`
-object, returned by the modules `Wolfi()` function:
+object, returned by the modules `wolfi` function:
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 Have a look at the [WithExec()](https://docs.dagger.io/api/reference/#Container-withExec) and [Stout()](https://docs.dagger.io/api/reference/#Container-stdout) functions.
