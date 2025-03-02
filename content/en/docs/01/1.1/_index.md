@@ -18,7 +18,7 @@ Often the pipeline takes longer to run online, and you have to hope all the test
 
 ![Pipeline Runs](1637159977041.jpg)
 
-To see if and why the pipeline run succeeded, one has to check on the remote repository on GitLab. 
+To see if and why the pipeline run succeeded, one has to check on the remote repository on GitLab.
 
 If a pipeline fails, one can consult the logs but the information you find there often is vague. The solution often is to extend the pipeline with bash-scripts and tools to better understand what happened. This is a far cry from efficient debugging.
 All the while you keep asking yourself these main questions:
@@ -41,7 +41,9 @@ Picture 2
 
 We can conclude: the current situation has its problems, that need to be addressed to make working more efficient and on a personal level, less frustrating.
 
+
 ## How does Dagger help?
+
 
 Dagger is set to give back the workflow control to the developers by allowing them to run a representative pipeline locally, improving flexibility and efficience.
 

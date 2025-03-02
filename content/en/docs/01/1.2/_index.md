@@ -6,7 +6,9 @@ description: >
   Introduction to Dagger.
 ---
 
+
 ## How does dagger work under the hood?
+
 
 "Dagger is Docker for your CI Pipeline" - Jeremy, propably
 
@@ -17,19 +19,20 @@ TDagger is based on an engine, at its heart the workflow is depicted as a Direct
 
 Picture 4
 
+
 ### Host components
+
 
 * **Input/Output**
 * **SDK**
 * **Dagger CLI**
 
-### GraphQL API
 
+### GraphQL API
 
 
 ### Dagger Engine
 
 
 ### BuildKit
-
 
