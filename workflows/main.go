@@ -56,3 +56,21 @@ func (m *Workflows) LocalStart(
 		AsService(dagger.ContainerAsServiceOpts{Args: []string{"hugo", "server", "-p", "8080"}})
 	return service, nil
 }
+
+// Runs lint on the given source.
+func (m *Workflows) Lint(
+	ctx context.Context,
+	src *dagger.Directory,
+) (string, error) {
+	tag,err := m.HugoTag(ctx, src)
+	if err != nil {
+		return "", err
+	}
+	from := strings.TrimSpace(fmt.Sprintf("docker.io/floryn90/hugo:%s", tag))
+	return dag.Container().
+		From(fmt.Sprintf("%s-ci", from)).
+		WithMountedDirectory("/mnt", src, dagger.ContainerWithMountedDirectoryOpts{Owner: "hugo"}).
+		WithWorkdir("/mnt").
+		WithExec([]string{"/bin/bash", "-c", "npm install && npm run mdlint"}).
+		Stdout(ctx)
+}
