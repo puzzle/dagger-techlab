@@ -17,7 +17,7 @@ Dagger works with similar principals as Docker, this is not surprising as the fo
 
 Dagger is based on an engine, at its heart the workflow is depicted as a Directed Acyclic Graph (DAG). The dagger engine receives outside communication via an GraphQL-API, which allows for an declarative definition of the separate pipeline steps. The output of the DAG is passed on to BildKit. The whole process is executed in a container, this ensures consistency and portability.
 
-[Dagger internal flow](dagger-4.svg)
+![Dagger internal flow](dagger-4.svg)
 
 
 ### Host components
