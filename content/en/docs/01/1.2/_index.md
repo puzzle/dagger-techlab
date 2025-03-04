@@ -33,10 +33,12 @@ Dagger is based on an engine, at its heart the workflow is depicted as a Directe
 Mediates between the host and the Dagger Engine and serves as a central communication protocol. Developers can use this API to make queries to monitor the status of the pipeline or execute specific steps.
 Enables declarative and flexible pipeline definitions, where each step is described as a clearly defined instruction in a graph-based structure. This makes complex workflows easier to maintain and understand.
 
+
 ### Dagger Engine
 
 Here, the workflow is processed as a Directed Acyclic Graph (DAG), which ensures that each step is executed logically and without cyclic dependencies.
 Each node in the graph represents a specific step in the pipeline, such as compiling code, executing tests or deploying artifacts. The engine ensures efficient execution and reusability of intermediate steps.
+
 
 ### BuildKit
 
