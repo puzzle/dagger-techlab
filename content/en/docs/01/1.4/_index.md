@@ -1,10 +1,9 @@
 ---
-title: "Setup"
-weight: 1
-type: docs
-menu:
-  main:
-    weight: 1
+title: "1.4 Installation guide"
+weight: 14
+sectionnumber: 1.4
+description: >
+  Installation guide.
 ---
 
 ## Installation Guide
@@ -22,7 +21,7 @@ In order to use Dagger you need a few prerequisits. You need an text editor to w
 * **Container Tool** The dagger engine is run in a container tool, we highly recommend Docker, as it needs docker compose and a rootless setup (so it might run bugy with Podman).
 * **Dagger CLI** You have to install the Dagger-CLI on your machine, see below how to achieve this.
 
-In the following you can find installation guides for [Linux](#installation-for-linux), [MacOS](installation-for-macos) and [Windows](installation-for-windows). 
+In the following you can find installation guides for [Linux](#installation-for-linux), [MacOS](installation-for-macos) and [Windows](installation-for-windows).
 
 
 ### Installation for Linux
@@ -167,6 +166,4 @@ To update your `dagger` CLI to the latest version, use the same command as for a
 ```bash
 Invoke-WebRequest -UseBasicParsing -Uri https://dl.dagger.io/dagger/install.ps1 | Invoke-Expression; Install-Dagger
 ```
-
-
 

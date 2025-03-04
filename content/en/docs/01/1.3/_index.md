@@ -1,74 +1,25 @@
 ---
-title: "1.3 Getting started"
+title: "1.3 Dagger is more..."
 weight: 13
 sectionnumber: 1.3
 description: >
-  Get familiar with the lab setup.
+  Dagger is more than push and flow.
 ---
 
-## Installation Guide
 
-Prerequisits:
-
-* **Container Tool** The dagger engine is run in a container tool, we highly recommend Docker, as it needs docker compose and a rootless setup (so it might run bugy with Podman).
-* **Dagger CLI** You have to install the Dagger-CLI on your machine, see below how to achieve this.
+## Dagger is more than push and flow 
 
 
-### Linux
+### More solutions for CI 
+
+Dagger solves more than the "push-and-pray" problem in CI. 
+It also introduces a way for developers to directly write tests in the coding language they are comfortable in by utilizing software developement kits (SDKs).
+At the moment Dagger offers SDKs for the following coding languages: Go, Python, Typescript, PHP and the newest addition (in beta) Java.
+- SDKs
 
 
-1. Make sure, that the installation path `$HOME/.local/bin` is declared in the variable PATH
+### Dagger for AI agents
 
-```
-export PATH="$HOME/.local/bin:$PATH"
-```
+- AI agents
+-
 
-1. Run the following command to install Dagger
-
-```
-curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
-```
-
-1.Check your installation by run
-
-```
-dagger version
-```
-
-
-### Windows
-
-
-1. Make sure, that the installation path is declared in the variable PATH
-
-1. Download the installation script and run it in the PowerShell
-
-```
-iwr https://dl.dagger.io/dagger/install.ps1 -useb | iex
-```
-
-1.Check your installation by running
-
-```
-dagger version
-```
-
-
-### Mac
-
-
-1. Install Dagger
-
-```
-brew install dagger/tap/dagger
-```
-or, alternatively use an installation step
-```
-curl -fsSL https://dl.dagger.io/dagger/install.sh | BIN_DIR=/usr/local/bin sh
-```
-
-1.Check your installation by run
-
-```
-dagger version
-```
