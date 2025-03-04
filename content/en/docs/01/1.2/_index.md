@@ -10,7 +10,7 @@ description: >
 ## How does dagger work under the hood?
 
 
-*"Dagger is Docker for your CI Pipeline" - Jeremy Adams (probably)*
+"Dagger is Docker for your CI Pipeline" - Jeremy Adams (probably)
 
 Let's start at the beginning. Containers have been around since the early 2000s, but only experienced a true upswing once Docker was introduced in 2013, as it mad working with containers easier and more intuitive.
 Dagger works with similar principles as Docker, this is not surprising as the founder of Docker is also the founder of Dagger.
