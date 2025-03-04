@@ -12,7 +12,7 @@ As a software developer you write your code in your local code base. To ensure y
 
 Once your local tests succeed, you push your code into the remote code registry (for example GitLab), where it can be build and tested once again (by runing a pipeline).
 
-Picture 1
+![Old way to do CICD](dagger-1.svg)
 
 Often the pipeline takes longer to run online, and you have to hope all the tests pass and wait ...
 
@@ -29,7 +29,7 @@ All the while you keep asking yourself these main questions:
 
 The scenario of pushing code changes and not knowing if a pipeline succeeded is so common, that it coined the term "push-and-pray".
 
-Picture 2
+![Problems with traditional CICD](dagger-1.svg)
 
 * Unpredictable: Unforseen error, which are difficult to locate.
 * Slow Feedback: Error feedback comes with a delay.
@@ -50,6 +50,6 @@ Dagger is set to give back the workflow control to the developers by allowing th
 Dagger can be shortly described as docker for your CI pipeline.
 It allows developers to run the same pipeline locally as it runs remotely, by sandboxing it.
 
-Picture 3
+![CICD with Dagger](dagger-1.svg)
 
 Additionally, dagger allows developers to work in the same programming language as their code is written in. This also enables developers to directly debug the processes.
