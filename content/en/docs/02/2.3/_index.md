@@ -144,3 +144,96 @@ Run the help command:
 .help sign
 ```
 {{% /details %}}
+
+
+## Task {{% param sectionnumber %}}.4: Define a Build
+
+With the knowledge of the Dagger Shell we go to define a Container build.
+
+Make sure that there is no default module set.
+Exit the shell with `Ctrl +d` and start a new shell.
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+```bash
+dagger shell
+```
+{{% /details %}}
+
+Start with the standard command to get a container:
+
+```bash
+container
+```
+
+This will return a container entity of the Dagger core API.
+
+```bash
+defaultArgs: []
+entrypoint: []
+mounts: []
+platform: linux/amd64
+user: ""
+workdir: ""
+```
+
+Run help to get the available functions on the container object.
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+```bash
+container | .help
+```
+{{% /details %}}
+
+There we find the `from` function. It is known from the Dockerfile.
+
+The base image of the container should be `alpine`.
+Use the `from` function to extend the container with alpine.
+
+What will be returned?
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+```bash
+container | from alpine
+```
+
+The new container (state) is returned.
+{{% /details %}}
+
+The container should run the `echo "Daggernaut"` command.
+
+This will be achieved using the `with-exec`.
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+```bash
+container | from alpine | with-exec echo "Daggernaut"
+```
+{{% /details %}}
+
+The updated container is returned.
+
+To get the output of the `echo` command inside the container, the Dagger container `stdout` function is needed.
+
+Extend the build with the `stdout` function.
+
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+```bash
+container | from alpine | with-exec echo "Daggernaut" | stdout
+```
+{{% /details %}}
+
+There is our build chain!
+
+* it constructed a DAG in the background
+* the executions are cached, such that only the newly added functions have to be executed
+
+Create an artefact, add a transformation, get a new artefact, add a transformation, ...
+
+<!---
+TODO:
+* [ ] variables, sub-shells
+* [ ] tab tab autocompletion
+* [ ] replay examples from 1.x labs
+* [ ] new API: with-xyz
+* [ ] replace the first example, such that it is not the same as the Task 4
+-->
