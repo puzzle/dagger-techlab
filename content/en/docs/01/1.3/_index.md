@@ -14,7 +14,7 @@ description: >
 
 Dagger solves more than the "push-and-pray" problem in CI.
 It also introduces a way for developers to directly write tests in the coding language they are comfortable in by utilizing software developement kits (SDKs).
-At the moment Dagger offers SDKs for the following coding languages: Go, Python, Typescript, PHP and the newest addition (in beta) [Java](https://dagger.io/blog/java-sdk).
+At the moment Dagger offers SDKs for the following coding languages: Go, Python, Typescript, PHP (experimental), Rust (experimental) and the newest addition [Java](https://dagger.io/blog/java-sdk) (experimental).
 
 The Dagger SDKs translate your code/functions internally into GraphQL API calls to communicate with the DAG in the Dagger RunTime.
 
@@ -24,10 +24,18 @@ Running your CI pipeline locally with Dagger also helps you be more efficient by
 
 To increase colaboration and visualize your pipelines you can use Dagger Cloud.
 
+All these feature allow you to be platform independent, as it can run on any hosting provider that can run containers.
+
 
 ### Dagger for AI agents
 
-Picture Robots
+This new feature of Dagger promises to make your CI experience easier than ever before, utilizing AI agents.
 
-connect to LLM endpoint of your choice to access your Dagger objects
+Dagger harnesses the power of LLMs and uses them as tooling agents, to complete small tasks in your pipeline and communicate with each other.
+
+You could for example reference the container which runs your build and let the AI agent pipe out the build result from the log file. This AI agent now calls on the tools needed to complete this task. Other AI agents can "pick" up the output and interact with it depending on their own constraints.
+
+From this you can add on complexity until your pipeline looks something like this:
+
+[Picture Robots](dagger-factory.jpg)
 
