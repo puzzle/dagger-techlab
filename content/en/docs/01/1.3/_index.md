@@ -12,7 +12,7 @@ description: >
 
 ### More solutions for CI
 
-Dagger solves more than the "push-and-pray" problem in CI. 
+Dagger solves more than the "push-and-pray" problem in CI.
 It also introduces a way for developers to directly write tests in the coding language they are comfortable in by utilizing software developement kits (SDKs).
 At the moment Dagger offers SDKs for the following coding languages: Go, Python, Typescript, PHP and the newest addition (in beta) [Java](https://dagger.io/blog/java-sdk).
 
