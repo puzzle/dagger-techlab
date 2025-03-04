@@ -37,5 +37,5 @@ You could for example reference the container which runs your build and let the 
 
 From this you can add on complexity until your pipeline looks something like this:
 
-[Picture Robots](dagger-factory.jpg)
+![Picture Robots](dagger-factory.jpg)
 
