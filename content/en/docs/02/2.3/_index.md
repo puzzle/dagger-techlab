@@ -10,6 +10,10 @@ description: >
 
 The Dagger shell is an alternative to the `dagger call` command of the [Dagger CLI](../2.1/). An other way to interact with the Dagger Engine.
 
+Not to be confused with this dagger shell:
+
+![the other dagger shell](dagger-shell.png)
+
 It is a simpler setup to get started to use Dagger. There is no need to initialize modules or to use a Dagger SDK.
 
 This interpreter looks like a shell pipeline (with commands and pipes `|`): `command | command | ...`
