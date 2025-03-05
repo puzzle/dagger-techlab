@@ -76,18 +76,16 @@ We will use the **Python SDK** for this example:
 dagger init --sdk=python --source=./ci
 ```
 
-This leaves us with a generated `dagger.json` module metadata file, an initial `ci/src/main/__init__.py` source code template, `ci/pyproject.toml` and
-`ci/requirements.lock` files, as well as a generated `ci/sdk` folder for local development.\
+This leaves us with a generated `dagger.json` module metadata file, an initial `ci/src/class_quiz/main.py` source code template, `ci/pyproject.toml` and
+other needed files, as well as a generated `ci/sdk` folder for local development.\
 The configuration file sets the name of the module to the name of the current directory, unless an alternative is specified with the `--name` argument.
 
 To check if the module works and what example functions are created, run the `functions` command.
 
 ```bash
 $ dagger functions
-Full trace at https://dagger.cloud/ (rotate dagger.cloud token for full url)
-
-✔ connect 1.1s
-✔ initialize 9.6s
+✔ connect 0.3s
+✔ load module 9.0s
 
 Name             Description
 container-echo   Returns a container that echoes whatever string argument is provided
@@ -97,7 +95,7 @@ grep-dir         Returns lines that match a pattern in the files of the provided
 
 ## Run the App locally
 
-The generated `ci/src/main/__init__.py` is the starting point, which needs to be extended.\
+The generated `ci/src/class_quiz/main.py` is the starting point, which needs to be extended.\
 It has already some example functions that are ready to use or extend.
 
 The ClassQuiz repository has two Dockerfile. One to build the frontend and one to build the backend.\
@@ -418,11 +416,11 @@ To fix this, delete all cookies and session data.
 
 ### Complete Solution
 
-`ci/src/main/__init__.py`:
+`ci/src/class_quiz/main.py`:
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable -->
-{{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
+{{< readfile file="solution/main.py" code="true" lang="Python" >}}
 <!-- markdownlint-restore -->
 
 `Cadyyfile-docker`:

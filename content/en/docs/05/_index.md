@@ -78,11 +78,11 @@ Add or alter something, push it to the repo and see if the action runs as expect
 ### Complete Solution
 
 
-`ci/src/main/__init__.py`:
+`ci/src/class_quiz/main.py`:
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable -->
-{{< readfile file="solution/__init__.py" code="true" lang="Python" >}}
+{{< readfile file="solution/main.py" code="true" lang="Python" >}}
 <!-- markdownlint-restore -->
 
 `dagger.yml`:
