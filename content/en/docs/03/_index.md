@@ -335,6 +335,7 @@ MAIL_SERVER
 MAIL_PORT
 SECRET_KEY
 MEILISEARCH_URL
+STORAGE_BACKEND
 STORAGE_PATH
 ```
 {{% /details %}}
@@ -358,6 +359,7 @@ STORAGE_PATH
             .with_env_variable("MAIL_PORT", "525")
             .with_env_variable("SECRET_KEY", "secret")
             .with_env_variable("MEILISEARCH_URL", "http://meilisearchd:7700")
+            .with_env_variable("STORAGE_BACKEND", "local")
             .with_env_variable("STORAGE_PATH", "/app/data")
             .with_service_binding("postgresd", self.postgres())
             .with_service_binding("meilisearchd", self.meilisearch())
