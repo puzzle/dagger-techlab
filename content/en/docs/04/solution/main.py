@@ -5,6 +5,23 @@ from dagger import dag, function, object_type
 class ClassQuiz:
 
     @function
+    async def build(self, context: dagger.Directory) -> dagger.Container:
+        """Returns a container built with the given context."""
+        return await dag.container().build(context)
+
+    @function
+    async def vulnerability_scan(self, context: dagger.Directory) -> dagger.Directory:
+        """Builds the front- and backend, performs a Trivy scan and returns the directory containing the reports."""
+        trivy = dag.trivy()
+
+        directory = (
+            dag.directory()
+            .with_file("scans/backend.sarif", trivy.container(await self.build(context)).report("sarif"))
+            .with_file("scans/frontend.sarif", trivy.container(await self.build(context.directory("frontend"))).report("sarif"))
+        )
+        return directory
+
+    @function
     def frontend(self, context: dagger.Directory) -> dagger.Container:
         """Returns a frontend container built with the given context and params."""
         return (
@@ -31,6 +48,7 @@ class ClassQuiz:
             .with_env_variable("MAIL_PORT", "525")
             .with_env_variable("SECRET_KEY", "secret")
             .with_env_variable("MEILISEARCH_URL", "http://meilisearchd:7700")
+            .with_env_variable("STORAGE_BACKEND", "local")
             .with_env_variable("STORAGE_PATH", "/app/data")
             .with_service_binding("postgresd", self.postgres())
             .with_service_binding("meilisearchd", self.meilisearch())

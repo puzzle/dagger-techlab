@@ -1,12 +1,15 @@
 {
   "name": "ClassQuiz",
-  "sdk": "python",
+  "engineVersion": "v0.16.2",
+  "sdk": {
+    "source": "python"
+  },
   "dependencies": [
     {
       "name": "trivy",
-      "source": "github.com/sagikazarmark/daggerverse/trivy@5b826062b6bc1bfbd619aa5d0fba117190c85aba"
+      "source": "github.com/sagikazarmark/daggerverse/trivy@trivy/v0.5.0",
+      "pin": "5b826062b6bc1bfbd619aa5d0fba117190c85aba"
     }
   ],
-  "source": "ci",
-  "engineVersion": "v0.12.7"
+  "source": "ci"
 }
