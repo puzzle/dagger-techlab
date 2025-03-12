@@ -19,7 +19,7 @@
   "homepage": "https://github.com/puzzle/dagger-techlab.git#readme",
   "devDependencies": {
     "husky": "9.1.7",
-    "lint-staged": "15.4.3",
+    "lint-staged": "15.5.0",
     "markdownlint-cli": "0.44.0"
   },
   "lint-staged": {
