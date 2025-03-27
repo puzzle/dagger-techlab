@@ -96,7 +96,8 @@ You can get even more details using the `help` option:
 The Dagger Shell session can have a default module. This is set with the `.use` command.
 
 Set the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module as default.
-bash
+
+```bash
 .use github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
 ```
 
