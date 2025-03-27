@@ -40,6 +40,9 @@ dagger call frontend --context=frontend terminal --cmd=bash
 
 ## Debugging
 
+
+### Debug flag
+
 In other cases, it would be helpful if we just could get a bit more detailed output.
 
 For this purpose, every Dagger command can be invoked with the `debug` flag:
@@ -47,4 +50,19 @@ For this purpose, every Dagger command can be invoked with the `debug` flag:
 ```bash
 dagger call --debug backend --context=.
 ```
+
+
+### Interactive flag
+
+Dagger has an interactive debugging feature, which allows users to drop in to an interactive shell when a pipeline run fails, with all the context at the point of failure.
+
+No need to set breakpoints or change your code.
+
+Just do your dagger call and include the `--interactive` flag.
+
+```bash
+dagger call --interactive foo
+```
+
+Utilizing the interactive flag, you can also set breakpoints in your pipeline
 

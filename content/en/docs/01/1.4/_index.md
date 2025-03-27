@@ -36,6 +36,8 @@ curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 To install a different `dagger` CLI version, you can specify it using this param, added to the previous command:
 
 `DAGGER_VERSION=x.y.z`
+
+Check for the newest version [here](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 {{% /alert %}}
 
 
@@ -52,7 +54,7 @@ This should output something similar to:
 
 ```
 ~/.local/bin/dagger
-dagger v0.12.7 (registry.dagger.io/engine) linux/amd64
+dagger v0.17.1 (registry.dagger.io/engine) linux/amd64
 ```
 
 
@@ -63,6 +65,8 @@ To update your `dagger` CLI to the latest version, use the same command as for a
 ```bash
 curl -L https://dl.dagger.io/dagger/install.sh | BIN_DIR=$HOME/.local/bin sh
 ```
+
+Check for the newest version and posiible breaking changes [in the Change log](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 
 
 ### Installation for macOS
@@ -84,6 +88,8 @@ curl -L https://dl.dagger.io/dagger/install.sh | sh
 To install a different `dagger` CLI version, you can specify it using this param, added to the previous command:
 
 `DAGGER_VERSION=x.y.z`
+
+Check for the newest version [here](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 {{% /alert %}}
 
 
@@ -100,7 +106,7 @@ This should output something similar to:
 
 ```
 /opt/homebrew/bin/dagger
-dagger v0.12.7 (registry.dagger.io/engine:v0.12.7) darwin/arm64
+dagger v0.17.1 (registry.dagger.io/engine:v0.12.7) darwin/arm64
 ```
 
 
@@ -119,6 +125,8 @@ To update using `sh` and `curl` instead, use the same commands as for a fresh in
 cd /usr/local
 curl -L https://dl.dagger.io/dagger/install.sh | sh
 ```
+
+Check for the newest version and posiible breaking changes [in the Change log](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 
 
 ### Installation for Windows

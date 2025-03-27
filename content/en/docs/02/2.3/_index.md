@@ -53,12 +53,12 @@ Basically this builds up the DAG (directed acyclic graph) which will run on Dagg
 
 ## Task {{% param sectionnumber %}}.1: Start the shell
 
-Open your terminal at any location and execute the `dagger shell` command of the [Dagger CLI](../2.1/).
+Open your terminal at any location and execute the `dagger` command of the [Dagger CLI](../2.1/).
 
 The output should look like this:
 
 ```bash
-$ dagger shell
+$ dagger 
 Experimental Dagger interactive shell. Type ".help" for more information. Press Ctrl+D to exit.
 ⋈
 ```
@@ -159,7 +159,7 @@ Exit the shell with `Ctrl +d` and start a new shell.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger shell
+dagger 
 ```
 {{% /details %}}
 
