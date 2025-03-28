@@ -93,24 +93,16 @@ You can get even more details using the `help` option:
 
 ## Task {{% param sectionnumber %}}.3: Use a Dagger module
 
-The Dagger Shell session can have a default module. This is set with the `.use` command.
-
-Set the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module as default.
+Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1).
 
 ```bash
-.use github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
-```
-
-The prompt shows now the name of the default module:
-
-```bash
-github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 ⋈
+github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
 ```
 
 See the extended API by running `.help` again:
 
 ```bash
-github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 ⋈ .help
+⋈ github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help
 BUILTIN COMMANDS
   .core         Load any core Dagger type
   ...
@@ -145,7 +137,7 @@ The required arguments are:
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 Run the help command:
 ```bash
-.help sign
+github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help sign
 ```
 {{% /details %}}
 
