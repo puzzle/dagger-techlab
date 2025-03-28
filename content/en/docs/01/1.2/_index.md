@@ -12,7 +12,7 @@ description: >
 
 "Dagger is Docker for your CI Pipeline" - Jeremy Adams (probably)
 
-Let's start at the beginning. Containers have been around since the early 2000s, but only experienced a true upswing once Docker was introduced in 2013, as it mad working with containers easier and more intuitive.
+Let's start at the beginning. Containers have been around since the early 2000s, but only experienced a true upswing once Docker was introduced in 2013, as it made working with containers easier and more intuitive.
 Dagger works with similar principles as Docker, this is not surprising as the founder of Docker is also the founder of Dagger.
 
 Dagger is based on an engine, at its heart the workflow is depicted as a Directed Acyclic Graph (DAG). The dagger engine receives outside communication via an GraphQL-API, which allows for a declarative definition of the separate pipeline steps. The output of the DAG is passed on to BuildKit. The whole process is executed in a container, this ensures consistency and portability.
