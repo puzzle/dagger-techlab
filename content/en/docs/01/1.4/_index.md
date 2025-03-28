@@ -18,7 +18,7 @@ Follow the instructions on the subsequent pages to complete the setup on your op
 In order to use Dagger you need a few prerequisites. You need a text editor to write and update your Dagger Pipeline. Then you need a container tool such as Docker, which Dagger calls in the background, and then of course the Dagger CLI.
 
 * **Editor** You need a text editor such as vi, vim, gedit, nano, VSCode, ...
-* **Container Tool** The dagger engine is run in a container tool, we highly recommend Docker, as it needs docker compose with root permissions (so it might run bugy with Podman).
+* **Container Tool** The dagger engine is run in a container tool, we highly recommend Docker, as it needs docker compose with root permissions (so it might run buggy with Podman).
 * **Dagger CLI** You have to install the Dagger-CLI on your machine, see below how to achieve this.
 
 In the following you can find installation guides for [Linux](#installation-for-linux), [MacOS](#installation-for-macos) and [Windows](#installation-for-windows).

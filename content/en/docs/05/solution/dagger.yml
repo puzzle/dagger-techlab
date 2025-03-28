@@ -7,7 +7,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: test and scan
-        uses: dagger/dagger-for-github@v6
+        uses: dagger/dagger-for-github@v8
         with:
           version: latest
           verb: call
