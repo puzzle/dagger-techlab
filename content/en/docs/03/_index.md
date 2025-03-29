@@ -17,14 +17,14 @@ We would like to conduct a survey regarding the popularity of the different Dagg
 
 ### The Candidate
 
-Fortunately, there is a free open-source quiz app called [ClassQuiz](https://classquiz.de/)\
+Fortunately, there is a free open-source quiz app called [ClassQuiz](https://classquiz.de/).\
 It allows the creation of shareable, fully customizable quizzes and surveys.\
 The app is split in a frontend and an api part:
 
-* The frontend is written in type script and uses a Redis memcache.
+* The frontend is written in TypeScript and uses a Redis memcache.
 * The backend is mostly written in python, uses a PostgreSQL database and Meilisearch.
 
-Caddy is used as reverse proxy to keep the parts together.
+Caddy is used as a reverse proxy to keep the parts together.
 
 
 ### The Journey
@@ -32,10 +32,12 @@ Caddy is used as reverse proxy to keep the parts together.
 
 #### Prerequisites
 
-Check out ClassQuiz:
+Create a fork of the [ClassQuiz Repo on Github](https://github.com/mawoka-myblock/ClassQuiz), this will come in handy later.
+
+Then, check out your fork of ClassQuiz:
 
 ```bash
-git clone https://github.com/mawoka-myblock/ClassQuiz.git
+git clone https://github.com/_your-Github-user_/ClassQuiz.git
 ```
 
 Get familiar with the source - take a closer look at the [docker-compse.yaml](https://github.com/mawoka-myblock/ClassQuiz/blob/master/docker-compose.yml),
@@ -213,7 +215,7 @@ As we have seen before, the two parts of the app depend on several components:
 * Meilisearch
 * Caddy
 
-We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used app.
+We have to implement each component as a [Service](https://docs.dagger.io/manuals/developer/services), which then can be used.
 For Redis this could look like this:
 
 ```python
@@ -277,7 +279,7 @@ While the implementations of PostgreSQL and Meilisearch are very similar and qui
 
 The implementation of Caddy is a bit more sophisticated, as the proxy is our new entry point, which "glues" all the pieces together.
 
-Official documentation about how to [Bind services in functions](https://docs.dagger.io/manuals/developer/services/#bind-services-in-functions)
+Official documentation about how to [Bind services in functions](https://docs.dagger.io/manuals/developer/services/#bind-services-in-functions).
 
 {{% alert title="Note" color="primary" %}}
 Important detail from the docs: The name used for the service binding defines the host name to be used by the function!
