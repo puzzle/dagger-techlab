@@ -60,10 +60,10 @@ If everything went well, the scan results should again be found in the directory
 
 ### Task {{% param sectionnumber %}}.3: Add GitHub action
 
-As final step, we need to call the `ci` function an every push to the repository.
+As final step, we need to call the `ci` function on every push to the repository.
 
 Have a look at [Dagger for GitHub](https://github.com/marketplace/actions/dagger-for-github) first
-and then add the action to your fork on GitHub. Keep it simple and trigger the pipeline with every push on every branch.
+and then add the action to __your fork__ on GitHub. Keep it simple and trigger the pipeline with every push on every branch.
 
 {{% details title="show solution" mode-switcher="normalexpertmode" %}}
 <!-- markdownlint-capture -->
