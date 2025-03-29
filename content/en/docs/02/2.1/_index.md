@@ -68,6 +68,11 @@ dagger call \
   hello
 ```
 
+{{% pageinfo color="info" %}}
+There are two ways to _call_ functions in dagger. In this lab we use `dagger call 'func-name args'` but you can also use `dagger -c 'func-name args'`.
+{{% /pageinfo %}}
+
+
 The `dagger` CLI first loads the `dagger-techlab-module` module directly from its [GitHub repository](https://github.com/puzzle/dagger-techlab/tree/main/mod) and then executes the `hello` function from that module.
 
 {{% alert title="Note" color="primary" %}}
