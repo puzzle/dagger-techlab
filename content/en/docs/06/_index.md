@@ -64,5 +64,32 @@ Just do your dagger call and include the `--interactive` flag.
 dagger call --interactive foo
 ```
 
-Utilizing the interactive flag, you can also set breakpoints in your pipeline
+Utilizing the interactive flag, you can also set breakpoints in your pipeline `.terminal()`
+
+```python
+import dagger
+from dagger import dag, function, object_type
+
+
+@object_type
+class MyModule:
+    @function
+    async def foo(self) -> dagger.Container:
+        return await (
+            dag.container()
+            .from_("alpine:latest")
+            .terminal()
+            .with_exec(["sh", "-c", "echo hello world > /foo"])
+            .terminal()
+        )
+```
+
+
+### Debugging with Dagger Cloud
+
+link:https://dagger.io/cloud[Dagger Cloud] allows you to run your dagger calls online, giving you an overview across all pipelines, both pre-push and post-push.
+
+As a single user you can register for free link:https://dagger.cloud/signup[here].
+
+Give it a try :)
 
