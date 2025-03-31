@@ -58,11 +58,23 @@ Dagger has an interactive debugging feature, which allows users to drop in to an
 
 No need to set breakpoints or change your code.
 
-Just do your dagger call and include the `--interactive` flag.
+Just do your dagger call and include the `--interactive` flag. E.g:
 
 ```bash
 dagger call --interactive foo
 ```
+
+Use the interactive (`-i`) shorthand to enter the container when a problem occurs:
+
+```bash
+dagger -i -c 'container | from alpine | with-exec echooo "Daggernaut" | stdout'
+```
+{{% alert title="Note" color="primary" %}}
+There is no `echooo` command available inside the container.\
+The call will stop in the alpine container. There you can check the environment and find the right command.\
+Press `Ctrl+D` to exit.
+{{% /alert %}}
+
 
 Utilizing the interactive flag, you can also set breakpoints in your pipeline `.terminal()`
 
