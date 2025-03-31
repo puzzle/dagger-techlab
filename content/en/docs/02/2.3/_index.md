@@ -93,30 +93,27 @@ You can get even more details using the `help` option:
 
 ## Task {{% param sectionnumber %}}.3: Use a Dagger module
 
-Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1).
+Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module in the Shell:
 
 ```bash
 github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
 ```
 
-See the extended API by running `.help` again:
+See the cosign functions / API by running `.help` again:
 
 ```bash
 ⋈ github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help
-BUILTIN COMMANDS
-  .core         Load any core Dagger type
-  ...
+OBJECT
+  Cosign
 
-AVAILABLE MODULE FUNCTIONS
-  sign             Sign will run cosign sign from the image, as defined by the cosignImage
-  sign-keyless     SignKeyless will run cosign sign (keyless) from the image, as defined by the cosignImage
+  Cosign represents the cosign Dagger module type
+
+AVAILABLE FUNCTIONS
   attest           Attest will run cosign attest from the image, as defined by the cosignImage
   attest-keyless   AttestKeyless will run cosign attest (keyless) from the image, as defined by the cosignImage
   clean            Clean will run cosign clean from the image, as defined by the cosignImage
-
-STANDARD COMMANDS
-  cache-volume   Constructs a cache volume for a given cache key.
-  ...
+  sign             Sign will run cosign sign from the image, as defined by the cosignImage
+  sign-keyless     SignKeyless will run cosign sign (keyless) from the image, as defined by the cosignImage
 ```
 
 
@@ -145,15 +142,6 @@ github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help sign
 ## Task {{% param sectionnumber %}}.4: Define a Build
 
 With the knowledge of the Dagger Shell we go to define a Container build.
-
-Make sure that there is no default module set.
-Exit the shell with `Ctrl +d` and start a new shell.
-
-{{% details title="show hint" mode-switcher="normalexpertmode" %}}
-```bash
-dagger
-```
-{{% /details %}}
 
 Start with the standard command to get a container:
 
@@ -211,7 +199,6 @@ To get the output of the `echo` command inside the container, the Dagger contain
 
 Extend the build with the `stdout` function.
 
-
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
 container | from alpine | with-exec echo "Daggernaut" | stdout
@@ -225,10 +212,71 @@ There is our build chain!
 
 Create an artefact, add a transformation, get a new artefact, add a transformation, ...
 
+
+## Task {{% param sectionnumber %}}.5: Use variables
+
+As in (bash) shells, variables can be used.
+
+We define a variable to used:
+
+```bash
+shout="Puzzle loves open source"
+```
+
+Then we reference the variable in the previous echo command:
+
+```bash
+container | from alpine | with-exec echo $shout | stdout
+```
+
+The output should print out the value of the `shout` variable.
+
+```bash
+✔ container | from alpine | with-exec echo $shout | stdout 0.0s
+Puzzle loves open source 
+```
+
+### Package functionality into variables.
+
+The whole function, based on the alpine container, can be placed into a variable.
+
+Define the `shoutContainer` variable like this:
+
+```bash
+shoutContainer=$( container | from alpine | with-exec echo $shout )
+```
+
+Calling the new variable should return the same output:
+
+```bash
+$shoutContainer | stdout
+```
+
+Output:
+
+```bash
+✔ $shoutContainer | stdout 1.3s
+Puzzle loves open source
+```
+
 <!---
+Change the output of the shout command.
+
+{{% details title="show hint" mode-switcher="normalexpertmode" %}}
+Change the value of the `shout`:
+
+```bash
+shout="Puzzle loves everyone!"
+```
+{{% /details %}}
+
+-->
+
+<!---
+
+
 TODO:
-* [ ] variables, sub-shells
-* [ ] tab tab autocompletion
+* [ ] tab -> autocompletion -> arrows up and down
 * [ ] replay examples from 1.x labs
 * [ ] new API: with-xyz
 * [ ] replace the first example, such that it is not the same as the Task 4
