@@ -413,8 +413,8 @@ And then visit [localhost:8000](http://localhost:8000/) - where, after registeri
 
 
 {{% alert title="Note" color="primary" %}}
-Sometimes old cookies or session storage corrupts the app.\
-To fix this, delete all cookies and session data.
+Sometimes old cookies or session storage corrupts the app, especially when applying changes.\
+To fix this, delete all cookies and session data or open it in an incognito tab.
 {{% /alert %}}
 
 

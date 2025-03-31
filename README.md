@@ -81,9 +81,6 @@ docker build -t puzzle/dagger-techlab .
 
 Run it locally:
 
-> [!WARNING]  
-> When building locally it is adviced to open localhost:8080 in an incognito tab or actively delete the site data and cookies, especially when applying changes.
-
 ```bash
 docker run --rm -p 8080:8080 puzzle/dagger-techlab
 ```
@@ -99,9 +96,6 @@ buildah build-using-dockerfile [--build-arg TRAINING_HUGO_ENV=...] -t puzzle/dag
 
 Run it locally:
 
-> [!WARNING]  
-> When building locally it is adviced to open localhost:8080 in an incognito tab or actively delete the site data and cookies, especially when applying changes.
-
 ```bash
 podman run --rm --rmi --publish 8080:8080 localhost/puzzle/dagger-techlab
 ```
@@ -110,10 +104,6 @@ podman run --rm --rmi --publish 8080:8080 localhost/puzzle/dagger-techlab
 
 
 ## How to develop locally
-
-> [!WARNING]  
-> When building locally it is adviced to open localhost:8080 in an incognito tab or actively delete the site data and cookies, especially when applying changes.
-
 
 ### Dagger
 
@@ -147,10 +137,6 @@ docker-compose up --build
 The website is available at [localhost:8080](http://localhost:8080)
 
 **Tip:** Set the following environment variables for faster builds: `DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1`
-
-> [!WARNING]  
-> When building locally it is adviced to open localhost:8080 in an incognito tab or actively delete the site data and cookies, especially when applying changes.
-
 
 ### Plain Docker
 
