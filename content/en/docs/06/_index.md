@@ -99,9 +99,13 @@ class MyModule:
 
 ### Debugging with Dagger Cloud
 
-link:https://dagger.io/cloud[Dagger Cloud] allows you to run your dagger calls online, giving you an overview across all pipelines, both pre-push and post-push.
+With https://dagger.io/cloud[Dagger Cloud] you gain visibility into every aspect of your Dagger pipelines.
+It gives you insights across all pipelines, both pre-push and post-push.
 
-As a single user you can register for free link:https://dagger.cloud/signup[here].
+As a single user you can register for free https://dagger.cloud/signup[here].
+
+The https://docs.dagger.io/configuration/cloud/[Dagger Cloud documentation] shows how to connect to https://dagger.cloud/ to see your pipeline traces.
+
+When you are connected and your local pipeline runs, just type `w`. This will open a browser showing the traces ot this run.
 
 Give it a try :)
-
