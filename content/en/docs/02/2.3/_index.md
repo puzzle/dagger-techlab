@@ -58,7 +58,7 @@ Open your terminal at any location and execute the `dagger` command of the [Dagg
 The output should look like this:
 
 ```bash
-$ dagger 
+$ dagger
 Experimental Dagger interactive shell. Type ".help" for more information. Press Ctrl+D to exit.
 ⋈
 ```
@@ -151,7 +151,7 @@ Exit the shell with `Ctrl +d` and start a new shell.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-dagger 
+dagger
 ```
 {{% /details %}}
 

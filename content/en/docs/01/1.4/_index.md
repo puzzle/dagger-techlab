@@ -12,6 +12,9 @@ This guide shows you how to install the `dagger` CLI.
 
 Follow the instructions on the subsequent pages to complete the setup on your operating system of choice.
 
+{{% alert title="Note" color="primary" %}}
+Find the latest instructions inside the Dagger docs: https://docs.dagger.io/install/
+{{% /alert %}}
 
 ### Prerequisites
 
