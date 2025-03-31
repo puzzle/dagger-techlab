@@ -106,7 +106,7 @@ This should output something similar to:
 
 ```
 /opt/homebrew/bin/dagger
-dagger v0.17.1 (registry.dagger.io/engine:v0.12.7) darwin/arm64
+dagger v0.17.2 (docker-image://registry.dagger.io/engine:v0.17.2) linux/amd64
 ```
 
 
