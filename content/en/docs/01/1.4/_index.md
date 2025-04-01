@@ -12,6 +12,10 @@ This guide shows you how to install the `dagger` CLI.
 
 Follow the instructions on the subsequent pages to complete the setup on your operating system of choice.
 
+{{% alert title="Note" color="primary" %}}
+Find the latest instructions inside the Dagger docs: https://docs.dagger.io/install/
+{{% /alert %}}
+
 
 ### Prerequisites
 
@@ -54,7 +58,7 @@ This should output something similar to:
 
 ```
 ~/.local/bin/dagger
-dagger v0.17.1 (registry.dagger.io/engine) linux/amd64
+dagger v0.18.0 (docker-image://registry.dagger.io/engine:v0.18.0) linux/amd64
 ```
 
 
@@ -106,7 +110,7 @@ This should output something similar to:
 
 ```
 /opt/homebrew/bin/dagger
-dagger v0.17.1 (registry.dagger.io/engine:v0.12.7) darwin/arm64
+dagger v0.18.0 (docker-image://registry.dagger.io/engine:v0.18.0) linux/amd64
 ```
 
 

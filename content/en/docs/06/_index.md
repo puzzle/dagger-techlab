@@ -58,11 +58,23 @@ Dagger has an interactive debugging feature, which allows users to drop in to an
 
 No need to set breakpoints or change your code.
 
-Just do your dagger call and include the `--interactive` flag.
+Just do your dagger call and include the `--interactive` flag. E.g:
 
 ```bash
 dagger call --interactive foo
 ```
+
+Use the interactive (`-i`) shorthand to enter the container when a problem occurs:
+
+```bash
+dagger -i -c 'container | from alpine | with-exec echooo "Daggernaut" | stdout'
+```
+{{% alert title="Note" color="primary" %}}
+There is no `echooo` command available inside the container.\
+The call will stop in the alpine container. There you can check the environment and find the right command.\
+Press `Ctrl+D` to exit.
+{{% /alert %}}
+
 
 Utilizing the interactive flag, you can also set breakpoints in your pipeline `.terminal()`
 
@@ -87,9 +99,13 @@ class MyModule:
 
 ### Debugging with Dagger Cloud
 
-link:https://dagger.io/cloud[Dagger Cloud] allows you to run your dagger calls online, giving you an overview across all pipelines, both pre-push and post-push.
+With https://dagger.io/cloud[Dagger Cloud] you gain visibility into every aspect of your Dagger pipelines.
+It gives you insights across all pipelines, both pre-push and post-push.
 
-As a single user you can register for free link:https://dagger.cloud/signup[here].
+As a single user you can register for free https://dagger.cloud/signup[here].
+
+The https://docs.dagger.io/configuration/cloud/[Dagger Cloud documentation] shows how to connect to https://dagger.cloud/ to see your pipeline traces.
+
+When you are connected and your local pipeline runs, just type `w`. This will open a browser showing the traces ot this run.
 
 Give it a try :)
-

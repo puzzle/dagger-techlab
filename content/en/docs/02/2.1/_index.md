@@ -69,7 +69,8 @@ dagger call \
 ```
 
 {{% pageinfo color="info" %}}
-There are two ways to _call_ functions in dagger. In this lab we use `dagger call 'func-name args'` but you can also use `dagger -c 'func-name args'`.
+There are two ways to _call_ functions in dagger. In this lab we use `dagger call func-name args` but you can also use `dagger -c 'func-name args'`.\
+The `dagger -c ''` version execute a dagger shell command. The shell will be introduced in the [Dagger Shell](../2.3/) lab.
 {{% /pageinfo %}}
 
 
