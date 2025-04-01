@@ -76,33 +76,30 @@ Run the `.help` command. This will show you the available commands.
 ```
 {{% /details %}}
 
-Try to get the help of the `.install` command.
+Try to get the help of the `.echo` command.
 
 {{% details title="show hint" mode-switcher="normalexpertmode" %}}
 ```bash
-.help .install
+.help .echo
 ```
 {{% /details %}}
-
-You can get even more details using the `help` option:
-
-```bash
-.install --help
-```
 
 
 ## Task {{% param sectionnumber %}}.3: Use a Dagger module
 
-Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module in the shell:
+We use the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module to show module usage in the Dagger Shell: `github.com/puzzle/dagger-module-cosign/cosign@v0.1.1`
 
-```bash
-github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
-```
-
+Referencing the module installs it and makes it available inside the shell.
 See the cosign functions / API by running `.help` again:
 
 ```bash
-⋈ github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help
+github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help
+```
+
+Expected output:
+
+```bash
+✔ github.com/puzzle/dagger-module-cosign/cosign@v0.1.1 | .help 0.0s
 OBJECT
   Cosign
 
@@ -114,6 +111,8 @@ AVAILABLE FUNCTIONS
   clean            Clean will run cosign clean from the image, as defined by the cosignImage
   sign             Sign will run cosign sign from the image, as defined by the cosignImage
   sign-keyless     SignKeyless will run cosign sign (keyless) from the image, as defined by the cosignImage
+
+Use ".help <function>" for more information on a function.
 ```
 
 
@@ -149,15 +148,10 @@ Start with the standard command to get a container:
 container
 ```
 
-This will return a container entity of the Dagger core API.
+This will return a reference to a container entity of the Dagger core API.
 
 ```bash
-defaultArgs: []
-entrypoint: []
-mounts: []
-platform: linux/amd64
-user: ""
-workdir: ""
+Container@xxh3:6934f6e558023746
 ```
 
 Run help to get the available functions on the container object.
