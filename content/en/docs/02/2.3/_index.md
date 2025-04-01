@@ -236,7 +236,8 @@ The output should print out the value of the `shout` variable.
 Puzzle loves open source 
 ```
 
-### Package functionality into variables.
+
+### Package functionality into variables
 
 The whole function, based on the alpine container, can be placed into a variable.
 

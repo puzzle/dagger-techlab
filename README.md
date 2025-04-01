@@ -81,6 +81,9 @@ docker build -t puzzle/dagger-techlab .
 
 Run it locally:
 
+> [!WARNING]  
+> When building locally and applying changes
+
 ```bash
 docker run --rm -p 8080:8080 puzzle/dagger-techlab
 ```
@@ -104,6 +107,7 @@ podman run --rm --rmi --publish 8080:8080 localhost/puzzle/dagger-techlab
 
 
 ## How to develop locally
+
 
 ### Dagger
 
@@ -134,9 +138,9 @@ To rebuild the image if something changed in the `Dockerfile`:
 docker-compose up --build
 ```
 
-The website is available at [localhost:8080](http://localhost:8080)
 
 **Tip:** Set the following environment variables for faster builds: `DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1`
+
 
 ### Plain Docker
 
@@ -238,6 +242,8 @@ helm install --dry-run --repo https://acend.github.io/helm-charts/  <release> ac
 hugo mod get github.com/google/docsy
 hugo mod get github.com/google/docsy/dependencies
 hugo mod get github.com/acend/docsy-plus
+hugo mod get github.com/acend/docsy-acend
+hugo mod get github.com/puzzle/docsy-puzzle
 hugo mod get github.com/acend/docsy-acend
 hugo mod get github.com/puzzle/docsy-puzzle
 ```

@@ -16,6 +16,7 @@ Follow the instructions on the subsequent pages to complete the setup on your op
 Find the latest instructions inside the Dagger docs: https://docs.dagger.io/install/
 {{% /alert %}}
 
+
 ### Prerequisites
 
 In order to use Dagger you need a few prerequisites. You need a text editor to write and update your Dagger Pipeline. Then you need a container tool such as Docker, which Dagger calls in the background, and then of course the Dagger CLI.
