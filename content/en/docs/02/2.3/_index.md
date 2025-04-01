@@ -93,7 +93,7 @@ You can get even more details using the `help` option:
 
 ## Task {{% param sectionnumber %}}.3: Use a Dagger module
 
-Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module in the Shell:
+Download the [Puzzle cosign](https://daggerverse.dev/mod/github.com/puzzle/dagger-module-cosign/cosign@v0.1.1) module in the shell:
 
 ```bash
 github.com/puzzle/dagger-module-cosign/cosign@v0.1.1
