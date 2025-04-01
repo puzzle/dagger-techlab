@@ -57,7 +57,7 @@ This should output something similar to:
 
 ```
 ~/.local/bin/dagger
-dagger v0.17.1 (registry.dagger.io/engine) linux/amd64
+dagger v0.18.0 (docker-image://registry.dagger.io/engine:v0.18.0) linux/amd64
 ```
 
 
@@ -109,7 +109,7 @@ This should output something similar to:
 
 ```
 /opt/homebrew/bin/dagger
-dagger v0.17.2 (docker-image://registry.dagger.io/engine:v0.17.2) linux/amd64
+dagger v0.18.0 (docker-image://registry.dagger.io/engine:v0.18.0) linux/amd64
 ```
 
 
