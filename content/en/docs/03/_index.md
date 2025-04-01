@@ -87,7 +87,7 @@ To check if the module works and what example functions are created, run the `fu
 ```bash
 $ dagger functions
 ✔ connect 0.3s
-✔ load module 9.0s
+✔ load module 1.4s
 
 Name             Description
 container-echo   Returns a container that echoes whatever string argument is provided
@@ -166,11 +166,11 @@ dagger call build --context=. with-exposed-port --port=8000 as-service up
 ```
 
 {{% alert title="Warning" color="primary" %}}
-Unfortunately the Dagger call stops. We have to analyze this!
+Unfortunately the Dagger call stops after a while. We have to analyze this!
 {{% /alert %}}
 
-We do not see the logs of the app in the output of the Dagger call.\
-Therefore we try to make the output more verbose. This is implemented with the `-v` option.
+If we do not see the relevant logs of the app in the output of the Dagger call, we should change the verbosity.\
+Try to make the output more verbose. This is implemented with the `-v` option.
 
 Run the call again with the verbosity option:
 
@@ -178,33 +178,11 @@ Run the call again with the verbosity option:
 dagger call -v build --context=. with-exposed-port --port=8000 as-service up
 ```
 
-The following does still not contain the needed information of the problem.\
-It only shows, that the app is not started:
-
-```bash
-...
-
-✔ Container.asService: Service! 0.9s
-  ✔ start ./start.sh 0.9s
-    ✘ 8000/tcp 0.8s
-    ! checking for port 8000/tcp: context canceled
-    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=51.200426ms                                                         
-    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=197.220376ms                                                        
-    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=391.991097ms                                                        
-    ┃ 11:26:25 WRN port not ready error="dial tcp 10.87.0.28:8000: connect: connection refused" elapsed=631.458639ms                                                        
-✘ Service.up: Void 0.9s
-! failed to start host service: start upstream: exited: exit code: 1
-
-13:26:20 WRN rotate dagger.cloud token for full url
-Error: response from query: input: container.build.withExposedPort.asService.up resolve: failed to start host service: start upstream: exited: exit code: 1
-```
-
-Increase the verbosity of the Dagger call even more to get to the goal.\
-We will add two levels at once (`-v` -> `-vvv`):
-
-```bash
-dagger call -vvv build --context=. with-exposed-port --port=8000 as-service up
-```
+{{% alert title="Note" color="primary" %}}
+If the output does still not contain the needed information of the problem,
+increase the verbosity of the Dagger call even more to get to the goal.\
+E.g. by adding two more levels at once (`-v` -> `-vvv`)
+{{% /alert %}}
 
 If we have a closer look to the console output, we will discover some error messages due to missing configurations.
 
