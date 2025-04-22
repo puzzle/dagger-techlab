@@ -9,16 +9,15 @@ acendTraining:
         tag: ""
         tagsuffix: ""
       ingress:
-        annotations:
-          haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
         emptyTLS: true
         ingressClassName: openshift-public
+        useDefaultSecret: true
         labels:
           public: "true"
-        useDefaultSecret: true
         appname: dagger-techlab
         domainmain: puzzle.ch
         domain: ocp.cloudscale.puzzle.ch
+
 
 nameOverride: "dagger-techlab"
 fullnameOverride: ""
