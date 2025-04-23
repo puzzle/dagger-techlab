@@ -1,14 +1,4 @@
-# changeme
-# Change the following parts to your current installation
-# - entire Docker Build steps accordingly to the amount of different versions or tags your building TRAINING_HUGO_ENV
-#   - Tags
-# - Helm Target Namespace
-# - Name of K8S Deployment to trigger and namespace
-# - URL that gets commented on the PR
-# - Secrets
-#   - QUAYIO_USERNAME and QUAYIO_TOKEN must be set accordingly to your registry, existing users must have access to the repos
-#   - KUBECONFIG_TEST content of the Kubeconfig File, Account must have access to the k8s namespace. It's used in the helm steps
-name: Build Training and Publish
+name: Build Training
 
 on:
   pull_request:
@@ -26,7 +16,7 @@ jobs:
         name: Set up npm for linting
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: 'latest'
       -
         name: Lint Markdown
         run: npm ci && npm run mdlint

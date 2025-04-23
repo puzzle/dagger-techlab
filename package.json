@@ -1,6 +1,6 @@
 {
   "name": "dagger-techlab",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "Dagger Techlab",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/puzzle/dagger-techlab.git#readme",
   "devDependencies": {
     "husky": "9.1.7",
-    "lint-staged": "15.5.0",
+    "lint-staged": "15.5.1",
     "markdownlint-cli": "0.44.0"
   },
   "lint-staged": {
