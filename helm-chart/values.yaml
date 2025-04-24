@@ -4,7 +4,7 @@ acendTraining:
     - name: puzzle
       replicaCount: 1
       image:
-        repository: quay.io/puzzle/dagger-techlab
+        repository: harbor.puzzle.ch/pitc-techlabs-public/dagger-techlab
         pullPolicy: Always
         tag: ""
         tagsuffix: ""

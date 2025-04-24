@@ -16,12 +16,12 @@ jobs:
         name: 'Install Helm'
         uses: azure/setup-helm@v4
         with:
-          version: v3.6.2
+          version: 'latest'
       -
         name: Install Kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: v1.21.2
+          version: 'latest'
       -
         name: Create KUBECONFIG
         env:
@@ -36,13 +36,16 @@ jobs:
           TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-test'
           TRAINING_VERSION: '${{ github.sha }}'
         run: |
-          helm uninstall $TRAINING_HELM_RELEASE --kubeconfig $HOME/.kube/config  --namespace=$TRAINING_NAMESPACE
+          helm uninstall $TRAINING_HELM_RELEASE --ignore-not-found --kubeconfig $HOME/.kube/config  --namespace=$TRAINING_NAMESPACE
       -
-        name: Delete Tags on Quay
+        name: Delete Tags on Image Registry
         id: delete_tags
         env:
           PR_NUMBER: '${{ github.event.pull_request.number }}'
-          QUAYIO_API_TOKEN: '${{ secrets.QUAYIO_API_TOKEN }}'
-          REPOSITORY: '${{ github.repository }}'
+          REGISTRY_API_AUTH: '${{ secrets.REGISTRY_USERNAME }}:${{ secrets.REGISTRY_AUTH }}'
+          PROJECT: 'pitc-techlabs-public'
+          REPOSITORY: 'dagger-techlab'
         run: |
-          curl -X DELETE -H "Authorization: Bearer ${QUAYIO_API_TOKEN}" https://quay.io/api/v1/repository/${REPOSITORY}/tag/pr-${PR_NUMBER}
+          curl -X DELETE \
+            -u ${REGISTRY_API_AUTH} \
+            https://harbor.puzzle.ch/api/v2.0/projects/${PROJECT}/repositories/${REPOSITORY}/artifacts/pr-${PR_NUMBER}

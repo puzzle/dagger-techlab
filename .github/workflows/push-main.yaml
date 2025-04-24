@@ -29,12 +29,12 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Login to Quay.io Container Registry
+        name: Login to Image Registry
         uses: docker/login-action@v3 
         with:
-          registry: quay.io
-          username: ${{ secrets.QUAYIO_USERNAME }}
-          password: ${{ secrets.QUAYIO_TOKEN }}
+          registry: harbor.puzzle.ch
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_AUTH }}
       -
         name: Build and Push Latest Version
         uses: docker/build-push-action@v6
@@ -43,17 +43,17 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            quay.io/puzzle/dagger-techlab:latest
+            harbor.puzzle.ch/pitc-techlabs-public/dagger-techlab:latest
       -
         name: 'Install Helm'
         uses: azure/setup-helm@v4
         with:
-          version: v3.6.2
+          version: 'latest'
       -
         name: Install Kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: v1.21.2
+          version: 'latest'
       -
         name: Create KUBECONFIG
         env:
