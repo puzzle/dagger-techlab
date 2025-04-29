@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  REGISTRY: 'ghcr.io'
-  REGISTRY_PATH: '${{ github.repository }}'
-  IMAGE_NAME: 'training-spa'
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -34,17 +34,24 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Login to Image Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${REGISTRY} -u ${{ github.actor }} --password-stdin
+        name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Build and Push Latest Version
+        name: Build and Push Latest version
+        id: build-and-push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: |
-            ${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: 'Install Helm'
         uses: azure/setup-helm@v4
