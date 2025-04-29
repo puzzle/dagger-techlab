@@ -24,16 +24,16 @@ RUN wkhtmltopdf --outline-depth 4 \
     /pdf/index.html /pdf.pdf
 
 FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine
+
+LABEL org.opencontainers.image.title="puzzle.ch's Dagger Basics Training" \
+      org.opencontainers.image.description="Container with puzzle.ch's Dagger Techlab content for https://dagger-techlab.puzzle.ch/" \
+      org.opencontainers.image.authors="Puzzle ITC <https://www.puzzle.ch/>" \
+      org.opencontainers.image.source="https://github.com/puzzle/dagger-techlab/" \
+      org.opencontainers.image.licenses="CC-BY-SA-4.0"
+
 USER root
 COPY nginx.conf /etc/nginx/nginx.conf
 USER 101
-
-LABEL maintainer=puzzle.ch
-LABEL org.opencontainers.image.title="puzzle.ch's Dagger Basics Training"
-LABEL org.opencontainers.image.description="Container with puzzle.ch's Dagger Techlab content"
-LABEL org.opencontainers.image.authors="puzzle.ch"
-LABEL org.opencontainers.image.source="https://github.com/puzzle/dagger-techlab/"
-LABEL org.opencontainers.image.licenses="CC-BY-SA-4.0"
 
 EXPOSE 8080
 
