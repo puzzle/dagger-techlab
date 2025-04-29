@@ -23,7 +23,7 @@ RUN wkhtmltopdf --outline-depth 4 \
     --header-html /pdf/header/index.html --footer-html /pdf/footer/index.html \
     /pdf/index.html /pdf.pdf
 
-FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine
+FROM docker.io/nginxinc/nginx-unprivileged:1.28-alpine
 
 LABEL org.opencontainers.image.title="puzzle.ch's Dagger Basics Training" \
       org.opencontainers.image.description="Container with puzzle.ch's Dagger Techlab content for https://dagger-techlab.puzzle.ch/" \
