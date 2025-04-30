@@ -6,7 +6,7 @@ on:
 
 env:
   # github.repository.name as <account>
-  ACCOUNT: ${{ github.repository.name }}
+  ACCOUNT: '${{ github.event.repository.name }}'
   PR_NUMBER: '${{ github.event.pull_request.number }}'
   PACKAGE_TYPE: 'container'
 
@@ -14,6 +14,12 @@ jobs:
   pr-cleanup:
     runs-on: 'ubuntu-latest'
     steps:
+      -
+        name: Dump github context
+        run:   echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
       -
         name: Checkout
         uses: actions/checkout@v4
