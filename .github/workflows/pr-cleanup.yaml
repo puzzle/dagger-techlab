@@ -5,21 +5,15 @@ on:
     types: [closed]
 
 env:
-  # github.repository.name as <account>
-  ACCOUNT: '${{ github.event.repository.name }}'
-  PR_NUMBER: '${{ github.event.pull_request.number }}'
+  ORG: '${{ github.repository_owner }}'
+  PACKAGE_NAME: '${{ github.event.repository.name }}'
   PACKAGE_TYPE: 'container'
+  TAG: "pr-${{ github.event.pull_request.number }}"
 
 jobs:
   pr-cleanup:
     runs-on: 'ubuntu-latest'
     steps:
-      -
-        name: Dump github context
-        run:   echo "$GITHUB_CONTEXT"
-        shell: bash
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
       -
         name: Checkout
         uses: actions/checkout@v4
@@ -53,10 +47,31 @@ jobs:
       -
         name: Delete Tags on Image Registry
         id: delete_tags
+        env:
+          LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -L \
-            -X DELETE \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: Bearer ${LOGIN_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/orgs/ORG/packages/${PACKAGE_TYPE}/${ACCOUNT}/versions/pr-${PR_NUMBER}
+            https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions > versions.json
+          export PACKAGE_VERSION_ID=$(cat versions.json | jq ".[] | select(.metadata.container.tags[]? == \"${TAG}\") | .id")
+          if [[ $PACKAGE_VERSION_ID ]]; then
+              echo "Found id for tag (${TAG}): ${PACKAGE_VERSION_ID}"
+              curl -L \
+                -X DELETE \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${LOGIN_TOKEN}" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}
+          else
+              echo "Did not find id for tag: ${TAG}"
+          fi
+      -
+        name: Delete Untagged Images on Registry
+        uses: actions/delete-package-versions@v5
+        with: 
+          package-name: ${PACKAGE_NAME}
+          package-type: ${PACKAGE_TYPE}
+          min-versions-to-keep: 5
+          delete-only-untagged-versions: 'true'
