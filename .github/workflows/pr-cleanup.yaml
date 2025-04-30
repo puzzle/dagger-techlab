@@ -64,14 +64,27 @@ jobs:
                 -H "Authorization: Bearer ${LOGIN_TOKEN}" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}
+              echo "Deleted tag (${TAG}): ${PACKAGE_VERSION_ID}"
           else
               echo "Did not find id for tag: ${TAG}"
           fi
       -
         name: Delete Untagged Images on Registry
-        uses: actions/delete-package-versions@v5
-        with: 
-          package-name: ${PACKAGE_NAME}
-          package-type: ${PACKAGE_TYPE}
-          min-versions-to-keep: 5
-          delete-only-untagged-versions: 'true'
+        env:
+          LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${LOGIN_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions > versions.json
+          cat versions.json | jq -r '.[] | select((.metadata.container.tags? // []) | length == 0) | .id' | while read -r id; do
+            echo "Found id without tag to be deleted $id"
+            curl -L \
+              -X DELETE \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${LOGIN_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/$id
+              echo "Deleted package with id: $id"
+          done
