@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Checkout Repository
+        name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -37,10 +37,11 @@ jobs:
     needs: lint
     steps:
       -
-        name: Download source artifact
-        uses: actions/download-artifact@v4
+        name: Checkout Repository
+        uses: actions/checkout@v4
         with:
-          name: source
+          submodules: recursive
+          fetch-depth: 0
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
