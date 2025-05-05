@@ -17,15 +17,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
           version: 'latest'
+
       - name: Install Kubectl
         uses: azure/setup-kubectl@v4
         with:
           version: 'latest'
+          
       - name: Create KUBECONFIG
         env:
           KUBE_CONFIG: '${{ secrets.KUBECONFIG_TEST_AV2 }}'
