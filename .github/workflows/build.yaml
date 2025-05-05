@@ -1,12 +1,17 @@
 name: Build Training
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  pull-requests: write
+
 on:
-  pull_request: 
+  pull_request:
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   HELM_RELEASE: pr-${{ github.event.pull_request.number }}
   HELM_NAME: dagger-techlab-puzzle
@@ -18,58 +23,48 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
-      -
-        name: Set up npm for linting
+      - name: Set up npm for linting
         uses: actions/setup-node@v4
         with:
           node-version: 'latest'
-      -
-        name: Cache npm dependencies
+      - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      -
-        name: Cache node_modules
+      - name: Cache node_modules
         uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-modules-
-      -
-        name: Lint Markdown
+      - name: Lint Markdown
         run: npm ci && npm run mdlint
 
   build_and_push:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-      -
-        name: Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      -
-        name: Set up QEMU
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Log into registry ${{ env.REGISTRY }}
+      - name: Log into registry ${{ env.REGISTRY }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Build and push Docker pr image
+      - name: Build and push Docker pr image
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
@@ -80,64 +75,59 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.5.0
+        with:
+          cosign-release: 'v2.2.4'
+      - name: Sign Docker image with cosign
+        env:
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: |
+          COSIGN_EXPERIMENTAL=1 cosign sign --yes ${TAG}@${DIGEST}
+      - name: Verify Docker image with cosign
+        env:
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: bash ./scripts/verify_cosign.sh
 
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
     steps:
-      -
-        name: Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
             helm-chart
+            scripts
           sparse-checkout-cone-mode: false
           fetch-depth: 0
-      -
-        name: 'Install Helm'
+      - name: 'Install Helm'
         uses: azure/setup-helm@v4
         with:
           version: 'latest'
-      -
-        name: Install Kubectl
+      - name: Install Kubectl
         uses: azure/setup-kubectl@v4
         with:
           version: 'latest'
-      -
-        name: Create KUBECONFIG
+      - name: Create KUBECONFIG
         env:
           KUBE_CONFIG: '${{ secrets.KUBECONFIG_TEST_AV2 }}'
-        run: |
-          mkdir -p $HOME/.kube
-          echo "$KUBE_CONFIG" > $HOME/.kube/config
-      -
-        name: Deploy Helm Release
-        run: |
-          helm upgrade $HELM_RELEASE acend-training-chart --install --wait \
-            --kubeconfig $HOME/.kube/config \
-            --namespace=$NAMESPACE \
-            --set=app.name=$HELM_RELEASE \
-            --set=app.version=$TRAINING_VERSION \
-            --repo=https://acend.github.io/helm-charts/ \
-            --values=helm-chart/values.yaml \
-            --atomic
-      -
-        name: Redeploy Deployments
-        run: |
-          kubectl rollout restart deployment/${HELM_RELEASE}-${HELM_NAME} \
-            --kubeconfig $HOME/.kube/config \
-            --namespace $NAMESPACE
+        run: bash ./scripts/create_kubeconfig.sh
+      - name: Deploy Helm Release
+        run: bash ./scripts/deploy_helm_release.sh
+      - name: Redeploy Deployments
+        run: bash ./scripts/redeploy_deployment.sh
 
-  # The 'comment' job posts a comment on the pull request with a link to the deployed environment.
-  # This provides visibility into the deployment status for reviewers and other stakeholders.
   comment:
     runs-on: ubuntu-latest
     needs: deploy
     steps:
-      -
-        name: Comment PR Environments in PR
+      - name: Comment PR Environments in PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
             🚀 PR Environment: [Open Deployment](${{ env.PR_ENV_URL }})
+            🖋️ Image Digest: `${{ steps.build-and-push.outputs.digest }}`
