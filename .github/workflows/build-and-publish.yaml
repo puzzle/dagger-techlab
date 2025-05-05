@@ -1,4 +1,4 @@
-name: Build Training
+name: Dagger Techlab Puzzle Build and Publish
 
 permissions:
   contents: read
@@ -9,6 +9,9 @@ permissions:
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -72,7 +75,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Install cosign
@@ -81,13 +84,13 @@ jobs:
           cosign-release: 'v2.2.4'
       - name: Sign Docker image with cosign
         env:
-          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
           COSIGN_EXPERIMENTAL=1 cosign sign --yes ${TAG}@${DIGEST}
       - name: Verify Docker image with cosign
         env:
-          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: bash ./scripts/verify_cosign.sh
 
