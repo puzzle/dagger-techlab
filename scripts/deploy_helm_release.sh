@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 set -euo pipefail
@@ -20,7 +19,6 @@ helm upgrade "$HELM_RELEASE" acend-training-chart \
   --set=app.version="$TRAINING_VERSION" \
   --repo=https://acend.github.io/helm-charts/ \
   --values=helm-chart/values.yaml \
-  --set-string=acendTraining.deployments[0].ingress.labels.public=true \
   --atomic
 
 echo "✅ Helm release '$HELM_RELEASE' deployed successfully."
