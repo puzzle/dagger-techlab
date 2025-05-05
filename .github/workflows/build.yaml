@@ -15,14 +15,30 @@ env:
   PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
 
 jobs:
-  lint:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       -
-        name: Checkout
+        name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      -
+        name: Upload source as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: source
+          path: .
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      -
+        name: Download source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: source
       -
         name: Set up npm for linting
         uses: actions/setup-node@v4
@@ -34,8 +50,13 @@ jobs:
 
   build_and_push:
     runs-on: ubuntu-latest
-    needs: lint
+    needs: prepare
     steps:
+      -
+        name: Download source artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: source
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
