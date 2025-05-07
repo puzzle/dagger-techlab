@@ -80,6 +80,18 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      -
+        name: Install cosign
+        uses: sigstore/cosign-installer@v3.5.0
+        with:
+          cosign-release: 'v2.2.4'
+
+      -
+        name: Sign Docker image with cosign
+        env:
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: echo "${TAG}" | xargs -I {} cosign sign --yes {}@${DIGEST}
 
   deploy:
     runs-on: ubuntu-latest
