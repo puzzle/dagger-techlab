@@ -28,7 +28,7 @@ jobs:
           node-version: 'latest'
       -
         name: Cache npm dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-node-
       -
         name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
@@ -128,6 +128,8 @@ jobs:
             --kubeconfig $HOME/.kube/config \
             --namespace $NAMESPACE
 
+  # The 'comment' job posts a comment on the pull request with a link to the deployed environment.
+  # This provides visibility into the deployment status for reviewers and other stakeholders.
   comment:
     runs-on: ubuntu-latest
     needs: deploy
