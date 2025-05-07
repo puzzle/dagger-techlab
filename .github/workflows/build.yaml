@@ -107,6 +107,7 @@ jobs:
         with:
           sparse-checkout: |
             helm-chart
+            scripts
           sparse-checkout-cone-mode: false
           fetch-depth: 0
 
