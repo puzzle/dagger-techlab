@@ -88,10 +88,19 @@ jobs:
 
       -
         name: Sign Docker image with cosign
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: echo "${TAG}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+
+      -
+        name: Verify Docker image with cosign
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: echo "${TAG}" | xargs -I {} cosign verify {}@${DIGEST}
 
   deploy:
     runs-on: ubuntu-latest
