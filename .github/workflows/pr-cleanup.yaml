@@ -3,88 +3,48 @@ name: PRCleanup
 on:
   pull_request:
     types: [closed]
-
-env:
-  ORG: '${{ github.repository_owner }}'
-  PACKAGE_NAME: '${{ github.event.repository.name }}'
-  PACKAGE_TYPE: 'container'
-  TAG: "pr-${{ github.event.pull_request.number }}"
+  workflow_dispatch:
 
 jobs:
-  pr-cleanup:
-    runs-on: 'ubuntu-latest'
+  cleanup_helm:
+    runs-on: ubuntu-latest
+    env:
+      TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
+      TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-test'
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      -
-        name: 'Install Helm'
+      - name: Install Helm
         uses: azure/setup-helm@v4
         with:
           version: 'latest'
-      -
-        name: Install Kubectl
+      - name: Install Kubectl
         uses: azure/setup-kubectl@v4
         with:
           version: 'latest'
-      -
-        name: Create KUBECONFIG
+      - name: Create KUBECONFIG
         env:
           KUBE_CONFIG: '${{ secrets.KUBECONFIG_TEST_AV2 }}'
         run: |
           mkdir -p $HOME/.kube
           echo "$KUBE_CONFIG" > $HOME/.kube/config
-      -
-        name: Remove PR Environment Helm Release
+      - name: Remove PR Environment Helm Release
         env:
-          TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
-          TRAINING_NAMESPACE: 'pitc-cicd-dagger-techlab-test'
-          TRAINING_VERSION: '${{ github.sha }}'
-        run: |
-          helm uninstall $TRAINING_HELM_RELEASE --ignore-not-found --kubeconfig $HOME/.kube/config  --namespace=$TRAINING_NAMESPACE
-      -
-        name: Delete Tags on Image Registry
-        id: delete_tags
-        env:
-          LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${LOGIN_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions > versions.json
-          export PACKAGE_VERSION_ID=$(cat versions.json | jq ".[] | select(.metadata.container.tags[]? == \"${TAG}\") | .id")
-          if [[ $PACKAGE_VERSION_ID ]]; then
-              echo "Found id for tag (${TAG}): ${PACKAGE_VERSION_ID}"
-              curl -L \
-                -X DELETE \
-                -H "Accept: application/vnd.github+json" \
-                -H "Authorization: Bearer ${LOGIN_TOKEN}" \
-                -H "X-GitHub-Api-Version: 2022-11-28" \
-                https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}
-              echo "Deleted tag (${TAG}): ${PACKAGE_VERSION_ID}"
-          else
-              echo "Did not find id for tag: ${TAG}"
-          fi
-      -
-        name: Delete Untagged Images on Registry
-        env:
-          LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${LOGIN_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions > versions.json
-          cat versions.json | jq -r '.[] | select((.metadata.container.tags? // []) | length == 0) | .id' | while read -r id; do
-            echo "Found id without tag to be deleted $id"
-            curl -L \
-              -X DELETE \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${LOGIN_TOKEN}" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              https://api.github.com/orgs/${ORG}/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/$id
-              echo "Deleted package with id: $id"
-          done
+          TRAINING_HELM_RELEASE: ${{ env.TRAINING_HELM_RELEASE }}
+          TRAINING_NAMESPACE: ${{ env.TRAINING_NAMESPACE }}
+          KUBECONFIG: $HOME/.kube/config
+        run: bash ./scripts/remove_helm_release.sh
+
+  cleanup_registry:
+    runs-on: ubuntu-latest
+    env:
+      ORG: '${{ github.repository_owner }}'
+      PACKAGE_NAME: '${{ github.event.repository.name }}'
+      PACKAGE_TYPE: 'container'
+      TAG: "pr-${{ github.event.pull_request.number }}"
+      LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Run registry cleanup script
+        run: bash ./scripts/cleanup_registry.sh
