@@ -1,0 +1,30 @@
+name: Test
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  pull-requests: write
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  HELM_RELEASE: pr-${{ github.event.pull_request.number }}
+  HELM_NAME: dagger-techlab-puzzle
+  NAMESPACE: pitc-cicd-dagger-techlab-test
+  TRAINING_VERSION: ${{ github.sha }}
+  PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
+  MY_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+  MY_SEC: ${{ github.ref == 'refs/heads/main' && '${{ secrets.KUBECONFIG_TEST_CRA }}' || '${{ secrets.KUBECONFIG_PROD_CRA }}' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Env
+        run: env | sort
