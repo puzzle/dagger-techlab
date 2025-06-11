@@ -18,7 +18,7 @@ env:
   TRAINING_VERSION: ${{ github.sha }}
   PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
   MY_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
-  MY_SEC: ${{ github.ref == 'refs/heads/main' && '${{ secrets.KUBECONFIG_PROD_CRA }}' || '${{ secrets.KUBECONFIG_TEST_CRA }}' }}
+  MY_SEC: ${{ github.ref == 'refs/heads/main' && "${{ secrets.KUBECONFIG_PROD_CRA }}" || "${{ secrets.KUBECONFIG_TEST_CRA }}" }}
 
 jobs:
   test:
