@@ -23,12 +23,12 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      HELM_RELEASE: ${{ env.BUILD_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Env
+        env:
+          HELM_RELEASE: ${{ env.BUILD_VERSION }}
         run: env | sort
       - name: File
         run: echo ${MY_ENV_SEC_VAR}
