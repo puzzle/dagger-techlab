@@ -1,0 +1,33 @@
+name: Renovate
+
+on:
+  # configure manual trigger
+  workflow_dispatch:
+
+env:
+  # The Dagger CLI uses the DAGGER_CLOUD_TOKEN environment variable to authenticate with Dagger Cloud
+  DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+  # github.repository as <account>/<repo>
+  GITHUB_REPOSITORY: ${{ github.repository }}
+  # github auth token
+  AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Install Dagger CLI
+        run: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
+      - name: Dagger renovate
+        run: |
+          dagger core git --url https://github.com/chrira/dagger-renovate head tree file --path config/config.json5 export --path config.json5
+          dagger -m https://github.com/chrira/dagger-renovate@v0.0.3 \
+              call \
+                git-hub \
+                  --config "./config.json5" \
+                  --github-read-token env:AUTH_TOKEN \
+                  --github-write-token env:AUTH_TOKEN \
+                  --renovate-repositories "[\"${GITHUB_REPOSITORY}\"]" \
+                  --docker-sock /var/run/docker.sock
