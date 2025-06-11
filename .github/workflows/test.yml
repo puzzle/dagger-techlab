@@ -18,7 +18,7 @@ env:
   TRAINING_VERSION: ${{ github.sha }}
   PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
   MY_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
-  MY_SEC: ${{ github.ref == 'refs/heads/main' && "${{ secrets.KUBECONFIG_PROD_CRA }}" || "${{ secrets.KUBECONFIG_TEST_CRA }}" }}
+  MY_ENV_SEC_VAR: ${{ github.ref == 'refs/heads/main' && 'KUBECONFIG_PROD_CRA' || 'KUBECONFIG_TEST_CRA' }}
 
 jobs:
   test:
@@ -29,6 +29,9 @@ jobs:
       - name: Env
         run: env | sort
       - name: File
-        run: echo ${MY_SEC}
+        run: echo ${MY_ENV_SEC_VAR}
       - name: File2
-        run: echo $${MY_SEC}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets[env.MY_ENV_SEC_VAR] }}
+        run: |
+          printenv | grep AWS_
