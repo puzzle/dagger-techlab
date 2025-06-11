@@ -16,10 +16,11 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  HELM_RELEASE: pr-${{ github.event.pull_request.number }}
   HELM_NAME: dagger-techlab-puzzle
-  NAMESPACE: pitc-cicd-dagger-techlab-test
   TRAINING_VERSION: ${{ github.sha }}
+  BUILD_VERSION: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+  DEPLOY_SECRET_VARIABLE_NAME: ${{ github.ref == 'refs/heads/main' && 'KUBECONFIG_PROD_AV2' || 'KUBECONFIG_TEST_AV2' }}
+  NAMESPACE_NAME: ${{ github.ref == 'refs/heads/main' && 'pitc-cicd-dagger-techlab-prod' || 'pitc-cicd-dagger-techlab-test' }}
   PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
 
 jobs:
@@ -75,7 +76,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Install cosign
@@ -84,13 +85,13 @@ jobs:
           cosign-release: 'v2.2.4'
       - name: Sign Docker image with cosign
         env:
-          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_VERSION }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: |
           COSIGN_EXPERIMENTAL=1 cosign sign --yes ${TAG}@${DIGEST}
       - name: Verify Docker image with cosign
         env:
-          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+          TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_VERSION }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: bash ./scripts/verify_cosign.sh
 
@@ -119,14 +120,21 @@ jobs:
           version: 'latest'
       - name: Create KUBECONFIG
         env:
-          KUBE_CONFIG: '${{ secrets.KUBECONFIG_TEST_AV2 }}'
+          KUBE_CONFIG: ${{ secrets[env.DEPLOY_SECRET_VARIABLE_NAME] }}
         run: bash ./scripts/create_kubeconfig.sh
       - name: Deploy Helm Release
+        env:
+          HELM_RELEASE: ${{ env.BUILD_VERSION }}
+          NAMESPACE: ${{ env.NAMESPACE_NAME }}
         run: bash ./scripts/deploy_helm_release.sh
       - name: Redeploy Deployments
+        env:
+          HELM_RELEASE: ${{ env.BUILD_VERSION }}
+          NAMESPACE: ${{ env.NAMESPACE_NAME }}
         run: bash ./scripts/redeploy_deployment.sh
 
   comment:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: deploy
     steps:
