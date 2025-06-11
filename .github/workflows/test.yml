@@ -13,7 +13,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   BUILD_VERSION: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
-  HELM_RELEASE: ${BUILD_VERSION}
+  HELM_RELEASE: $${BUILD_VERSION}
   HELM_NAME: dagger-techlab-puzzle
   NAMESPACE: pitc-cicd-dagger-techlab-test
   TRAINING_VERSION: ${{ github.sha }}
