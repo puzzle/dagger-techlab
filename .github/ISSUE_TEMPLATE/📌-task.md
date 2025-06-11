@@ -15,8 +15,5 @@ Describe the task that needs to be completed.
 - [ ] Step 2
 - [ ] Step 3
 
-## 📆 Deadline
-Expected completion date: `YYYY-MM-DD`
-
 ## 📌 Additional Context
 Any other relevant information.
