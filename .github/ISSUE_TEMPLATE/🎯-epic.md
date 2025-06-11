@@ -15,8 +15,5 @@ Describe the larger feature or initiative.
 - [ ] Task 2
 - [ ] Task 3
 
-## 📆 Timeline
-Estimated timeframe: `YYYY-MM-DD to YYYY-MM-DD`
-
 ## 📌 Additional Context
 Any extra information.
