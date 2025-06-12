@@ -1,17 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "ignorePaths": [
-    "**/mod/**"
-  ],
-  "prConcurrentLimit": 4,
   "packageRules": [
     {
-      //"matchFiles": ["mod/go.mod", "workflows/go.mod"], // Dagger module go.mod is managed by dagger
-      "matchFiles": ["**/go.mod"], // Dagger module go.mod is managed by dagger
-      "enabled": false
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
     },
     {
       "matchPackageNames": ["/floryn90/hugo/", "/nginxinc/nginx-unprivileged/"],
