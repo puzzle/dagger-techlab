@@ -1,6 +1,9 @@
 name: Renovate
 
 on:
+  # run at 04:26 on Mondays
+  schedule:
+    - cron: "26 4 * * 1"
   # configure manual trigger
   workflow_dispatch:
 
