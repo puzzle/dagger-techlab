@@ -18,12 +18,13 @@
       "matchDatasources": ["github-tags"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
-    },
+    }
+    /*,
     {
       "description": "Automerge dev-dependencies",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
-    }
+    }*/
   ]
 }
