@@ -129,7 +129,7 @@ It contains all the core types (like Container, Directory, etc.), as well as bin
 
 The [Python SDK Reference](https://dagger-io.readthedocs.org/) documents all Dagger API types and functions.\
 Our function starts by creating a container (`dag.container()`).
-[Here](https://dagger-io.readthedocs.io/en/latest/client.html#dagger.Container) is the reference to the Python documentation.
+See the reference to the Python [documentation](https://dagger-io.readthedocs.io/en/latest/client.html#dagger.Container).
 
 The [build](https://dagger-io.readthedocs.io/en/latest/client.html#dagger.Container.build) executes the Docker build with the given files.
 

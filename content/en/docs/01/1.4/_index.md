@@ -41,7 +41,7 @@ To install a different `dagger` CLI version, you can specify it using this param
 
 `DAGGER_VERSION=x.y.z`
 
-Check for the newest version [here](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
+Check for the newest version in the [changelog](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 {{% /alert %}}
 
 
@@ -93,7 +93,7 @@ To install a different `dagger` CLI version, you can specify it using this param
 
 `DAGGER_VERSION=x.y.z`
 
-Check for the newest version [here](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
+Check for the newest version in the [changelog](https://github.com/dagger/dagger/blob/main/CHANGELOG.md).
 {{% /alert %}}
 
 
