@@ -67,10 +67,9 @@ jobs:
       - name: Run registry cleanup script
         run: bash ./scripts/cleanup_registry.sh
 
-  cleanup_signatures:
+  show_signatures:
     if: ${{ github.event.inputs.only_signatures == 'true' }}
     runs-on: ubuntu-latest
- #   needs: cleanup_registry
     steps:
       - name: Install GitHub CLI
         run: |
@@ -78,25 +77,15 @@ jobs:
           sudo apt-get install -y gh
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-      - name: Cleanup Non-Latest Signatures
+      - name: Show all .sig versions and tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
-          echo "Fetching latest digest..."
-          latest_digest=$(gh api -H "Accept: application/vnd.github+json" \
-            /user/packages/container/${REPO##*/}/versions \
-            | jq -r '.[] | select(.metadata.container.tags | index("latest")) | .name' | head -n1)
-
-          echo "Latest digest: $latest_digest"
-
-          echo "Fetching .sig versions not matching latest digest..."
+          echo -e "ID\tNAME\tTAGS"
           gh api -H "Accept: application/vnd.github+json" \
-            /user/packages/container/${REPO##*/}/versions \
-            | jq -r --arg latest "$latest_digest" '.[] | select((.name | endswith(".sig")) and (.name != $latest)) | .id' |
-          while read -r version_id; do
-            echo "Deleting version ID $version_id (non-latest .sig)..."
-            gh api --method DELETE \
-              -H "Accept: application/vnd.github+json" \
-              /user/packages/container/${REPO##*/}/versions/"$version_id"
+            /user/packages/container/${REPO##*/}/versions |
+          jq -r '.[] | select(.name | endswith(".sig")) | [.id, .name, (.metadata.container.tags | join(","))] | @tsv' |
+          while IFS=$'\t' read -r id name tags; do
+            echo -e "$id\t$name\t$tags"
           done
