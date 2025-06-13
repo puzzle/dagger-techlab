@@ -70,7 +70,7 @@ jobs:
   cleanup_signatures:
     if: ${{ github.event.inputs.only_signatures == 'true' }}
     runs-on: ubuntu-latest
-    needs: cleanup_registry
+ #   needs: cleanup_registry
     steps:
       - name: Install GitHub CLI
         run: |
