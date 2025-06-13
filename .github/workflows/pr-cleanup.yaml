@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [closed]
   workflow_dispatch:
+    inputs:
+      run_signatures_cleanup:
+        description: 'Run signature cleanup'
+        required: false
+        default: 'false'
 
 jobs:
   cleanup_helm:
@@ -57,3 +62,30 @@ jobs:
           fetch-depth: 0
       - name: Run registry cleanup script
         run: bash ./scripts/cleanup_registry.sh
+
+  cleanup_signatures:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_signatures_cleanup == 'true' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: cleanup_registry
+    steps:
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      - name: Cleanup Non-Latest Signatures
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Fetching package versions..."
+          gh api -H "Accept: application/vnd.github+json" \
+            /user/packages/container/${REPO##*/}/versions \
+            -q '.[] | select(.metadata.container.tags | index("latest") | not) | .id' |
+          while read -r version_id; do
+            echo "Deleting version ID $version_id (non-latest)..."
+            gh api --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              /user/packages/container/${REPO##*/}/versions/"$version_id"
+          done
