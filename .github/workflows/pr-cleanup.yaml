@@ -82,9 +82,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
+          OWNER="${REPO%%/*}"
+          NAME="${REPO##*/}"
+
           echo -e "ID\tNAME\tTAGS"
-          gh api -H "Accept: application/vnd.github+json" \
-            /user/packages/container/${REPO##*/}/versions |
+
+          API_PATH="user/packages/container/${NAME}/versions"
+          if ! gh api /user | jq -r '.login' | grep -q "^${OWNER}$"; then
+            API_PATH="orgs/${OWNER}/packages/container/${NAME}/versions"
+          fi
+
+          gh api -H "Accept: application/vnd.github+json" "/${API_PATH}" |
           jq -r '.[] | select(.name | endswith(".sig")) | [.id, .name, (.metadata.container.tags | join(","))] | @tsv' |
           while IFS=$'\t' read -r id name tags; do
             echo -e "$id\t$name\t$tags"
