@@ -95,7 +95,7 @@ jobs:
             API_PATH="orgs/${OWNER}/packages/container/${NAME}/versions"
           fi
 
-          gh api -H "Accept: application/vnd.github+json" "/${API_PATH}" |
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" "/${API_PATH}" |
           jq -r '.[] | select(.name | endswith(".sig")) | [.id, .name, (.metadata.container.tags | join(","))] | @tsv' |
           while IFS=$'\t' read -r id name tags; do
             echo -e "$id\t$name\t$tags"
