@@ -86,7 +86,7 @@ jobs:
           echo "Fetching package versions..."
           gh api -H "Accept: application/vnd.github+json" \
             /user/packages/container/${REPO##*/}/versions \
-            -q '.[] | select(.metadata.container.tags | index("latest") | not) | .id' |
+            -q '.[] | select((.name | endswith(".sig")) and (.metadata.container.tags | index("latest") | not)) | .id' |
           while read -r version_id; do
             echo "Deleting version ID $version_id (non-latest)..."
             gh api --method DELETE \
