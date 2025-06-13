@@ -1,24 +1,39 @@
-name: Dagger test
+name: Test
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  pull-requests: write
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-  # configure manual trigger
   workflow_dispatch:
 
 env:
-  # The Dagger CLI uses the DAGGER_CLOUD_TOKEN environment variable to authenticate with Dagger Cloud
-  DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  BUILD_VERSION: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+  HELM_NAME: dagger-techlab-puzzle
+  NAMESPACE: pitc-cicd-dagger-techlab-test
+  TRAINING_VERSION: ${{ github.sha }}
+  PR_ENV_URL: https://dagger-techlab-pr-${{ github.event.pull_request.number }}.ocp.cloudscale.puzzle.ch
+  MY_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || format('pr-{0}', github.event.pull_request.number) }}
+  MY_ENV_SEC_VAR: ${{ github.ref == 'refs/heads/main' && 'KUBECONFIG_PROD_CRA' || 'KUBECONFIG_TEST_CRA' }}
 
 jobs:
-  build:
-    name: build
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Dagger CLI
-        run: cd /usr/local && { curl -L https://dl.dagger.io/dagger/install.sh | sh; cd -; }
-      - name: Generate and compile Helm module
-        run: dagger -m mod/ functions
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Env
+        env:
+          HELM_RELEASE: ${{ env.BUILD_VERSION }}
+        run: env | sort
+      - name: File
+        run: echo ${MY_ENV_SEC_VAR}
+      - name: File2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets[env.MY_ENV_SEC_VAR] }}
+        run: |
+          printenv | grep AWS_
