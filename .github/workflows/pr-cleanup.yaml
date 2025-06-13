@@ -1,5 +1,8 @@
 name: PRCleanup
 
+permissions:
+  packages: read
+
 on:
   workflow_dispatch:
     inputs:
