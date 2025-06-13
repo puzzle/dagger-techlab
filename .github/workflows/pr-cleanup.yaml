@@ -1,8 +1,5 @@
 name: PRCleanup
 
-permissions:
-  packages: read
-
 on:
   workflow_dispatch:
     inputs:
@@ -70,7 +67,7 @@ jobs:
       - name: Run registry cleanup script
         run: bash ./scripts/cleanup_registry.sh
 
-  show_signatures:
+  list_all_packages:
     if: ${{ github.event.inputs.only_signatures == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -80,7 +77,7 @@ jobs:
           sudo apt-get install -y gh
       - name: Authenticate with GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-      - name: Show all .sig versions and tags
+      - name: List all packages for this repository
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -88,15 +85,8 @@ jobs:
           OWNER="${REPO%%/*}"
           NAME="${REPO##*/}"
 
-          echo -e "ID\tNAME\tTAGS"
+          echo "Fetching all packages for ${OWNER}/${NAME}..."
 
-          API_PATH="user/packages/container/${NAME}/versions"
-          if ! gh api /user | jq -r '.login' | grep -q "^${OWNER}$"; then
-            API_PATH="orgs/${OWNER}/packages/container/${NAME}/versions"
-          fi
-
-          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" "/${API_PATH}" |
-          jq -r '.[] | select(.name | endswith(".sig")) | [.id, .name, (.metadata.container.tags | join(","))] | @tsv' |
-          while IFS=$'\t' read -r id name tags; do
-            echo -e "$id\t$name\t$tags"
-          done
+          gh api -H "Accept: application/vnd.github+json" \
+            /orgs/${OWNER}/packages?package_type=container |
+          jq -r '.[] | [.name, .package_type, .html_url] | @tsv'
