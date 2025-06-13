@@ -1,17 +1,20 @@
 name: PRCleanup
 
 on:
-  pull_request:
-    types: [closed]
   workflow_dispatch:
     inputs:
-      run_signatures_cleanup:
-        description: 'Run signature cleanup'
-        required: false
-        default: 'false'
+      only_signatures:
+        description: 'Only run signature cleanup?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   cleanup_helm:
+    if: ${{ github.event.inputs.only_signatures == 'false' }}
     runs-on: ubuntu-latest
     env:
       TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
@@ -44,6 +47,7 @@ jobs:
         run: bash ./scripts/remove_helm_release.sh
 
   cleanup_registry:
+    if: ${{ github.event.inputs.only_signatures == 'false' }}
     runs-on: ubuntu-latest
     needs: cleanup_helm
     env:
@@ -64,7 +68,7 @@ jobs:
         run: bash ./scripts/cleanup_registry.sh
 
   cleanup_signatures:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_signatures_cleanup == 'true' || github.event_name == 'pull_request'
+    if: ${{ github.event.inputs.only_signatures == 'true' }}
     runs-on: ubuntu-latest
     needs: cleanup_registry
     steps:
