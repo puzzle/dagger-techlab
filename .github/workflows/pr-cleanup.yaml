@@ -83,12 +83,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
-          echo "Fetching package versions..."
+          echo "Fetching latest digest..."
+          latest_digest=$(gh api -H "Accept: application/vnd.github+json" \
+            /user/packages/container/${REPO##*/}/versions \
+            | jq -r '.[] | select(.metadata.container.tags | index("latest")) | .name' | head -n1)
+
+          echo "Latest digest: $latest_digest"
+
+          echo "Fetching .sig versions not matching latest digest..."
           gh api -H "Accept: application/vnd.github+json" \
             /user/packages/container/${REPO##*/}/versions \
-            -q '.[] | select((.name | endswith(".sig")) and (.metadata.container.tags | index("latest") | not)) | .id' |
+            | jq -r --arg latest "$latest_digest" '.[] | select((.name | endswith(".sig")) and (.name != $latest)) | .id' |
           while read -r version_id; do
-            echo "Deleting version ID $version_id (non-latest)..."
+            echo "Deleting version ID $version_id (non-latest .sig)..."
             gh api --method DELETE \
               -H "Accept: application/vnd.github+json" \
               /user/packages/container/${REPO##*/}/versions/"$version_id"
