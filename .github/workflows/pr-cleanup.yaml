@@ -85,26 +85,8 @@ jobs:
           OWNER="${REPO%%/*}"
           NAME="${REPO##*/}"
 
-          echo "Listing packages for ${OWNER}/${NAME} using GraphQL..."
-
-          gh api graphql -f query='
-            {
-              repository(owner: "'"${OWNER}"'", name: "'"${NAME}"'") {
-                packages(first: 100, packageType: CONTAINER) {
-                  nodes {
-                    name
-                    id
-                    versions(first: 5) {
-                      nodes {
-                        id
-                        version
-                        repository {
-                          nameWithOwner
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }' |
-          jq -r '.data.repository.packages.nodes[] | "\(.name)\t\(.id)"'
+          echo "Fetching container packages for ${OWNER}/${NAME}..."
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" \
+            "/users/${OWNER}/packages?package_type=container" ||
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" \
+            "/orgs/${OWNER}/packages?package_type=container"
