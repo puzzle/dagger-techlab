@@ -85,8 +85,7 @@ jobs:
           OWNER="${REPO%%/*}"
           NAME="${REPO##*/}"
 
-          echo "Fetching packages in organization ${OWNER} for repo ${REPO}..."
-
-          gh api -H "Accept: application/vnd.github+json" \
-            /orgs/${OWNER}/packages?package_type=container 2>/dev/null |
-          jq -r 'map(select(.repository.full_name == "'"${REPO}"'"))[] | [.name, .package_type, .html_url] | @tsv'
+          echo "Fetching all container packages in organization ${OWNER}..."
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" \
+            "/orgs/${OWNER}/packages?package_type=container" |
+          jq -r '.[] | [.name, .package_type, (.html_url // "no_url")] | @tsv'
