@@ -23,7 +23,7 @@ RUN wkhtmltopdf --outline-depth 4 \
     --header-html /pdf/header/index.html --footer-html /pdf/footer/index.html \
     /pdf/index.html /pdf.pdf
 
-FROM docker.io/nginxinc/nginx-unprivileged:1.28-alpine
+FROM docker.io/nginxinc/nginx-unprivileged:1.29-alpine
 
 LABEL maintainer="Puzzle ITC <https://www.puzzle.ch/>" \
       org.opencontainers.image.authors="Puzzle ITC <https://www.puzzle.ch/>" \
