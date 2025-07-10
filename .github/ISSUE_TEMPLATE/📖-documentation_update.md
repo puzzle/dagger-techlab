@@ -1,7 +1,7 @@
 ---
 name: "📖 Documentation Update"
 about: "Suggest an improvement to the project documentation"
-title: "Docs: "
+title: "📖 Docs: "
 labels: ["documentation"]
 assignees: []
 
