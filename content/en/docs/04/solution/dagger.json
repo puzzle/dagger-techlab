@@ -1,6 +1,6 @@
 {
   "name": "ClassQuiz",
-  "engineVersion": "v0.18.0",
+  "engineVersion": "v0.18.12",
   "sdk": {
     "source": "python"
   },
