@@ -1,12 +1,20 @@
 name: PRCleanup
 
 on:
-  pull_request:
-    types: [closed]
   workflow_dispatch:
+    inputs:
+      only_signatures:
+        description: 'Only run signature cleanup?'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   cleanup_helm:
+    if: ${{ github.event.inputs.only_signatures == 'false' }}
     runs-on: ubuntu-latest
     env:
       TRAINING_HELM_RELEASE: 'pr-${{ github.event.pull_request.number }}'
@@ -39,6 +47,7 @@ jobs:
         run: bash ./scripts/remove_helm_release.sh
 
   cleanup_registry:
+    if: ${{ github.event.inputs.only_signatures == 'false' }}
     runs-on: ubuntu-latest
     needs: cleanup_helm
     env:
@@ -57,3 +66,27 @@ jobs:
           fetch-depth: 0
       - name: Run registry cleanup script
         run: bash ./scripts/cleanup_registry.sh
+
+  list_all_packages:
+    if: ${{ github.event.inputs.only_signatures == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+      - name: Authenticate with GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      - name: List all packages for this repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          OWNER="${REPO%%/*}"
+          NAME="${REPO##*/}"
+
+          echo "Fetching container packages for ${OWNER}/${NAME}..."
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" \
+            "/users/${OWNER}/packages?package_type=container" ||
+          GH_TOKEN="${GH_TOKEN}" gh api -H "Accept: application/vnd.github+json" \
+            "/orgs/${OWNER}/packages?package_type=container"
