@@ -57,3 +57,23 @@ jobs:
           fetch-depth: 0
       - name: Run registry cleanup script
         run: bash ./scripts/cleanup_registry.sh
+
+  cleanup_signatures:
+    runs-on: ubuntu-latest
+    needs: cleanup_helm
+    env:
+      ORG: '${{ github.repository_owner }}'
+      PACKAGE_NAME: '${{ github.event.repository.name }}'
+      PACKAGE_TYPE: 'container'
+      TAG: "pr-${{ github.event.pull_request.number }}"
+      LOGIN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+          fetch-depth: 0
+      - name: Run signatures cleanup script
+        run: bash ./scripts/cleanup_signatures.sh
