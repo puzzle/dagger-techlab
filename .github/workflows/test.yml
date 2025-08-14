@@ -13,8 +13,8 @@ env:
   DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
 
 jobs:
-  build:
-    name: build
+  test:
+    name: Dagger-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
