@@ -2,6 +2,9 @@
 
 This guided hands-on training helps dagger.io newbies to get started. It also provides information and labs for more advanced topics.
 
+## Techlab last given
+
+27.03.2025
 
 ## Content Sections
 
