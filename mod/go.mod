@@ -7,7 +7,7 @@ require (
 	github.com/Khan/genqlient v0.8.0
 	github.com/vektah/gqlparser/v2 v2.5.23
 	go.opentelemetry.io/otel v1.34.0
-	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0
+	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.14.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.8.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.32.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.32.0
@@ -42,7 +42,7 @@ require (
 	google.golang.org/protobuf v1.36.6 // indirect
 )
 
-replace go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc => go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0
+replace go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc => go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.14.0
 
 replace go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp => go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.8.0
 
