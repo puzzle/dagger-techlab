@@ -79,6 +79,7 @@ jobs:
           file: ./Dockerfile
           sbom: true
           push: true
+          provenance: mode=min
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_VERSION }}
           cache-from: type=gha
